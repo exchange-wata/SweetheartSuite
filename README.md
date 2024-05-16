@@ -24,6 +24,7 @@
 ## 環境構築
 
 - backend 配下で`docker compose up`を実行
+  - 参考サイトは[こちら](https://zenn.dev/satton/articles/162735f93d5e6f)
 - `curl localhost:3000`で'Hello World!'が返ってきたら OK (暫定)
 
 ## ER 図(暫定)
