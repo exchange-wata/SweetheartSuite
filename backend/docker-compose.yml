@@ -10,6 +10,7 @@ services:
     restart: always
     volumes:
       - ./src:/app/src
+
   postgres:
     image: postgres:16.0
     environment:
@@ -21,3 +22,6 @@ services:
       - 5432:5432
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+
+volumes:
+  postgres:
