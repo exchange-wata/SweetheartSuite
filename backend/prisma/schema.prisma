@@ -10,5 +10,8 @@ generator client {
 model User {
   id    Int @default(autoincrement()) @id
   name  String
-  mailadress String  @unique
+  mailaddress String  @unique
+  createdAt DateTime
+  updatedAt DateTime
+  deletedAt DateTime
 }
