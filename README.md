@@ -26,6 +26,10 @@
 - BE 編
   - BE は[こちら](backend/README.md)
 
+## 画面設計
+
+![](siteDesign.drawio.svg)
+
 ## ER 図(暫定)
 
-- ![](backend/db.drawio.svg)
+![](backend/db.drawio.svg)
