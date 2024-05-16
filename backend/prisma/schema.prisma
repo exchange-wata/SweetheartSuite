@@ -13,5 +13,5 @@ model User {
   mailaddress String  @unique
   createdAt DateTime
   updatedAt DateTime
-  deletedAt DateTime
+  deletedAt DateTime?
 }

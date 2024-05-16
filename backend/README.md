@@ -7,6 +7,14 @@
 
 - 環境変数`DATABASE_URL`について
   - [公式サイト](https://docs.nestjs.com/recipes/prisma#set-up-prisma)参照。docker-compose.ymlを参照して設定してください。
-- migrationについて
-  - ローカルにて`npx prisma migrate dev --name init`を実行してください。BEコンテナ内だとうまくいかなかったです。(原因わかったら教えてください。)
-  - `init`部分は都度変えた方が良さそう。もしくはなくてもいいかもです。
+
+## migrationについて
+
+- ※ ローカル環境にて実行してください。BEコンテナ内だとうまくいかなかったです。(原因わかったら教えてください。)
+- `npx prisma migrate reset`
+  - DB内のデータを削除してseederを再実行します。
+  - TBLがない時にはmigrationファイルを元にTBLを作成します。
+- `npx prisma migrate dev --name init`
+  - `init`部分はmigrationファイルを保持するディレクトリ名の末尾になります。
+- `npx prisma db seed`
+  - seederを実行します。
