@@ -11,6 +11,8 @@ export class UserResolver {
   async getLoginUserName(
     @Args('mailaddress') mailaddress: string,
   ): Promise<string> {
-    return this.getLoginUserNameUsecase.getLoginUserName(mailaddress);
+    const user =
+      await this.getLoginUserNameUsecase.getLoginUserName(mailaddress);
+    return user.name;
   }
 }
