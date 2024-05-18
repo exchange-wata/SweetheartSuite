@@ -1,18 +1,22 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["user", "list"]
 }
 
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["native", "linux-musl", "debian-openssl-1.1.x"]
+  previewFeatures = ["multiSchema"]
 }
 
 model User {
-  id    Int @default(autoincrement()) @id
+  id String @id @default(uuid())
   name  String
   mailaddress String  @unique
   createdAt DateTime
   updatedAt DateTime
   deletedAt DateTime?
+
+  @@schema("user")
 }

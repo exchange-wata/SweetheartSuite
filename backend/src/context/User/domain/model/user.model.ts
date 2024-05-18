@@ -1,13 +1,13 @@
 import { Mailaddress } from './valueObject/mailaddress.value';
 
 type UserType = {
-  id: number;
+  id: string;
   name: string;
   mailaddress: string;
 };
 
 export class UserModel {
-  id: number;
+  id: string;
   name: string;
   mailaddress: Mailaddress;
 
