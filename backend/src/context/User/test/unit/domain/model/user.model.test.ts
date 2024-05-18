@@ -1,4 +1,4 @@
-import { UserModel } from '../../../../domain/model/user.model';
+import { UserModel } from 'src/context/User/domain/model/user.model';
 
 describe('user modelのテスト', () => {
   it('正常系', () => {

@@ -1,4 +1,4 @@
-import { Mailaddress } from '../../../../../domain/model/valueObject/mailaddress.value';
+import { Mailaddress } from 'src/context/User/domain/model/valueObject/mailaddress.value';
 
 describe('mailaddress vo のテスト', () => {
   it('正常系', () => {
