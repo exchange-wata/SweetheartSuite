@@ -1,5 +1,5 @@
 import { TempUserModel } from '../model/tempUser.mode';
 
 export interface TempUserRepositoryInterface {
-  create(mailaddress: string): Promise<TempUserModel>;
+  create(mailaddress: string, token: string): Promise<TempUserModel>;
 }

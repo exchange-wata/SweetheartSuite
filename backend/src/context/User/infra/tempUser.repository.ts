@@ -7,11 +7,11 @@ import { TempUserModel } from '../domain/model/tempUser.mode';
 export class TempUserRepository implements TempUserRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(mailaddress: string): Promise<TempUserModel> {
+  async create(mailaddress: string, token: string): Promise<TempUserModel> {
     const tempUser = await this.prisma.tempUser.create({
       data: {
         mailaddress,
-        token: '1398yr93r9cnwo1831nci3yn9',
+        token,
       },
     });
 
