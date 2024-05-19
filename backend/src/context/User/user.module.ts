@@ -4,8 +4,10 @@ import { UserRepository } from './infra/user.repository';
 import { USER_REPOSITORY } from './const/user.token';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetUserByMailaddressUsecase } from './usecase/getUserByMailaddress.usecase';
+import { TempUserModule } from './tempUser.module';
 
 @Module({
+  imports: [TempUserModule],
   providers: [
     UserResolver,
     GetUserByMailaddressUsecase,
