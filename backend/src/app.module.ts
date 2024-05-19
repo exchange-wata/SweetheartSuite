@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { HelloResolver } from './resolver/Hello.resolver';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { UserModule } from './context/User/user.module';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
+    UserModule,
   ],
-  providers: [HelloResolver],
 })
 export class AppModule {}
