@@ -1,18 +1,19 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
-import { GetLoginUserNameUsecase } from '../usecase/getLoginUserName.usecase';
+import { GetUserByMailaddressUsecase } from '../usecase/getUserByMailaddress.usecase';
+import { UserPresenter } from '../presenter/user.presenter';
 
 @Resolver()
 export class UserResolver {
   constructor(
-    private readonly getLoginUserNameUsecase: GetLoginUserNameUsecase,
+    private readonly getUserByMailaddressUsecase: GetUserByMailaddressUsecase,
   ) {}
 
-  @Query(() => String)
-  async getLoginUserName(
+  @Query(() => UserPresenter)
+  async getUserByMailaddress(
     @Args('mailaddress') mailaddress: string,
-  ): Promise<string> {
+  ): Promise<UserPresenter> {
     const user =
-      await this.getLoginUserNameUsecase.getLoginUserName(mailaddress);
-    return user.name;
+      await this.getUserByMailaddressUsecase.getUserByMailaddress(mailaddress);
+    return UserPresenter.create(user);
   }
 }

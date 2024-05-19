@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UserRepository implements UserRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getLoginUserName(mailaddress: string): Promise<UserModel> {
+  async getUserByMailaddress(mailaddress: string): Promise<UserModel> {
     const user = await this.prisma.user.findUnique({
       where: { mailaddress },
     });

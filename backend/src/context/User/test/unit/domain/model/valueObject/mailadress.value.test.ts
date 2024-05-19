@@ -3,8 +3,8 @@ import { Mailaddress } from 'src/context/User/domain/model/valueObject/mailaddre
 describe('mailaddress vo のテスト', () => {
   it('正常系', () => {
     const input = 'aA0_.+-@example.com';
-    const { mailaddress } = Mailaddress.create(input);
-    expect(mailaddress).toBe(input);
+    const { value } = Mailaddress.create(input);
+    expect(value).toBe(input);
   });
 
   describe('異常系', () => {

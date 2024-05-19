@@ -5,16 +5,14 @@ import { Mailaddress } from '../domain/model/valueObject/mailaddress.value';
 import { UserModel } from '../domain/model/user.model';
 
 @Injectable()
-export class GetLoginUserNameUsecase {
+export class GetUserByMailaddressUsecase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryInterface,
   ) {}
 
-  async getLoginUserName(mailaddress: string): Promise<UserModel> {
+  async getUserByMailaddress(mailaddress: string): Promise<UserModel> {
     const validatedMailaddress = Mailaddress.create(mailaddress);
-    return this.userRepository.getLoginUserName(
-      validatedMailaddress.mailaddress,
-    );
+    return this.userRepository.getUserByMailaddress(validatedMailaddress.value);
   }
 }

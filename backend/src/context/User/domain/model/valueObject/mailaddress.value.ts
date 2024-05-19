@@ -1,11 +1,11 @@
 export class Mailaddress {
-  public mailaddress: string;
+  public readonly value: string;
 
   private constructor(mailaddress: string) {
     if (!this.isValidMailaddress(mailaddress)) {
       throw new Error('Invalid email address');
     }
-    this.mailaddress = mailaddress;
+    this.value = mailaddress;
   }
 
   public static create(mailaddress: string): Mailaddress {
