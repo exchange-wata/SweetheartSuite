@@ -6,12 +6,10 @@ export const user = async () => {
   await prisma.user.createMany({
     data: Array(10)
       .fill(0)
-      .map((v, i) => ({
+      .map((_, i) => ({
         id: crypto.randomUUID(),
         name: `name${i + 1}`,
         mailaddress: `email${i + 1}@gmail.com`,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       })),
   });
 };
