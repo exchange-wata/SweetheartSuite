@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Mailaddress } from '../domain/model/valueObject/mailaddress.value';
+import { Mailaddress } from '../../domain/model/valueObject/mailaddress.value';
 
 type UserType = {
   id: string;
