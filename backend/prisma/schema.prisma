@@ -20,3 +20,13 @@ model User {
 
   @@schema("user")
 }
+
+model TempUser {
+  id String @id @default(uuid())
+  mailaddress String
+  token String
+  createdAt DateTime
+  updatedAt DateTime
+
+  @@schema("user")
+}
