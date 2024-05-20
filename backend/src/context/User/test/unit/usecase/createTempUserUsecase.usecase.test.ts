@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TEMP_USER_REPOSITORY } from 'src/context/User/const/user.token';
 import { TempUserRepositoryInterface } from 'src/context/User/domain/interface/tempUserRepositoryInterface.repository.interface';
-import { TempUserModel } from 'src/context/User/domain/model/tempUser.mode';
+import { TempUserModel } from 'src/context/User/domain/model/tempUser.model';
 import { CreateTempUserUsecase } from 'src/context/User/usecase/createTempUserUsecase.usecase';
 import { createToken } from 'src/library/hash.library';
 

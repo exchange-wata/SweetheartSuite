@@ -1,4 +1,4 @@
-import { TempUserModel } from 'src/context/User/domain/model/tempUser.mode';
+import { TempUserModel } from 'src/context/User/domain/model/tempUser.model';
 
 describe('tempUser modelのテスト', () => {
   it('正常系', () => {

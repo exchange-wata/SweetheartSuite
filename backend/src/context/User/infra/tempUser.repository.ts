@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TempUserRepositoryInterface } from '../domain/interface/tempUserRepositoryInterface.repository.interface';
-import { TempUserModel } from '../domain/model/tempUser.mode';
+import { TempUserModel } from '../domain/model/tempUser.model';
 
 @Injectable()
 export class TempUserRepository implements TempUserRepositoryInterface {
