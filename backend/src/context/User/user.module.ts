@@ -5,7 +5,7 @@ import { USER_REPOSITORY } from './const/user.token';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetUserByMailaddressUsecase } from './usecase/getUserByMailaddress.usecase';
 import { TempUserModule } from './tempUser.module';
-import { CreateUserUsecase } from './usecase/createUserUsecase.usecase';
+import { CreateUserUsecase } from './usecase/createUser.usecase';
 
 @Module({
   imports: [TempUserModule],

@@ -1,7 +1,7 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { GetUserByMailaddressUsecase } from '../../usecase/getUserByMailaddress.usecase';
 import { UserPresenter } from '../presenter/user.presenter';
-import { CreateUserUsecase } from '../../usecase/createUserUsecase.usecase';
+import { CreateUserUsecase } from '../../usecase/createUser.usecase';
 
 @Resolver()
 export class UserResolver {
