@@ -1,2 +1,2 @@
-// user.constants.ts
 export const USER_REPOSITORY = 'USER_REPOSITORY';
+export const TEMP_USER_REPOSITORY = 'TEMP_USER_REPOSITORY';
