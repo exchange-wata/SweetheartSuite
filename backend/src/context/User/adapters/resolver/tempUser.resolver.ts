@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CreateTempUserUsecase } from '../../usecase/createTempUserUsecase.usecase';
+import { CreateTempUserUsecase } from '../../usecase/createTempUser.usecase';
 import { TempUserPresenter } from '../presenter/tempUser.presenter';
 
 @Resolver()

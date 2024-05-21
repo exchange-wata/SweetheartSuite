@@ -14,4 +14,15 @@ export class UserRepository implements UserRepositoryInterface {
 
     return UserModel.create(user);
   }
+
+  async create(name: string, mailaddress: string): Promise<UserModel> {
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        mailaddress,
+      },
+    });
+
+    return UserModel.create(user);
+  }
 }

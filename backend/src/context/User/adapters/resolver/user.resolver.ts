@@ -1,11 +1,13 @@
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { GetUserByMailaddressUsecase } from '../../usecase/getUserByMailaddress.usecase';
 import { UserPresenter } from '../presenter/user.presenter';
+import { CreateUserUsecase } from '../../usecase/createUser.usecase';
 
 @Resolver()
 export class UserResolver {
   constructor(
     private readonly getUserByMailaddressUsecase: GetUserByMailaddressUsecase,
+    private readonly createUserUsecase: CreateUserUsecase,
   ) {}
 
   @Query(() => UserPresenter)
@@ -13,6 +15,15 @@ export class UserResolver {
     @Args('mailaddress') mailaddress: string,
   ): Promise<UserPresenter> {
     const user = await this.getUserByMailaddressUsecase.execute(mailaddress);
+    return UserPresenter.create(user);
+  }
+
+  @Mutation(() => UserPresenter)
+  async createUser(
+    @Args('name') name: string,
+    @Args('token') token: string,
+  ): Promise<UserPresenter> {
+    const user = await this.createUserUsecase.execute(name, token);
     return UserPresenter.create(user);
   }
 }

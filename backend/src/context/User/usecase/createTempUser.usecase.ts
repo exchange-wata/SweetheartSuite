@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TEMP_USER_REPOSITORY } from '../const/user.token';
 import { Mailaddress } from '../domain/model/valueObject/mailaddress.value';
-import { TempUserRepositoryInterface } from '../domain/interface/tempUserRepositoryInterface.repository.interface';
+import { TempUserRepositoryInterface } from '../domain/interface/tempUser.repository.interface';
 import { TempUserModel } from '../domain/model/tempUser.model';
 import { createToken } from 'src/library/hash.library';
 
