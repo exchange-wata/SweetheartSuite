@@ -24,7 +24,7 @@ model User {
 model TempUser {
   id String @id @default(uuid())
   mailaddress String
-  token String
+  token String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 

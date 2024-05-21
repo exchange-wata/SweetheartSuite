@@ -7,6 +7,7 @@ import { GetUserByMailaddressUsecase } from './usecase/getUserByMailaddress.usec
 import { TempUserModule } from './tempUser.module';
 import { LoginUsecase } from './usecase/login.usecase';
 import { AuthModule } from '../Auth/auth.module';
+import { CreateUserUsecase } from './usecase/createUser.usecase';
 
 @Module({
   // FIXME: AuthModuleの読み込みをやめたい
@@ -15,6 +16,7 @@ import { AuthModule } from '../Auth/auth.module';
     UserResolver,
     GetUserByMailaddressUsecase,
     LoginUsecase,
+    CreateUserUsecase,
     { provide: USER_REPOSITORY, useClass: UserRepository },
     PrismaService,
   ],

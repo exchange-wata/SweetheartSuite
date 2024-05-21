@@ -4,6 +4,7 @@ import { UserRepositoryInterface } from 'src/context/User/domain/interface/user.
 import { UserModel } from 'src/context/User/domain/model/user.model';
 import { Mailaddress } from 'src/context/User/domain/model/valueObject/mailaddress.value';
 import { GetUserByMailaddressUsecase } from 'src/context/User/usecase/getUserByMailaddress.usecase';
+
 let usecase: GetUserByMailaddressUsecase;
 let userRepository: UserRepositoryInterface;
 

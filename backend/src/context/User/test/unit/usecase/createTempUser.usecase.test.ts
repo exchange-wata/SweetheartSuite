@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TEMP_USER_REPOSITORY } from 'src/context/User/const/user.token';
-import { TempUserRepositoryInterface } from 'src/context/User/domain/interface/tempUserRepositoryInterface.repository.interface';
+import { TempUserRepositoryInterface } from 'src/context/User/domain/interface/tempUser.repository.interface';
 import { TempUserModel } from 'src/context/User/domain/model/tempUser.model';
-import { CreateTempUserUsecase } from 'src/context/User/usecase/createTempUserUsecase.usecase';
+import { CreateTempUserUsecase } from 'src/context/User/usecase/createTempUser.usecase';
 import { createToken } from 'src/library/hash.library';
 
 jest.mock('src/library/hash.library', () => ({
