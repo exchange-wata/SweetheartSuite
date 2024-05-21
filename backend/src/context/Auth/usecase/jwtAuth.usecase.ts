@@ -6,7 +6,7 @@ type AuthType = {
 };
 
 @Injectable()
-export class JwtAuthService {
+export class JwtAuthUsecase {
   constructor(private jwtService: JwtService) {}
 
   async generateToken(input: AuthType): Promise<string> {
