@@ -21,13 +21,12 @@ export class TempUserRepository implements TempUserRepositoryInterface {
     return TempUserModel.create(tempUser);
   }
 
-  async findMany(token: string): Promise<TempUserModel[]> {
-    const tempUser = await this.prisma.tempUser.findMany({
+  async findByToken(token: string): Promise<TempUserModel> {
+    const tempUser = await this.prisma.tempUser.findUnique({
       where: { token },
-      orderBy: { createdAt: 'desc' },
     });
 
-    return tempUser.map((user) => TempUserModel.create(user));
+    return TempUserModel.create(tempUser);
   }
 
   async deleteMany(mailaddress: string): Promise<BatchPayload> {

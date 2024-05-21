@@ -14,8 +14,7 @@ export class CreateUserUsecase {
   ) {}
 
   async execute(name: string, token: string): Promise<UserModel> {
-    const tempUsers = await this.tempUserRepository.findByToken(token);
-    const tempUser = tempUsers.shift();
+    const tempUser = await this.tempUserRepository.findByToken(token);
     const user = await this.userRepository.create(
       name,
       tempUser.mailaddress.value,

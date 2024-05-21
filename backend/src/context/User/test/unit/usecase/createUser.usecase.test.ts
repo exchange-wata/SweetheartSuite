@@ -60,9 +60,7 @@ describe('CreateTempUserUsecase', () => {
       });
 
       (userRepository.create as jest.Mock).mockResolvedValue(user);
-      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue([
-        tempUser,
-      ]);
+      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue(tempUser);
       (tempUserRepository.deleteMany as jest.Mock).mockResolvedValue({
         count: 1,
       });
@@ -90,9 +88,7 @@ describe('CreateTempUserUsecase', () => {
       });
 
       (userRepository.create as jest.Mock).mockResolvedValue(null);
-      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue([
-        tempUser,
-      ]);
+      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue(tempUser);
       await expect(usecase.execute(name, token)).rejects.toThrow(
         'can not create user',
       );
