@@ -6,6 +6,6 @@ export type BatchPayload = {
 
 export interface TempUserRepositoryInterface {
   create(mailaddress: string, token: string): Promise<TempUserModel>;
-  findMany(token: string): Promise<TempUserModel[]>;
+  findByToken(token: string): Promise<TempUserModel[]>;
   deleteMany(mailaddress: string): Promise<BatchPayload>;
 }

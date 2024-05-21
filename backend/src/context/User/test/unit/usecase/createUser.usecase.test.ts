@@ -27,7 +27,7 @@ beforeEach(async () => {
       {
         provide: TEMP_USER_REPOSITORY,
         useValue: {
-          findMany: jest.fn(),
+          findByToken: jest.fn(),
           deleteMany: jest.fn(),
         },
       },
@@ -60,7 +60,9 @@ describe('CreateTempUserUsecase', () => {
       });
 
       (userRepository.create as jest.Mock).mockResolvedValue(user);
-      (tempUserRepository.findMany as jest.Mock).mockResolvedValue([tempUser]);
+      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue([
+        tempUser,
+      ]);
       (tempUserRepository.deleteMany as jest.Mock).mockResolvedValue({
         count: 1,
       });
@@ -68,7 +70,7 @@ describe('CreateTempUserUsecase', () => {
       const result = await usecase.execute(name, token);
 
       expect(userRepository.create).toHaveBeenCalled();
-      expect(tempUserRepository.findMany).toHaveBeenCalled();
+      expect(tempUserRepository.findByToken).toHaveBeenCalled();
       expect(tempUserRepository.deleteMany).toHaveBeenCalled();
       expect(result).toBe(user);
     });
@@ -88,13 +90,15 @@ describe('CreateTempUserUsecase', () => {
       });
 
       (userRepository.create as jest.Mock).mockResolvedValue(null);
-      (tempUserRepository.findMany as jest.Mock).mockResolvedValue([tempUser]);
+      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue([
+        tempUser,
+      ]);
       await expect(usecase.execute(name, token)).rejects.toThrow(
         'can not create user',
       );
 
       expect(userRepository.create).toHaveBeenCalled();
-      expect(tempUserRepository.findMany).toHaveBeenCalled();
+      expect(tempUserRepository.findByToken).toHaveBeenCalled();
       expect(tempUserRepository.deleteMany).not.toHaveBeenCalled();
     });
   });
