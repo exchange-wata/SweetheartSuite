@@ -14,8 +14,7 @@ export class UserResolver {
   async getUserByMailaddress(
     @Args('mailaddress') mailaddress: string,
   ): Promise<UserPresenter> {
-    const user =
-      await this.getUserByMailaddressUsecase.getUserByMailaddress(mailaddress);
+    const user = await this.getUserByMailaddressUsecase.execute(mailaddress);
     return UserPresenter.create(user);
   }
 

@@ -40,7 +40,7 @@ describe('GetUserByMailaddressUsecase', () => {
         user,
       );
 
-      const result = await usecase.getUserByMailaddress(mailaddress);
+      const result = await usecase.execute(mailaddress);
       const validatedMailaddress = Mailaddress.create(mailaddress);
 
       expect(userRepository.getUserByMailaddress).toHaveBeenCalledWith(
@@ -54,9 +54,7 @@ describe('GetUserByMailaddressUsecase', () => {
     it('メールアドレスが不正な時、エラーになる', async () => {
       const invalidMailaddress = 'invalid-email';
 
-      await expect(
-        usecase.getUserByMailaddress(invalidMailaddress),
-      ).rejects.toThrow();
+      await expect(usecase.execute(invalidMailaddress)).rejects.toThrow();
     });
   });
 });
