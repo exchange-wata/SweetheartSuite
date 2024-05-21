@@ -11,7 +11,7 @@ export class GetUserByMailaddressUsecase {
     private readonly userRepository: UserRepositoryInterface,
   ) {}
 
-  async getUserByMailaddress(mailaddress: string): Promise<UserModel> {
+  async execute(mailaddress: string): Promise<UserModel> {
     const validatedMailaddress = Mailaddress.create(mailaddress);
     return this.userRepository.getUserByMailaddress(validatedMailaddress.value);
   }
