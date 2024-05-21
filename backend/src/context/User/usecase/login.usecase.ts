@@ -9,7 +9,7 @@ export class LoginUsecase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryInterface,
-    private readonly JwtAuthUsecase: JwtAuthUsecase,
+    private readonly jwtAuthUsecase: JwtAuthUsecase,
     private readonly googleAuthUsecase: GoogleAuthUsecase,
   ) {}
 
@@ -20,7 +20,7 @@ export class LoginUsecase {
     if (mailaddress) {
       const user = await this.userRepository.getUserByMailaddress(mailaddress);
       if (user) {
-        return this.JwtAuthUsecase.generateToken({ id: user.id });
+        return this.jwtAuthUsecase.generateToken({ id: user.id });
       } else {
         return null;
       }
