@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { UserSeedType } from './init';
+import { UserSeedType } from './transaction';
 
 const crypto = require('crypto');
 const prisma = new PrismaClient();

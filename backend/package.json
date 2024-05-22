@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed/init.ts"
+    "seed": "ts-node prisma/seed/init.ts",
+    "seed:master": "ts-node prisma/seed/master/master.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
