@@ -14,8 +14,7 @@ export class LoginUsecase {
   ) {}
 
   async execute(token: string): Promise<string | null> {
-    const ticket = await this.googleAuthUsecase.verifyToken(token);
-    const mailaddress = ticket.getPayload().email;
+    const mailaddress = await this.googleAuthUsecase.verifyToken(token);
 
     if (mailaddress) {
       const user = await this.userRepository.getUserByMailaddress(mailaddress);
