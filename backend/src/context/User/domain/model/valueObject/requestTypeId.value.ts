@@ -1,4 +1,4 @@
-enum RequestTypes {
+export enum RequestTypes {
   SENT = 1,
   APPROVED = 2,
   REJECTED = 3,

@@ -12,7 +12,10 @@ export class SendRequestUsecase {
   ) {}
 
   // TODO: senderMailaddressはjwtとかからとる想定
-  async execute(senderMailaddress: string, receiverMailaddress: string) {
+  async execute(
+    senderMailaddress: string,
+    receiverMailaddress: string,
+  ): Promise<boolean> {
     // FIXME: 複数ユーザーを一度に取得するとどちらが送受信者かわかりにくくなりそうなのでこの形
     const sendUser =
       await this.userRepository.getUserByMailaddress(senderMailaddress);
@@ -22,10 +25,11 @@ export class SendRequestUsecase {
     if (receivedUser.mailaddress.value) {
       const couple = await this.coupleRepository.findByUserId(receivedUser.id);
       if (!couple) {
-        await this.requestRepository.createRequest(
+        await this.requestRepository.create(
           sendUser.mailaddress.value,
           receivedUser.mailaddress.value,
         );
+        return true;
       } else {
         throw new Error('can not send request');
       }
