@@ -11,8 +11,8 @@ export type UserSeedType = {
 const prisma = new PrismaClient();
 
 export async function transaction() {
-  await prisma.user.deleteMany();
   await prisma.couple.deleteMany();
+  await prisma.user.deleteMany();
 
   const users = await user();
   await couple(chunkUsersForCouple(users));
