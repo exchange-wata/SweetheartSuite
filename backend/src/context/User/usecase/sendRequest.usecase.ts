@@ -1,13 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interfase';
 import { RequestRepositoryInterface } from '../domain/interface/request.respository.interface';
+import {
+  COUPLE_REPOSITORY,
+  REQUEST_REPOSITORY,
+  USER_REPOSITORY,
+} from '../const/user.token';
 
 @Injectable()
 export class SendRequestUsecase {
   constructor(
+    @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryInterface,
+    @Inject(COUPLE_REPOSITORY)
     private readonly coupleRepository: CoupleRepositoryInterface,
+    @Inject(REQUEST_REPOSITORY)
     private readonly requestRepository: RequestRepositoryInterface,
   ) {}
 
@@ -24,7 +32,7 @@ export class SendRequestUsecase {
 
     if (receivedUser.mailaddress.value) {
       const couple = await this.coupleRepository.findByUserId(receivedUser.id);
-      if (!couple) {
+      if (couple.length === 0) {
         await this.requestRepository.create(
           sendUser.mailaddress.value,
           receivedUser.mailaddress.value,
