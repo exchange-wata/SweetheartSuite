@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
-import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interfase';
-import { RequestRepositoryInterface } from '../domain/interface/request.respository.interface';
+import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
+import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import {
   COUPLE_REPOSITORY,
   REQUEST_REPOSITORY,

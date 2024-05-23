@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interfase';
+import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { CoupleModel } from '../domain/model/couple.model';
 import { PrismaService } from 'src/prisma/prisma.service';
 
