@@ -24,27 +24,21 @@ export class SendRequestUsecase {
     senderMailaddress: string,
     receiverMailaddress: string,
   ): Promise<boolean> {
-    // FIXME: 複数ユーザーを一度に取得するとどちらが送受信者かわかりにくくなりそうなのでこの形
-    const sendUser =
-      await this.userRepository.getUserByMailaddress(senderMailaddress);
-    const receivedUser =
-      await this.userRepository.getUserByMailaddress(receiverMailaddress);
+    try {
+      const [sendUser, receivedUser] = await Promise.all([
+        this.userRepository.getUserByMailaddress(senderMailaddress),
+        this.userRepository.getUserByMailaddress(receiverMailaddress),
+      ]);
 
-    if (receivedUser.mailaddress.value) {
       const couple = await this.coupleRepository.findByUserId(receivedUser.id);
-      if (couple.length === 0) {
-        await this.requestRepository.create(
-          sendUser.mailaddress.value,
-          receivedUser.mailaddress.value,
-        );
-        return true;
-      } else {
-        throw new Error('can not send request');
+      if (couple.length > 0) {
+        return false;
       }
-    } else {
-      throw new Error(
-        `can not find user with that mailaddress is ${receiverMailaddress}`,
-      );
+
+      await this.requestRepository.create(sendUser.id, receivedUser.id);
+      return true;
+    } catch (e) {
+      throw new Error(e);
     }
   }
 }

@@ -9,6 +9,7 @@ import { RequestRepository } from '../infra/request.repository';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRepository } from '../infra/user.repository';
 import { CoupleRepository } from '../infra/couple.repository';
+import { RequestResolver } from '../adapters/resolver/request.resolver';
 
 const exportProviders = [
   {
@@ -26,7 +27,12 @@ const exportProviders = [
 ];
 
 @Module({
-  providers: [SendRequestUsecase, PrismaService, ...exportProviders],
+  providers: [
+    RequestResolver,
+    SendRequestUsecase,
+    PrismaService,
+    ...exportProviders,
+  ],
   exports: [...exportProviders],
 })
 export class RequestModule {}
