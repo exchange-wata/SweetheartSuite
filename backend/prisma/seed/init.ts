@@ -5,8 +5,8 @@ import { transaction } from './transaction/transaction';
 const prisma = new PrismaClient();
 
 async function main() {
-  await master();
   await transaction();
+  await master();
 }
 
 main()
