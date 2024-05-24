@@ -49,12 +49,12 @@ model Couple {
 }
 
 model Request {
-  id     String @id @default(uuid())
-  from   String @unique
-  to     String @unique
-  typeId Int
-  fromUser User @relation("fromUser", fields: [from], references: [id])
-  toUser   User @relation("toUser", fields: [to], references: [id])
+  id           String @id @default(uuid())
+  fromUserId   String @unique
+  toUserId     String @unique
+  typeId       Int
+  fromUser User @relation("fromUser", fields: [fromUserId], references: [id])
+  toUser   User @relation("toUser", fields: [toUserId], references: [id])
   requestType RequestType @relation(fields: [typeId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

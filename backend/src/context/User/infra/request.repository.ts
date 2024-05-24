@@ -11,9 +11,9 @@ import {
 export class RequestRepository implements RequestRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(from: string, to: string): Promise<RequestModel> {
+  async create(fromUserId: string, toUserId: string): Promise<RequestModel> {
     const request = await this.prisma.request.create({
-      data: { from, to, typeId: RequestTypes.SENT },
+      data: { fromUserId, toUserId, typeId: RequestTypes.SENT },
     });
 
     return RequestModel.create({
