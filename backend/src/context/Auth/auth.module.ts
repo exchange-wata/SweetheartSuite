@@ -1,17 +1,20 @@
 import { Module } from '@nestjs/common';
 import { JwtAuthUsecase } from './usecase/jwtAuth.usecase';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { GoogleAuthUsecase } from './usecase/googleAuth.usecase';
-import { jwtConst } from './const/jwt.const';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    JwtModule.register({
-      global: true,
-      secret: jwtConst.secret,
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+      inject: [ConfigService],
     }),
   ],
-  providers: [JwtService, JwtAuthUsecase, GoogleAuthUsecase],
+  providers: [JwtAuthUsecase, GoogleAuthUsecase],
   exports: [JwtAuthUsecase, GoogleAuthUsecase],
 })
 export class AuthModule {}
