@@ -9,4 +9,10 @@ describe('requestTypeId vo のテスト', () => {
     const { value } = RequestTypeId.create(input);
     expect(value).toBe(input);
   });
+
+  it('異常系', () => {
+    const input = 4;
+    const value = RequestTypeId.create(input);
+    expect(value).toBeNull();
+  });
 });
