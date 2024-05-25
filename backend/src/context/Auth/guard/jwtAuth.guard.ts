@@ -9,7 +9,7 @@ import { JwtAuthUsecase } from '../usecase/jwtAuth.usecase';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
-export class jwtAuthGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtAuthService: JwtAuthUsecase) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
