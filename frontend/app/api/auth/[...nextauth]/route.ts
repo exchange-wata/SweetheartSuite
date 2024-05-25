@@ -9,6 +9,7 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { cookies } from 'next/headers';
+import { Effect, pipe } from 'effect';
 
 const handler = NextAuth({
   providers: [
@@ -34,49 +35,78 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      if (!user || !account) return false;
+      const client = new GraphQLClient(process.env.BACKEND_URL);
 
-      try {
-        const token =
-          account.provider === 'credentials'
+      const login = pipe(
+        Effect.succeed(
+          account?.provider === 'credentials'
             ? cookies().get('googleToken')?.value
-            : account.id_token;
-        if (!token) return false;
+            : account?.id_token,
+        ),
+        Effect.flatMap((token) =>
+          token
+            ? Effect.succeed(token)
+            : Effect.fail({ _tag: 'No token' } as const),
+        ),
+        Effect.flatMap((token) =>
+          Effect.tryPromise({
+            try: () =>
+              client.request<LoginQuery, LoginQueryVariables>(loginQuery, {
+                token,
+              }),
+            catch: () => ({ _tag: 'User Not Found' } as const),
+          }),
+        ),
+        Effect.map(({ login }) => {
+          user.accessToken = login;
+          return true;
+        }),
+      );
 
-        const client = new GraphQLClient(process.env.BACKEND_URL);
-
-        try {
-          const data = await client.request<LoginQuery, LoginQueryVariables>(
-            loginQuery,
-            {
-              token,
-            },
-          );
-          if (data.login) {
-            user.accessToken = data.login;
-            return true;
-          }
-        } catch (error) {
-          if (!user.email || !account.id_token) return false;
-
-          const tempToken = await client.request<
-            CreateTempUserMutation,
-            CreateTempUserMutationVariables
-          >(createTempUserMutation, { mailaddress: user.email });
-
-          cookies().set('googleToken', account.id_token, {
+      const createTempUser = Effect.Do.pipe(
+        Effect.bind('mailaddress', () =>
+          user.email
+            ? Effect.succeed(user.email)
+            : Effect.fail({ _tag: 'No email' } as const),
+        ),
+        Effect.bind('tempToken', ({ mailaddress }) =>
+          Effect.tryPromise(() =>
+            client.request<
+              CreateTempUserMutation,
+              CreateTempUserMutationVariables
+            >(createTempUserMutation, { mailaddress }),
+          ),
+        ),
+        Effect.bind('googleToken', () =>
+          account?.id_token
+            ? Effect.succeed(account.id_token)
+            : Effect.fail({ _tag: 'No Google Token' } as const),
+        ),
+        Effect.let('signUpURL', ({ tempToken, googleToken }) => {
+          cookies().set('googleToken', googleToken, {
             path: '/',
             maxAge: 10 * 60,
           });
 
           return `/signUp?tempToken=${tempToken?.createTempUser.token ?? ''}`;
-        }
+        }),
+      ).pipe(
+        Effect.map(({ signUpURL }) => signUpURL),
+        Effect.catchTags({
+          'No email': () => Effect.succeed(false),
+          'No Google Token': () => Effect.succeed(false),
+        }),
+      );
 
-        return false;
-      } catch (error) {
-        console.error('Error during sign-in', error);
-        return false;
-      }
+      const result = pipe(
+        login,
+        Effect.catchTags({
+          'No token': () => Effect.succeed(false),
+          'User Not Found': () => createTempUser,
+        }),
+      );
+
+      return Effect.runPromise(result);
     },
     async jwt({ token, user }) {
       // 初回サインイン時にJWTをトークンに追加
