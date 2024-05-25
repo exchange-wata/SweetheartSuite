@@ -1,11 +1,10 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { SendRequestUsecase } from '../../usecase/sendRequest.usecase';
-import { UseGuards } from '@nestjs/common';
-import { jwtAuthGuard } from 'src/context/Auth/guard/jwtAuth.guard';
 import { User } from '../../decorator/user.decorator';
+import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 
 @Resolver()
-@UseGuards(jwtAuthGuard)
+@JwtAuth()
 export class RequestResolver {
   constructor(private readonly sendRequestUsecase: SendRequestUsecase) {}
 
