@@ -12,6 +12,7 @@ export default [
       react: reactPlugin,
     },
     rules: {
+      'no-unused-vars': 'error',
       'react/jsx-uses-react': 'off',
       'react/react-in-jsx-scope': 'off',
     },

@@ -3,11 +3,8 @@
 import {
   CreateUserMutation,
   CreateUserMutationVariables,
-  LoginQuery,
-  LoginQueryVariables,
 } from '@/types/gql/graphql';
 import { GraphQLClient, gql } from 'graphql-request';
-import { cookies } from 'next/headers';
 
 export const action = async ({
   name,
@@ -33,11 +30,5 @@ const createUserMutation = gql`
     createUser(name: $name, token: $createUserToken2) {
       mailaddress
     }
-  }
-`;
-
-const loginQuery = gql`
-  query Login($token: String!) {
-    login(token: $token)
   }
 `;
