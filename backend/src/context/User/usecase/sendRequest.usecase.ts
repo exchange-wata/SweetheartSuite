@@ -19,14 +19,13 @@ export class SendRequestUsecase {
     private readonly requestRepository: RequestRepositoryInterface,
   ) {}
 
-  // TODO: senderMailaddressはjwtとかからとる想定
   async execute(
-    senderMailaddress: string,
+    senderId: string,
     receiverMailaddress: string,
   ): Promise<boolean> {
     try {
       const [sendUser, receivedUser] = await Promise.all([
-        this.userRepository.getUserByMailaddress(senderMailaddress),
+        this.userRepository.findByUserId(senderId),
         this.userRepository.getUserByMailaddress(receiverMailaddress),
       ]);
 

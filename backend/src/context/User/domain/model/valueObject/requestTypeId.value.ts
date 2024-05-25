@@ -4,7 +4,7 @@ export const RequestTypes = {
   REJECTED: 3,
 } as const;
 
-type RequestTypes = (typeof RequestTypes)[keyof typeof RequestTypes];
+export type RequestTypes = (typeof RequestTypes)[keyof typeof RequestTypes];
 
 const isRequestType = (typeId: number): boolean =>
   (Object.values(RequestTypes) as number[]).includes(typeId);

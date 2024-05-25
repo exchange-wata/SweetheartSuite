@@ -14,7 +14,7 @@ export class RequestResolver {
     @User() user,
     @Args('mailaddress') mailaddress: string,
   ): Promise<Boolean> {
-    const senderMailaddress = user.mailaddress;
-    return this.sendRequestUsecase.execute(senderMailaddress, mailaddress);
+    const userId = user.userId;
+    return this.sendRequestUsecase.execute(userId, mailaddress);
   }
 }

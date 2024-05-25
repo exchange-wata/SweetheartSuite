@@ -29,6 +29,7 @@ beforeEach(async () => {
         provide: USER_REPOSITORY,
         useValue: {
           getUserByMailaddress: jest.fn(),
+          findByUserId: jest.fn(),
         },
       },
       {
@@ -57,7 +58,12 @@ describe('SendRequestUsecase', () => {
   describe('正常系', () => {
     it('coupleが成立済みの時、falseが返る', async () => {
       const name = 'テスト';
-      const user = UserModel.create({
+      const sender = UserModel.create({
+        id: '8d946a74-f3e1-464c-8cf5-f180e729892a1',
+        name,
+        mailaddress: sendUserMailaddress,
+      });
+      const receiver = UserModel.create({
         id: '8d946a74-f3e1-464c-8cf5-f180e729892a',
         name,
         mailaddress: sendUserMailaddress,
@@ -69,8 +75,9 @@ describe('SendRequestUsecase', () => {
       });
 
       (userRepository.getUserByMailaddress as jest.Mock).mockResolvedValue(
-        user,
+        sender,
       );
+      (userRepository.findByUserId as jest.Mock).mockResolvedValue(receiver);
       (coupleRepository.findByUserId as jest.Mock).mockResolvedValue([couple]);
 
       const result = await usecase.execute(
@@ -85,8 +92,13 @@ describe('SendRequestUsecase', () => {
     });
     it('coupleが未成立の時、trueが返る', async () => {
       const name = 'テスト';
-      const user = UserModel.create({
-        id: '8d946a74-f3e1-464c-8cf5-f180e729892a',
+      const sender = UserModel.create({
+        id: '8d946a74-f3e1-464c-8cf5-f180e729892a1',
+        name,
+        mailaddress: sendUserMailaddress,
+      });
+      const receiver = UserModel.create({
+        id: '8d946a74-f3e1-464c-8cf5-f180e729892a1',
         name,
         mailaddress: sendUserMailaddress,
       });
@@ -98,8 +110,9 @@ describe('SendRequestUsecase', () => {
       });
 
       (userRepository.getUserByMailaddress as jest.Mock).mockResolvedValue(
-        user,
+        sender,
       );
+      (userRepository.findByUserId as jest.Mock).mockResolvedValue(receiver);
       (coupleRepository.findByUserId as jest.Mock).mockResolvedValue([]);
       (requestRepository.create as jest.Mock).mockResolvedValue(request);
 
@@ -126,6 +139,7 @@ describe('SendRequestUsecase', () => {
       ).rejects.toThrow();
 
       expect(userRepository.getUserByMailaddress).toHaveBeenCalled();
+      expect(userRepository.findByUserId).toHaveBeenCalled();
       expect(coupleRepository.findByUserId).not.toHaveBeenCalled();
       expect(requestRepository.create).not.toHaveBeenCalled();
     });
