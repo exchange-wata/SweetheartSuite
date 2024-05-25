@@ -15,10 +15,14 @@ export const action = async ({
 }) => {
   const client = new GraphQLClient(process.env.BACKEND_URL);
 
-  await client.request<CreateUserMutation, CreateUserMutationVariables>(
+  const {
+    createUser: { id },
+  } = await client.request<CreateUserMutation, CreateUserMutationVariables>(
     createUserMutation,
     { name, createUserToken2: token },
   );
+
+  return { id };
 };
 
 const createUserMutation = gql`
