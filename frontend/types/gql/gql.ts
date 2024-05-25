@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query Login($token: String!) {\n    login(token: $token)\n  }\n": types.LoginDocument,
     "\n  mutation CreateTempUser($mailaddress: String!) {\n    createTempUser(mailaddress: $mailaddress) {\n      token\n    }\n  }\n": types.CreateTempUserDocument,
-    "\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      id\n    }\n  }\n": types.CreateUserDocument,
+    "\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      mailaddress\n    }\n  }\n": types.CreateUserDocument,
 };
 
 /**
@@ -43,7 +43,7 @@ export function graphql(source: "\n  mutation CreateTempUser($mailaddress: Strin
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      id\n    }\n  }\n"];
+export function graphql(source: "\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      mailaddress\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      mailaddress\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

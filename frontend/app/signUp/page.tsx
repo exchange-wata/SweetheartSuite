@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { action } from './action';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function SignUp({
   searchParams,
@@ -11,12 +13,22 @@ export default function SignUp({
   searchParams: { tempToken: string };
 }) {
   const [name, setName] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    const { mailaddress, accessToken } = await action({
+      name,
+      token: searchParams.tempToken,
+    });
+    signIn('credentials', { mailaddress, accessToken });
+    router.push('/home');
+  };
 
   return (
     <div>
       <h1>新規登録</h1>
       <div>
-        <form action={() => action({ name, token: searchParams.tempToken })}>
+        <form action={handleSubmit}>
           <label>名前</label>
           <Input
             value={name}

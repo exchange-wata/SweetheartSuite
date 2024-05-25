@@ -7,9 +7,27 @@ import {
 import { GraphQLClient, gql } from 'graphql-request';
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { cookies } from 'next/headers';
 
 const handler = NextAuth({
   providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        mailaddress: { label: 'Mail Address', type: 'email' },
+        accessToken: { label: 'Access Token', type: 'text' },
+      },
+      authorize: (credential) => {
+        if (!credential?.mailaddress || !credential.accessToken) return null;
+        return {
+          id: credential.mailaddress,
+          name: credential.mailaddress,
+          email: credential.mailaddress,
+          accessToken: credential.accessToken,
+        };
+      },
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -20,8 +38,14 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
+      if (!user || !account) return false;
+
       try {
-        if (!account?.id_token || !user.email) return false;
+        const token =
+          account.provider === 'credentials'
+            ? cookies().get('googleToken')?.value
+            : account.id_token;
+        if (!token) return false;
 
         const client = new GraphQLClient(process.env.BACKEND_URL);
 
@@ -29,7 +53,7 @@ const handler = NextAuth({
           const data = await client.request<LoginQuery, LoginQueryVariables>(
             loginQuery,
             {
-              token: account.id_token,
+              token,
             },
           );
           if (data.login) {
@@ -37,10 +61,17 @@ const handler = NextAuth({
             return true;
           }
         } catch (error) {
+          if (!user.email || !account.id_token) return false;
+
           const tempToken = await client.request<
             CreateTempUserMutation,
             CreateTempUserMutationVariables
           >(createTempUserMutation, { mailaddress: user.email });
+
+          cookies().set('googleToken', account.id_token, {
+            path: '/',
+            maxAge: 10 * 60,
+          });
 
           return `/signUp?tempToken=${tempToken?.createTempUser.token ?? ''}`;
         }

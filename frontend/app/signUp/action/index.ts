@@ -3,8 +3,11 @@
 import {
   CreateUserMutation,
   CreateUserMutationVariables,
+  LoginQuery,
+  LoginQueryVariables,
 } from '@/types/gql/graphql';
 import { GraphQLClient, gql } from 'graphql-request';
+import { cookies } from 'next/headers';
 
 export const action = async ({
   name,
@@ -15,16 +18,34 @@ export const action = async ({
 }) => {
   const client = new GraphQLClient(process.env.BACKEND_URL);
 
-  await client.request<CreateUserMutation, CreateUserMutationVariables>(
+  const {
+    createUser: { mailaddress },
+  } = await client.request<CreateUserMutation, CreateUserMutationVariables>(
     createUserMutation,
     { name, createUserToken2: token },
   );
+
+  const googleToken = cookies().get('googleToken');
+
+  const { login: jwt } = await client.request<LoginQuery, LoginQueryVariables>(
+    loginQuery,
+    { token: googleToken?.value ?? '' },
+  );
+  cookies().set('next-auth.session-token', jwt);
+
+  return { mailaddress, accessToken: jwt };
 };
 
 const createUserMutation = gql`
   mutation CreateUser($name: String!, $createUserToken2: String!) {
     createUser(name: $name, token: $createUserToken2) {
-      id
+      mailaddress
     }
+  }
+`;
+
+const loginQuery = gql`
+  query Login($token: String!) {
+    login(token: $token)
   }
 `;
