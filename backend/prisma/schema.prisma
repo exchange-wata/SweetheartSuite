@@ -19,6 +19,8 @@ model User {
   deletedAt DateTime?
   user1 Couple? @relation("user1")
   user2 Couple? @relation("user2")
+  requestFrom Request? @relation("fromUser")
+  requestTo Request? @relation("toUser")
 
   @@schema("user")
 }
@@ -39,6 +41,32 @@ model Couple {
   user1 User @relation("user1", references: [id], fields: [userId1])
   userId2 String @unique
   user2 User @relation("user2", references: [id], fields: [userId2])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  deletedAt DateTime?
+
+  @@schema("user")
+}
+
+model Request {
+  id           String @id @default(uuid())
+  fromUserId   String @unique
+  toUserId     String @unique
+  typeId       Int
+  fromUser User @relation("fromUser", fields: [fromUserId], references: [id])
+  toUser   User @relation("toUser", fields: [toUserId], references: [id])
+  requestType RequestType @relation(fields: [typeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  deletedAt DateTime?
+
+  @@schema("user")
+}
+
+model RequestType {
+  id   Int @id @default(autoincrement())
+  name String
+  requests Request[] @relation
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   deletedAt DateTime?

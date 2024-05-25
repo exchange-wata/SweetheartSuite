@@ -1,15 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { master } from './master/master';
-import { transaction } from './transaction/transaction';
+import { requestType } from './requestType';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  await transaction();
-  await master();
+export async function master() {
+  await prisma.requestType.deleteMany();
+
+  await requestType();
 }
 
-main()
+master()
   .catch((e) => console.error(e))
   .finally(async () => {
     await prisma.$disconnect();
