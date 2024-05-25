@@ -16,19 +16,19 @@ export const action = async ({
   const client = new GraphQLClient(process.env.BACKEND_URL);
 
   const {
-    createUser: { mailaddress },
+    createUser: { id },
   } = await client.request<CreateUserMutation, CreateUserMutationVariables>(
     createUserMutation,
     { name, createUserToken2: token },
   );
 
-  return { mailaddress };
+  return { id };
 };
 
 const createUserMutation = gql`
   mutation CreateUser($name: String!, $createUserToken2: String!) {
     createUser(name: $name, token: $createUserToken2) {
-      mailaddress
+      id
     }
   }
 `;

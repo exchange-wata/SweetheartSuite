@@ -15,14 +15,12 @@ const handler = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        mailaddress: { label: 'Mail Address', type: 'email' },
+        id: { label: 'ID', type: 'text' },
       },
       authorize: (credential) => {
-        if (!credential?.mailaddress) return null;
+        if (!credential?.id) return null;
         return {
-          id: credential.mailaddress,
-          name: credential.mailaddress,
-          email: credential.mailaddress,
+          id: credential.id,
         };
       },
     }),
