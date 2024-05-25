@@ -16,15 +16,13 @@ const handler = NextAuth({
       name: 'Credentials',
       credentials: {
         mailaddress: { label: 'Mail Address', type: 'email' },
-        accessToken: { label: 'Access Token', type: 'text' },
       },
       authorize: (credential) => {
-        if (!credential?.mailaddress || !credential.accessToken) return null;
+        if (!credential?.mailaddress) return null;
         return {
           id: credential.mailaddress,
           name: credential.mailaddress,
           email: credential.mailaddress,
-          accessToken: credential.accessToken,
         };
       },
     }),

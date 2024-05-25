@@ -16,11 +16,11 @@ export default function SignUp({
   const router = useRouter();
 
   const handleSubmit = async () => {
-    const { mailaddress, accessToken } = await action({
+    const { mailaddress } = await action({
       name,
       token: searchParams.tempToken,
     });
-    signIn('credentials', { mailaddress, accessToken });
+    signIn('credentials', { mailaddress });
     router.push('/home');
   };
 

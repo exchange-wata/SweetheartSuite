@@ -25,15 +25,7 @@ export const action = async ({
     { name, createUserToken2: token },
   );
 
-  const googleToken = cookies().get('googleToken');
-
-  const { login: jwt } = await client.request<LoginQuery, LoginQueryVariables>(
-    loginQuery,
-    { token: googleToken?.value ?? '' },
-  );
-  cookies().set('next-auth.session-token', jwt);
-
-  return { mailaddress, accessToken: jwt };
+  return { mailaddress };
 };
 
 const createUserMutation = gql`
