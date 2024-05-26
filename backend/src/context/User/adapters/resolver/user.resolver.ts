@@ -3,6 +3,7 @@ import { GetUserByMailaddressUsecase } from '../../usecase/getUserByMailaddress.
 import { UserPresenter } from '../presenter/user.presenter';
 import { LoginUsecase } from '../../usecase/login.usecase';
 import { CreateUserUsecase } from '../../usecase/createUser.usecase';
+import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 
 @Resolver()
 export class UserResolver {
@@ -12,6 +13,7 @@ export class UserResolver {
     private readonly createUserUsecase: CreateUserUsecase,
   ) {}
 
+  @JwtAuth()
   @Query(() => UserPresenter)
   async getUserByMailaddress(
     @Args('mailaddress') mailaddress: string,
@@ -25,6 +27,7 @@ export class UserResolver {
     return this.loginUsecase.execute(token);
   }
 
+  @JwtAuth()
   @Mutation(() => UserPresenter)
   async createUser(
     @Args('name') name: string,
