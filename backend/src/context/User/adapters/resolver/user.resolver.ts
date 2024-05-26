@@ -27,7 +27,6 @@ export class UserResolver {
     return this.loginUsecase.execute(token);
   }
 
-  @JwtAuth()
   @Mutation(() => UserPresenter)
   async createUser(
     @Args('name') name: string,
