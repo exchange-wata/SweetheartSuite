@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { CoupleModel } from '../domain/model/couple.model';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CoupleRepository implements CoupleRepositoryInterface {

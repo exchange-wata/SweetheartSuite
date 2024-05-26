@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { SendRequestUsecase } from '../usecase/sendRequest.usecase';
+import { AuthModule } from 'src/context/Auth/auth.module';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { RequestResolver } from '../adapters/resolver/request.resolver';
 import {
   COUPLE_REPOSITORY,
   REQUEST_REPOSITORY,
   USER_REPOSITORY,
 } from '../const/user.token';
-import { RequestRepository } from '../infra/request.repository';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { UserRepository } from '../infra/user.repository';
 import { CoupleRepository } from '../infra/couple.repository';
-import { RequestResolver } from '../adapters/resolver/request.resolver';
-import { AuthModule } from 'src/context/Auth/auth.module';
+import { RequestRepository } from '../infra/request.repository';
+import { UserRepository } from '../infra/user.repository';
+import { SendRequestUsecase } from '../usecase/sendRequest.usecase';
 
 const externalContext = [AuthModule];
 

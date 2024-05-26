@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import { RequestModel } from '../domain/model/request.model';
-import { PrismaService } from 'src/prisma/prisma.service';
 import {
   RequestTypeId,
   RequestTypes,

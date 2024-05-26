@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
-import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
-import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
-import { CoupleModel } from '../domain/model/couple.model';
 import { COUPLE_REPOSITORY, REQUEST_REPOSITORY } from '../const/user.token';
+import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
+import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
+import { CoupleModel } from '../domain/model/couple.model';
+import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
 
 @Injectable()
 export class CreateCoupleUsecase {
