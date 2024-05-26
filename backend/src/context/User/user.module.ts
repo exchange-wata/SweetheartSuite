@@ -9,10 +9,11 @@ import { LoginUsecase } from './usecase/login.usecase';
 import { AuthModule } from '../Auth/auth.module';
 import { CreateUserUsecase } from './usecase/createUser.usecase';
 import { RequestModule } from './module/request.module';
+import { CoupleModule } from './module/couple.module';
 
 const externalContext = [AuthModule];
 @Module({
-  imports: [TempUserModule, RequestModule, ...externalContext],
+  imports: [TempUserModule, RequestModule, CoupleModule, ...externalContext],
   providers: [
     UserResolver,
     GetUserByMailaddressUsecase,

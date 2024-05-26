@@ -16,4 +16,12 @@ export class CoupleRepository implements CoupleRepositoryInterface {
 
     return couple.map((v) => CoupleModel.create(v));
   }
+
+  async create(userId1: string, userId2: string): Promise<CoupleModel> {
+    const couple = await this.prisma.couple.create({
+      data: { userId1, userId2 },
+    });
+
+    return CoupleModel.create(couple);
+  }
 }
