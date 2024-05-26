@@ -12,4 +12,8 @@ export class JwtAuthUsecase {
   async generateToken(input: AuthType): Promise<string> {
     return this.jwtService.sign({ userId: input.id });
   }
+
+  async verifyToken(token: string) {
+    return this.jwtService.verifyAsync(token);
+  }
 }

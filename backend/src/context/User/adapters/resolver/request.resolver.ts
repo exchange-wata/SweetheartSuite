@@ -1,16 +1,19 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { SendRequestUsecase } from '../../usecase/sendRequest.usecase';
+import { User } from '../../decorator/user.decorator';
+import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 
 @Resolver()
+@JwtAuth()
 export class RequestResolver {
   constructor(private readonly sendRequestUsecase: SendRequestUsecase) {}
 
   @Mutation(() => Boolean)
   async sendRequest(
+    @User() user,
     @Args('mailaddress') mailaddress: string,
   ): Promise<Boolean> {
-    // TODO: 仮の送信者メールアドレス(seederにあるやつを設定)
-    const senderMailaddress = 'email1@gmail.com';
-    return this.sendRequestUsecase.execute(senderMailaddress, mailaddress);
+    const userId = user.userId;
+    return this.sendRequestUsecase.execute(userId, mailaddress);
   }
 }

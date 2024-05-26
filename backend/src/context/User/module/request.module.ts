@@ -10,6 +10,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRepository } from '../infra/user.repository';
 import { CoupleRepository } from '../infra/couple.repository';
 import { RequestResolver } from '../adapters/resolver/request.resolver';
+import { AuthModule } from 'src/context/Auth/auth.module';
+
+const externalContext = [AuthModule];
 
 const exportProviders = [
   {
@@ -27,6 +30,7 @@ const exportProviders = [
 ];
 
 @Module({
+  imports: [...externalContext],
   providers: [
     RequestResolver,
     SendRequestUsecase,

@@ -25,4 +25,12 @@ export class UserRepository implements UserRepositoryInterface {
 
     return UserModel.create(user);
   }
+
+  async findByUserId(id: string): Promise<UserModel> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    return UserModel.create(user);
+  }
 }
