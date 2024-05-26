@@ -21,4 +21,22 @@ export class RequestRepository implements RequestRepositoryInterface {
       typeId: RequestTypeId.create(request.typeId).value,
     });
   }
+
+  async update(toUserId: string, typeId: RequestTypes): Promise<RequestModel> {
+    const request = await this.prisma.request.update({
+      where: {
+        toUserId,
+      },
+      data: {
+        typeId,
+        updatedAt: new Date(),
+        deletedAt: new Date(),
+      },
+    });
+
+    return RequestModel.create({
+      ...request,
+      typeId: RequestTypeId.create(request.typeId).value,
+    });
+  }
 }
