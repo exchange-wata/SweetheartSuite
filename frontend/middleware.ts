@@ -9,7 +9,7 @@ export default withAuth({
       },
     }) {
       if (token) return true;
-      console.log(pathname);
+
       if (
         pathname.includes('/api/auth') ||
         pathname === '/' ||
