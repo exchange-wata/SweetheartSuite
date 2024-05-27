@@ -1,24 +1,27 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { withAuth } from 'next-auth/middleware';
 
-export async function middleware(req: NextRequest) {
-  const token = req.cookies.get('next-auth.session-token')?.value;
-  const { pathname } = req.nextUrl;
+export default withAuth({
+  callbacks: {
+    authorized({
+      token,
+      req: {
+        nextUrl: { pathname },
+      },
+    }) {
+      if (token) return true;
+      console.log(pathname);
+      if (
+        pathname.includes('/api/auth') ||
+        pathname === '/' ||
+        pathname === '/signIn' ||
+        pathname === '/signUp'
+      )
+        return true;
 
-  if (
-    pathname.includes('/api/auth') ||
-    pathname === '/signIn' ||
-    pathname === '/signUp' ||
-    token
-  ) {
-    return NextResponse.next();
-  }
-
-  if (!token && pathname !== '/' && pathname !== '/signIn') {
-    const url = req.nextUrl.clone();
-    url.pathname = '/signIn';
-    return NextResponse.redirect(url);
-  }
-}
+      return false;
+    },
+  },
+});
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
