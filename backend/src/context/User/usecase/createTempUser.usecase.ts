@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { createToken } from 'src/library/hash.library';
 import { TEMP_USER_REPOSITORY } from '../const/user.token';
-import { Mailaddress } from '../domain/model/valueObject/mailaddress.value';
 import { TempUserRepositoryInterface } from '../domain/interface/tempUser.repository.interface';
 import { TempUserModel } from '../domain/model/tempUser.model';
-import { createToken } from 'src/library/hash.library';
+import { Mailaddress } from '../domain/model/valueObject/mailaddress.value';
 
 @Injectable()
 export class CreateTempUserUsecase {

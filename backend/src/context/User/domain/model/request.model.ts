@@ -1,4 +1,3 @@
-import { Mailaddress } from './valueObject/mailaddress.value';
 import { RequestTypeId } from './valueObject/requestTypeId.value';
 
 type CoupleType = {

@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { action } from './action';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Center } from '@/components/layout/center';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export default function SignUp({
   searchParams,
@@ -25,18 +27,26 @@ export default function SignUp({
   };
 
   return (
-    <div>
-      <h1>新規登録</h1>
-      <div>
-        <form action={handleSubmit}>
-          <label>名前</label>
-          <Input
-            value={name}
-            onChange={({ target: { value } }) => setName(value)}
-          />
-          <Button type="submit">登録</Button>
-        </form>
-      </div>
-    </div>
+    <Center className="m-20">
+      <Card>
+        <CardHeader className="items-center">
+          <h1 className="font-bold text-3xl">新規登録</h1>
+        </CardHeader>
+        <CardContent>
+          <form action={handleSubmit}>
+            <div className="m-10">
+              <label className="text-lg">名前</label>
+              <Input
+                value={name}
+                onChange={({ target: { value } }) => setName(value)}
+              />
+            </div>
+            <div className="w-full flex justify-center">
+              <Button type="submit">登録</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </Center>
   );
 }

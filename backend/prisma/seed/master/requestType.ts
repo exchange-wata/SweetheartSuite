@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-const crypto = require('crypto');
 const prisma = new PrismaClient();
 
 export const requestType = async () => {

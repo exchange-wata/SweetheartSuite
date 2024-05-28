@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TEMP_USER_REPOSITORY, USER_REPOSITORY } from '../const/user.token';
-import { UserModel } from '../domain/model/user.model';
-import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 import { TempUserRepositoryInterface } from '../domain/interface/tempUser.repository.interface';
+import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
+import { UserModel } from '../domain/model/user.model';
 
 @Injectable()
 export class CreateUserUsecase {

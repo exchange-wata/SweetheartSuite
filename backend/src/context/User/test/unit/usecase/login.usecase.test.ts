@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthModule } from 'src/context/Auth/auth.module';
 import { GoogleAuthUsecase } from 'src/context/Auth/usecase/googleAuth.usecase';
 import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 import { USER_REPOSITORY } from 'src/context/User/const/user.token';
@@ -21,7 +20,6 @@ const googleAuthUsecaseMock = {
 
 beforeAll(async () => {
   const module: TestingModule = await Test.createTestingModule({
-    imports: [AuthModule],
     providers: [
       LoginUsecase,
       {

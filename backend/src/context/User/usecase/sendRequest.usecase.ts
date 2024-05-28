@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
-import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
-import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import {
   COUPLE_REPOSITORY,
   REQUEST_REPOSITORY,
   USER_REPOSITORY,
 } from '../const/user.token';
+import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
+import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
+import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 
 @Injectable()
 export class SendRequestUsecase {
@@ -19,14 +19,13 @@ export class SendRequestUsecase {
     private readonly requestRepository: RequestRepositoryInterface,
   ) {}
 
-  // TODO: senderMailaddressはjwtとかからとる想定
   async execute(
-    senderMailaddress: string,
+    senderId: string,
     receiverMailaddress: string,
   ): Promise<boolean> {
     try {
       const [sendUser, receivedUser] = await Promise.all([
-        this.userRepository.getUserByMailaddress(senderMailaddress),
+        this.userRepository.findByUserId(senderId),
         this.userRepository.getUserByMailaddress(receiverMailaddress),
       ]);
 
