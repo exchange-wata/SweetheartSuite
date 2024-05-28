@@ -19,6 +19,8 @@ import {
   runPromise,
 } from 'effect/Effect';
 
+export const AUTHORIZATION = 'authorization';
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -63,7 +65,8 @@ const handler = NextAuth({
           catch: () => ({ _tag: 'User Not Found' } as const),
         });
 
-        user.accessToken = login;
+        cookies().set(AUTHORIZATION, `Bearer ${login}`);
+
         return true;
       });
 
@@ -107,23 +110,13 @@ const handler = NextAuth({
 
       return runPromise(result);
     },
-    async jwt({ token, user }) {
-      // 初回サインイン時にJWTをトークンに追加
-      if (user) {
-        token.accessToken = user.accessToken;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (typeof token.accessToken !== 'string')
-        throw new Error('accessToken is not a string');
-
-      // セッションにJWTを追加
-      session.accessToken = token.accessToken;
-      return session;
-    },
     async redirect() {
       return '/home';
+    },
+  },
+  events: {
+    async signOut() {
+      cookies().set(AUTHORIZATION, '', { maxAge: 0 });
     },
   },
 });
