@@ -1,17 +1,42 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Effect } from 'effect';
 import {
   TEMP_USER_REPOSITORY,
   USER_REPOSITORY,
 } from 'src/context/User/const/user.token';
 import { TempUserRepositoryInterface } from 'src/context/User/domain/interface/tempUser.repository.interface';
 import { UserRepositoryInterface } from 'src/context/User/domain/interface/user.repository.interface';
+import { TempUserModel } from 'src/context/User/domain/model/tempUser.model';
 import { UserModel } from 'src/context/User/domain/model/user.model';
 import { CreateUserUsecase } from 'src/context/User/usecase/createUser.usecase';
 
 describe('CreateUserUsecase', () => {
   let createUserUsecase: CreateUserUsecase;
-  let tempUserRepository: TempUserRepositoryInterface;
-  let userRepository: UserRepositoryInterface;
+  const tempUserRepository: TempUserRepositoryInterface = {
+    findByToken: jest.fn((_) =>
+      Effect.succeed({
+        id: '9424650b-208e-4c91-a656-38785ae6ca86',
+        mailaddress: { value: 'test@mail.com' },
+        token: '$2b$10$1HB3A8sbvmENS.1xLFfKAu.K.JMI5Pi4/4urpWKdBQf5wAk9xdUEC',
+      } as TempUserModel),
+    ),
+    deleteMany: jest.fn(() =>
+      Effect.succeed({
+        count: 1,
+      }),
+    ),
+    create: (() => {}) as any,
+  };
+
+  const userRepository: UserRepositoryInterface = {
+    create: jest.fn((_) =>
+      Effect.succeed({
+        mailaddress: { value: 'test@mail.com' },
+      } as UserModel),
+    ),
+    getUserByMailaddress: (() => {}) as any,
+    findByUserId: (() => {}) as any,
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,27 +44,19 @@ describe('CreateUserUsecase', () => {
         CreateUserUsecase,
         {
           provide: TEMP_USER_REPOSITORY,
-          useValue: {
-            findByToken: jest.fn(),
-            deleteMany: jest.fn(),
-          },
+          useValue: tempUserRepository,
         },
         {
           provide: USER_REPOSITORY,
-          useValue: {
-            create: jest.fn(),
-          },
+          useValue: userRepository,
         },
       ],
     }).compile();
 
     createUserUsecase = module.get<CreateUserUsecase>(CreateUserUsecase);
-    tempUserRepository =
-      module.get<TempUserRepositoryInterface>(TEMP_USER_REPOSITORY);
-    userRepository = module.get<UserRepositoryInterface>(USER_REPOSITORY);
   });
 
-  it('正常系', async () => {
+  test('正常系', async () => {
     const token = 'test-token';
     const name = 'test-name';
     const tempUser = {
@@ -51,12 +68,6 @@ describe('CreateUserUsecase', () => {
       mailaddress: { value: 'test@mail.com' },
     } as UserModel;
 
-    (tempUserRepository.findByToken as jest.Mock).mockResolvedValue(tempUser);
-    (userRepository.create as jest.Mock).mockResolvedValue(createdUser);
-    (tempUserRepository.deleteMany as jest.Mock).mockResolvedValue({
-      count: 1,
-    });
-
     const result = await createUserUsecase.execute(name, token);
 
     expect(tempUserRepository.findByToken).toHaveBeenCalledWith(token);
@@ -67,7 +78,7 @@ describe('CreateUserUsecase', () => {
     expect(tempUserRepository.deleteMany).toHaveBeenCalledWith(
       createdUser.mailaddress.value,
     );
-    expect(result).toBe(createdUser);
+    expect(result).toEqual(createdUser);
   });
 
   // describe('異常系', () => {

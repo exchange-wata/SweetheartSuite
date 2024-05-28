@@ -23,21 +23,17 @@ export class SendRequestUsecase {
     senderId: string,
     receiverMailaddress: string,
   ): Promise<boolean> {
-    try {
-      const [sendUser, receivedUser] = await Promise.all([
-        this.userRepository.findByUserId(senderId),
-        this.userRepository.getUserByMailaddress(receiverMailaddress),
-      ]);
+    const [sendUser, receivedUser] = await Promise.all([
+      this.userRepository.findByUserId(senderId),
+      this.userRepository.getUserByMailaddress(receiverMailaddress),
+    ]);
 
-      const couple = await this.coupleRepository.findByUserId(receivedUser.id);
-      if (couple.length > 0) {
-        return false;
-      }
-
-      await this.requestRepository.create(sendUser.id, receivedUser.id);
-      return true;
-    } catch (e) {
-      throw new Error(e);
+    const couple = await this.coupleRepository.findByUserId(receivedUser.id);
+    if (couple.length > 0) {
+      return false;
     }
+
+    await this.requestRepository.create(sendUser.id, receivedUser.id);
+    return true;
   }
 }
