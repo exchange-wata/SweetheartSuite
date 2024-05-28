@@ -23,6 +23,8 @@ export class SendRequestUsecase {
     senderId: string,
     receiverMailaddress: string,
   ): Promise<boolean> {
+    // TODO: 返却値見直す
+    // REF: https://github.com/exchange-wata/SweetheartSuite/pull/48
     try {
       const [sendUser, receivedUser] = await Promise.all([
         this.userRepository.findByUserId(senderId),
@@ -36,7 +38,7 @@ export class SendRequestUsecase {
 
       await this.requestRepository.create(sendUser.id, receivedUser.id);
       return true;
-    } catch (e) {
+    } catch (e: any) {
       throw new Error(e);
     }
   }
