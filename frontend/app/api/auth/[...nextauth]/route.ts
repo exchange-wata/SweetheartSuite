@@ -10,6 +10,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { cookies } from 'next/headers';
 
+export const AUTHORIZATION = 'authorization';
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -54,6 +56,7 @@ const handler = NextAuth({
           );
           if (data.login) {
             user.accessToken = data.login;
+            cookies().set(AUTHORIZATION, `Bearer ${data.login}`);
             return true;
           }
         } catch (error) {
@@ -65,7 +68,6 @@ const handler = NextAuth({
           >(createTempUserMutation, { mailaddress: user.email });
 
           cookies().set('googleToken', account.id_token, {
-            path: '/',
             maxAge: 10 * 60,
           });
 
@@ -78,23 +80,13 @@ const handler = NextAuth({
         return false;
       }
     },
-    async jwt({ token, user }) {
-      // 初回サインイン時にJWTをトークンに追加
-      if (user) {
-        token.accessToken = user.accessToken;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (typeof token.accessToken !== 'string')
-        throw new Error('accessToken is not a string');
-
-      // セッションにJWTを追加
-      session.accessToken = token.accessToken;
-      return session;
-    },
     async redirect() {
       return '/home';
+    },
+  },
+  events: {
+    async signOut() {
+      cookies().set(AUTHORIZATION, '', { maxAge: 0 });
     },
   },
 });
