@@ -35,10 +35,8 @@ export class TempUserRepository implements TempUserRepositoryInterface {
       andThen(TempUserModel.create),
     );
 
-  deleteMany = (
-    mailaddress: string,
-  ): Effect<BatchPayload, { _tag: string }> => {
-    return tryPromise({
+  deleteMany = (mailaddress: string): Effect<BatchPayload, { _tag: string }> =>
+    tryPromise({
       try: () => {
         const a = this.prisma.tempUser.deleteMany({
           where: {
@@ -47,11 +45,8 @@ export class TempUserRepository implements TempUserRepositoryInterface {
             },
           },
         });
-        console.log('=============きた？=========');
-        console.log(`a`);
         return a;
       },
       catch: () => ({ _tag: 'can not delete temp user' }) as const,
     });
-  };
 }
