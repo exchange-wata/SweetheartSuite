@@ -20,7 +20,7 @@ export class UserRepository implements UserRepositoryInterface {
   create = (
     name: string,
     mailaddress: string,
-  ): Effect<UserModel, { _tag: string }> =>
+  ): Effect<UserModel, { _tag: 'can not create user' }> =>
     pipe(
       tryPromise({
         try: () =>

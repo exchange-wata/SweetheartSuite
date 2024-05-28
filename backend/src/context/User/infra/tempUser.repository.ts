@@ -23,7 +23,7 @@ export class TempUserRepository implements TempUserRepositoryInterface {
     return TempUserModel.create(tempUser);
   }
 
-  findByToken = (token: string): Effect<TempUserModel, { _tag: string }> =>
+  findByToken = (token: string) =>
     pipe(
       tryPromise({
         try: () =>
@@ -35,18 +35,16 @@ export class TempUserRepository implements TempUserRepositoryInterface {
       andThen(TempUserModel.create),
     );
 
-  deleteMany = (mailaddress: string): Effect<BatchPayload, { _tag: string }> =>
+  deleteMany = (mailaddress: string) =>
     tryPromise({
-      try: () => {
-        const a = this.prisma.tempUser.deleteMany({
+      try: () =>
+        this.prisma.tempUser.deleteMany({
           where: {
             mailaddress: {
               equals: mailaddress,
             },
           },
-        });
-        return a;
-      },
+        }),
       catch: () => ({ _tag: 'can not delete temp user' }) as const,
     });
 }

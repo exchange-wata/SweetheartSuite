@@ -6,6 +6,6 @@ export interface UserRepositoryInterface {
   create(
     name: string,
     mailaddress: string,
-  ): Effect<UserModel, { _tag: string }>;
+  ): Effect<UserModel, { _tag: 'can not create user' }>;
   findByUserId(id: string): Promise<UserModel>;
 }
