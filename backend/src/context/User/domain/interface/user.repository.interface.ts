@@ -3,7 +3,12 @@ import { UserErrorMessage } from '../../const/errorMessage/user.errorMessage';
 import { UserModel } from '../model/user.model';
 
 export interface UserRepositoryInterface {
-  getUserByMailaddress(mailaddress: string): Promise<UserModel>;
+  getUserByMailaddress(
+    mailaddress: string,
+  ): Effect<
+    UserModel,
+    { _tag: typeof UserErrorMessage.GET_USER_BY_MAILADDRESS }
+  >;
   create(
     name: string,
     mailaddress: string,
