@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { gen, runPromise } from 'effect/Effect';
 import { createToken } from 'src/library/hash.library';
 import { TEMP_USER_REPOSITORY } from '../const/user.token';
 import { TempUserRepositoryInterface } from '../domain/interface/tempUser.repository.interface';
@@ -12,9 +13,19 @@ export class CreateTempUserUsecase {
     private readonly tempUserRepository: TempUserRepositoryInterface,
   ) {}
 
-  async execute(mailaddress: string): Promise<TempUserModel> {
-    const { value } = Mailaddress.create(mailaddress);
-    const token = await createToken(value);
-    return this.tempUserRepository.create(value, token);
-  }
+  execute = (mailaddress: string): Promise<TempUserModel> => {
+    const self = this;
+    const result = gen(function* () {
+      const value = yield* Mailaddress.create(mailaddress);
+      const validatedMailaddress = value.value;
+      console.log(validatedMailaddress);
+      const token = yield* createToken(validatedMailaddress);
+      const tempUser = yield* self.tempUserRepository.create(
+        validatedMailaddress,
+        token,
+      );
+      return tempUser;
+    });
+    return runPromise(result);
+  };
 }

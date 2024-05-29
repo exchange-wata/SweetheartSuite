@@ -10,16 +10,20 @@ import { TempUserModel } from '../domain/model/tempUser.model';
 export class TempUserRepository implements TempUserRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(mailaddress: string, token: string): Promise<TempUserModel> {
-    const tempUser = await this.prisma.tempUser.create({
-      data: {
-        mailaddress,
-        token,
-      },
-    });
-
-    return TempUserModel.create(tempUser);
-  }
+  create = (mailaddress: string, token: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.tempUser.create({
+            data: {
+              mailaddress,
+              token,
+            },
+          }),
+        catch: () => ({ _tag: TempUserErrorMessage.CREATE }) as const,
+      }),
+      andThen(TempUserModel.create),
+    );
 
   findByToken = (token: string) =>
     pipe(

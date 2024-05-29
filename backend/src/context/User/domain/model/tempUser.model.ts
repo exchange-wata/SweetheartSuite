@@ -1,6 +1,8 @@
+import { runSync } from 'effect/Effect';
+import { gen } from 'effect/Either';
 import { Mailaddress } from './valueObject/mailaddress.value';
 
-type UserType = {
+type TempUserType = {
   id: string;
   mailaddress: string;
   token: string;
@@ -11,13 +13,20 @@ export class TempUserModel {
   mailaddress: Mailaddress;
   token: string;
 
-  private constructor(input: UserType) {
-    this.id = input.id;
-    this.mailaddress = Mailaddress.create(input.mailaddress);
-    this.token = input.token;
-  }
+  constructor(input: TempUserType) {}
 
-  public static create(input: UserType): TempUserModel {
-    return new TempUserModel(input);
+  public static create(input: TempUserType): TempUserModel {
+    const result = gen(function* () {
+      const mailaddress = runSync(Mailaddress.create(input.mailaddress));
+      const inputModel = {
+        id: input.id,
+        mailaddress: mailaddress.value,
+        token: input.token,
+      };
+
+      return new TempUserModel(inputModel);
+    });
+
+    return runSync(result);
   }
 }
