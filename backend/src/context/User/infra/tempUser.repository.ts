@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { pipe } from 'effect';
+import { andThen, tryPromise } from 'effect/Effect';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  BatchPayload,
-  TempUserRepositoryInterface,
-} from '../domain/interface/tempUser.repository.interface';
+import { TempUserErrorMessage } from '../const/errorMessage/tempUser.errorMessage';
+import { TempUserRepositoryInterface } from '../domain/interface/tempUser.repository.interface';
 import { TempUserModel } from '../domain/model/tempUser.model';
 
 @Injectable()
@@ -21,21 +21,28 @@ export class TempUserRepository implements TempUserRepositoryInterface {
     return TempUserModel.create(tempUser);
   }
 
-  async findByToken(token: string): Promise<TempUserModel> {
-    const tempUser = await this.prisma.tempUser.findUnique({
-      where: { token },
-    });
+  findByToken = (token: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.tempUser.findUniqueOrThrow({
+            where: { token },
+          }),
+        catch: () => ({ _tag: TempUserErrorMessage.FIND_BY_TOKEN }) as const,
+      }),
+      andThen(TempUserModel.create),
+    );
 
-    return TempUserModel.create(tempUser);
-  }
-
-  async deleteMany(mailaddress: string): Promise<BatchPayload> {
-    return this.prisma.tempUser.deleteMany({
-      where: {
-        mailaddress: {
-          equals: mailaddress,
-        },
-      },
+  deleteMany = (mailaddress: string) =>
+    tryPromise({
+      try: () =>
+        this.prisma.tempUser.deleteMany({
+          where: {
+            mailaddress: {
+              equals: mailaddress,
+            },
+          },
+        }),
+      catch: () => ({ _tag: TempUserErrorMessage.DELETE_MANY }) as const,
     });
-  }
 }

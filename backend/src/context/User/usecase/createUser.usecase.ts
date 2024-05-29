@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { gen, runPromise } from 'effect/Effect';
 import { TEMP_USER_REPOSITORY, USER_REPOSITORY } from '../const/user.token';
 import { TempUserRepositoryInterface } from '../domain/interface/tempUser.repository.interface';
 import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
@@ -13,19 +14,17 @@ export class CreateUserUsecase {
     private readonly tempUserRepository: TempUserRepositoryInterface,
   ) {}
 
-  async execute(name: string, token: string): Promise<UserModel> {
-    const tempUser = await this.tempUserRepository.findByToken(token);
-    const user = await this.userRepository.create(
-      name,
-      tempUser.mailaddress.value,
-    );
-
-    if (!user) {
-      throw new Error('can not create user');
-    } else {
-      await this.tempUserRepository.deleteMany(user.mailaddress.value);
-    }
-
-    return user;
-  }
+  execute = (name: string, token: string): Promise<UserModel> => {
+    const self = this;
+    const result = gen(function* () {
+      const tempUser = yield* self.tempUserRepository.findByToken(token);
+      const user = yield* self.userRepository.create(
+        name,
+        tempUser.mailaddress.value,
+      );
+      yield* self.tempUserRepository.deleteMany(user.mailaddress.value);
+      return user;
+    });
+    return runPromise(result);
+  };
 }
