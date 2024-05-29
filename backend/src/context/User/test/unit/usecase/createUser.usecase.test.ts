@@ -1,9 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { Effect } from 'effect';
-import {
-  TEMP_USER_REPOSITORY,
-  USER_REPOSITORY,
-} from 'src/context/User/const/user.token';
+import { TempUserErrorMessage } from 'src/context/User/const/errorMessage/tempUser.errorMessage';
+import { UserErrorMessage } from 'src/context/User/const/errorMessage/user.errorMessage';
 import { TempUserRepositoryInterface } from 'src/context/User/domain/interface/tempUser.repository.interface';
 import { UserRepositoryInterface } from 'src/context/User/domain/interface/user.repository.interface';
 import { TempUserModel } from 'src/context/User/domain/model/tempUser.model';
@@ -11,7 +8,6 @@ import { UserModel } from 'src/context/User/domain/model/user.model';
 import { CreateUserUsecase } from 'src/context/User/usecase/createUser.usecase';
 
 describe('CreateUserUsecase', () => {
-  let createUserUsecase: CreateUserUsecase;
   const tempUserRepository: Pick<
     TempUserRepositoryInterface,
     'findByToken' | 'deleteMany'
@@ -38,25 +34,12 @@ describe('CreateUserUsecase', () => {
     ),
   };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CreateUserUsecase,
-        {
-          provide: TEMP_USER_REPOSITORY,
-          useValue: tempUserRepository,
-        },
-        {
-          provide: USER_REPOSITORY,
-          useValue: userRepository,
-        },
-      ],
-    }).compile();
-
-    createUserUsecase = module.get<CreateUserUsecase>(CreateUserUsecase);
-  });
-
   it('正常系', async () => {
+    const createUserUsecase = new CreateUserUsecase(
+      userRepository as UserRepositoryInterface,
+      tempUserRepository as TempUserRepositoryInterface,
+    );
+
     const token = 'test-token';
     const name = 'test-name';
     const tempUser = {
@@ -83,42 +66,55 @@ describe('CreateUserUsecase', () => {
 
   describe('異常系', () => {
     it('temp userが存在しない時、エラーになる', async () => {
+      const errorTempUserRepository: Pick<
+        TempUserRepositoryInterface,
+        'findByToken'
+      > = {
+        findByToken: jest.fn(() =>
+          Effect.fail({ _tag: TempUserErrorMessage.FIND_BY_TOKEN }),
+        ),
+      };
+      const createUserUsecase = new CreateUserUsecase(
+        userRepository as UserRepositoryInterface,
+        errorTempUserRepository as TempUserRepositoryInterface,
+      );
       const token = 'invalid-token';
       const name = 'test-name';
-
-      (tempUserRepository.findByToken as jest.Mock).mockImplementation(
-        () => new Error(),
-      );
 
       await expect(createUserUsecase.execute(name, token)).rejects.toThrow();
     });
 
     it('ユーザー作成が失敗した時、エラーになる', async () => {
+      const errorUserRepository: Pick<UserRepositoryInterface, 'create'> = {
+        create: jest.fn(() => Effect.fail({ _tag: UserErrorMessage.CREATE })),
+      };
+      const createUserUsecase = new CreateUserUsecase(
+        errorUserRepository as UserRepositoryInterface,
+        tempUserRepository as TempUserRepositoryInterface,
+      );
       const token = 'test-token';
       const name = 'test-name';
-      const tempUser = { mailaddress: { value: 'test@mail.com' } };
-
-      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue(tempUser);
-      (userRepository.create as jest.Mock).mockImplementation(
-        () => new Error(),
-      );
 
       await expect(createUserUsecase.execute(name, token)).rejects.toThrow();
     });
 
     it('temp userの削除に失敗した時、エラーになる', async () => {
+      const errorTempUserRepository: Pick<
+        TempUserRepositoryInterface,
+        'deleteMany'
+      > = {
+        ...tempUserRepository,
+        deleteMany: jest.fn(() =>
+          Effect.fail({ _tag: 'can not delete temp user' }),
+        ),
+      };
+      const createUserUsecase = new CreateUserUsecase(
+        userRepository as UserRepositoryInterface,
+        errorTempUserRepository as TempUserRepositoryInterface,
+      );
+
       const token = 'test-token';
       const name = 'test-name';
-      const tempUser = { mailaddress: { value: 'test@mail.com' } };
-      const createdUser = {
-        mailaddress: { value: 'test@mail.com' },
-      } as UserModel;
-
-      (tempUserRepository.findByToken as jest.Mock).mockResolvedValue(tempUser);
-      (userRepository.create as jest.Mock).mockResolvedValue(createdUser);
-      (tempUserRepository.deleteMany as jest.Mock).mockImplementation(
-        () => new Error(),
-      );
 
       await expect(createUserUsecase.execute(name, token)).rejects.toThrow();
     });
