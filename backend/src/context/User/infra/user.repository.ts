@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { pipe } from 'effect';
-import { Effect, andThen, tryPromise } from 'effect/Effect';
+import { andThen, tryPromise } from 'effect/Effect';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserErrorMessage } from '../const/errorMessage/user.errorMessage';
 import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 import { UserModel } from '../domain/model/user.model';
 
@@ -17,10 +18,7 @@ export class UserRepository implements UserRepositoryInterface {
     return UserModel.create(user);
   }
 
-  create = (
-    name: string,
-    mailaddress: string,
-  ): Effect<UserModel, { _tag: string }> =>
+  create = (name: string, mailaddress: string) =>
     pipe(
       tryPromise({
         try: () =>
@@ -30,7 +28,7 @@ export class UserRepository implements UserRepositoryInterface {
               mailaddress,
             },
           }),
-        catch: () => ({ _tag: 'can not create user' }) as const,
+        catch: () => ({ _tag: UserErrorMessage.CREATE }) as const,
       }),
       andThen(UserModel.create),
     );
