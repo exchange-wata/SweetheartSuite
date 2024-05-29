@@ -18,7 +18,6 @@ export class CreateTempUserUsecase {
     const result = gen(function* () {
       const value = yield* Mailaddress.create(mailaddress);
       const validatedMailaddress = value.value;
-      console.log(validatedMailaddress);
       const token = yield* createToken(validatedMailaddress);
       const tempUser = yield* self.tempUserRepository.create(
         validatedMailaddress,
