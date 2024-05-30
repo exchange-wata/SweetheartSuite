@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { pipe } from 'effect';
+import { andThen, tryPromise } from 'effect/Effect';
 import { OAuth2Client } from 'google-auth-library';
 
 @Injectable()
@@ -9,16 +11,16 @@ export class GoogleAuthUsecase {
     this.client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
   }
 
-  async verifyToken(token: string): Promise<string> {
-    try {
-      const ticket = await this.client.verifyIdToken({
-        idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      });
-
-      return ticket.getPayload().email;
-    } catch (error) {
-      throw new Error('Invalid token');
-    }
-  }
+  verifyToken = (token: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+          }),
+        catch: () => ({ _tag: 'Invalid token' }) as const,
+      }),
+      andThen((v) => v.getPayload().email),
+    );
 }
