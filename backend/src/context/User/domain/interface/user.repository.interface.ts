@@ -13,5 +13,7 @@ export interface UserRepositoryInterface {
     name: string,
     mailaddress: string,
   ): Effect<UserModel, { _tag: typeof UserErrorMessage.CREATE }>;
-  findByUserId(id: string): Promise<UserModel>;
+  findByUserId(
+    id: string,
+  ): Effect<UserModel, { _tag: typeof UserErrorMessage.FIND_BY_USER_ID }>;
 }

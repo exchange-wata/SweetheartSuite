@@ -38,11 +38,15 @@ export class UserRepository implements UserRepositoryInterface {
       andThen(UserModel.create),
     );
 
-  async findByUserId(id: string): Promise<UserModel> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
-
-    return UserModel.create(user);
-  }
+  findByUserId = (id: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.user.findUnique({
+            where: { id },
+          }),
+        catch: () => ({ _tag: UserErrorMessage.FIND_BY_USER_ID }) as const,
+      }),
+      andThen(UserModel.create),
+    );
 }
