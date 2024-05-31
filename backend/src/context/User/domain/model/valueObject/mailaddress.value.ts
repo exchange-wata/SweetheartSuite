@@ -12,7 +12,7 @@ export class Mailaddress {
   ): Effect<Mailaddress, { _tag: string }> {
     return this.isValidMailaddress(mailaddress)
       ? succeed(new Mailaddress(mailaddress))
-      : fail({ _tag: 'Invalid email address' });
+      : fail({ _tag: 'Invalid email address' } as const);
   }
 
   private static isValidMailaddress(mailaddress: string): boolean {

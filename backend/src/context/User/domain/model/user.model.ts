@@ -1,5 +1,4 @@
-import { runSync } from 'effect/Effect';
-import { gen } from 'effect/Either';
+import { gen, runSync } from 'effect/Effect';
 import { Mailaddress } from './valueObject/mailaddress.value';
 
 type UserType = {
@@ -13,19 +12,23 @@ export class UserModel {
   name: string;
   mailaddress: Mailaddress;
 
-  private constructor(input: UserType) {}
+  private constructor(input: {
+    id: string;
+    name: string;
+    mailaddress: Mailaddress;
+  }) {
+    (this.id = input.id), (this.name = input.name);
+    this.mailaddress = input.mailaddress;
+  }
 
   public static create(input: UserType): UserModel {
-    // FIXME* unknownがいいかわからない
-    // const result: Either<UserModel, unknown>
     const result = gen(function* () {
-      const mailaddress = runSync(Mailaddress.create(input.mailaddress));
-      const inputModel = {
+      const mailaddress = yield* Mailaddress.create(input.mailaddress);
+      return new UserModel({
         id: input.id,
         name: input.name,
-        mailaddress: mailaddress.value,
-      };
-      return new UserModel(inputModel);
+        mailaddress,
+      });
     });
 
     return runSync(result);
