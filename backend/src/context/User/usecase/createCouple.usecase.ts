@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { gen, runPromise } from 'effect/Effect';
 import { COUPLE_REPOSITORY, REQUEST_REPOSITORY } from '../const/user.token';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
@@ -14,20 +15,29 @@ export class CreateCoupleUsecase {
     private readonly coupleRepository: CoupleRepositoryInterface,
   ) {}
 
-  async execute(
+  execute = (
     receiverId: string,
     isAccepted: boolean,
-  ): Promise<CoupleModel | null> {
-    const requestTypeId = isAccepted
-      ? RequestTypes.APPROVED
-      : RequestTypes.REJECTED;
-    const request = await this.requestRepository.update(
-      receiverId,
-      requestTypeId,
-    );
+  ): Promise<CoupleModel | null> => {
+    const self = this;
+    const result = gen(function* () {
+      const requestTypeId = isAccepted
+        ? RequestTypes.APPROVED
+        : RequestTypes.REJECTED;
+      const request = yield* self.requestRepository.update(
+        receiverId,
+        requestTypeId,
+      );
 
-    if (!isAccepted) return null;
+      if (!isAccepted) return null;
 
-    return this.coupleRepository.create(request.fromUserId, request.toUserId);
-  }
+      const couple = yield* self.coupleRepository.create(
+        request.fromUserId,
+        request.toUserId,
+      );
+      return couple;
+    });
+
+    return runPromise(result);
+  };
 }

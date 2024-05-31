@@ -31,21 +31,27 @@ export class RequestRepository implements RequestRepositoryInterface {
       ),
     );
 
-  async update(toUserId: string, typeId: RequestTypes): Promise<RequestModel> {
-    const request = await this.prisma.request.update({
-      where: {
-        toUserId,
-      },
-      data: {
-        typeId,
-        updatedAt: new Date(),
-        deletedAt: new Date(),
-      },
-    });
-
-    return RequestModel.create({
-      ...request,
-      typeId: RequestTypeId.create(request.typeId).value,
-    });
-  }
+  update = (toUserId: string, typeId: RequestTypes) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.request.update({
+            where: {
+              toUserId,
+            },
+            data: {
+              typeId,
+              updatedAt: new Date(),
+              deletedAt: new Date(),
+            },
+          }),
+        catch: () => ({ _tag: RequestErrorMessage.UPDATE }) as const,
+      }),
+      andThen((request) =>
+        RequestModel.create({
+          ...request,
+          typeId: RequestTypeId.create(request.typeId).value,
+        }),
+      ),
+    );
 }

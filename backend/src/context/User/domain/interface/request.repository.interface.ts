@@ -8,5 +8,8 @@ export interface RequestRepositoryInterface {
     fromUserId: string,
     toUserId: string,
   ): Effect<RequestModel, { _tag: typeof RequestErrorMessage.CREATE }>;
-  update(toUserId: string, typeId: RequestTypes): Promise<RequestModel>;
+  update(
+    toUserId: string,
+    typeId: RequestTypes,
+  ): Effect<RequestModel, { _tag: typeof RequestErrorMessage.UPDATE }>;
 }

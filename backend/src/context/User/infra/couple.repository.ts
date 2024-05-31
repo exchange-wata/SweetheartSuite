@@ -24,11 +24,15 @@ export class CoupleRepository implements CoupleRepositoryInterface {
       andThen((couples) => couples.map((v) => CoupleModel.create(v))),
     );
 
-  async create(userId1: string, userId2: string): Promise<CoupleModel> {
-    const couple = await this.prisma.couple.create({
-      data: { userId1, userId2 },
-    });
-
-    return CoupleModel.create(couple);
-  }
+  create = (userId1: string, userId2: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.couple.create({
+            data: { userId1, userId2 },
+          }),
+        catch: () => ({ _tag: CoupleErrorMessage.CREATE }) as const,
+      }),
+      andThen(CoupleModel.create),
+    );
 }
