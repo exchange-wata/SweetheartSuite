@@ -7,9 +7,8 @@ import {
   SendRequestMutation,
   SendRequestMutationVariables,
 } from '@/types/gql/graphql';
-import { authClient } from '@/lib/authClient';
-import { catchTags, gen, runPromise, succeed, tryPromise } from 'effect/Effect';
-import { failWithTag, tag } from '@/lib/Effect.lib';
+import { AUTHORIZATION } from '@/app/api/auth/[...nextauth]/route';
+import { cookies } from 'next/headers';
 
 type State = {
   mailaddress: string;
@@ -32,7 +31,6 @@ export const findUser = async (_: State, payload: FormData) => {
       GetUserByMailaddressQuery,
       GetUserByMailaddressQueryVariables
     >(getUserByMailaddressQuery, { mailaddress });
-
     return {
       mailaddress: getUserByMailaddress.mailaddress,
       name: getUserByMailaddress.name,
@@ -51,42 +49,35 @@ export const sendRequest = async (
   _: { mailaddress: string; error: string },
   payload: FormData,
 ) => {
-  const result = gen(function* () {
-    const mailaddress = payload.get('mailaddress')?.toString();
+  const mailaddress = payload.get('mailaddress')?.toString();
+  if (!mailaddress)
+    return {
+      mailaddress: '',
+      error: 'メールアドレスを入力してください',
+    };
 
-    if (!mailaddress) return yield* failWithTag('no mailaddress');
+  const client = new GraphQLClient(process.env.BACKEND_URL);
+  const authorization = cookies().get(AUTHORIZATION)?.value;
+  if (!authorization) throw new Error('Unauthorized');
 
-    const client = yield* authClient();
-
-    yield* tryPromise({
-      try: () =>
-        client.request<SendRequestMutation, SendRequestMutationVariables>(
-          sendRequestMutation,
-          { mailaddress },
-        ),
-      catch: () => tag('already sent'),
-    });
+  try {
+    await client
+      .setHeader(AUTHORIZATION, authorization)
+      .request<SendRequestMutation, SendRequestMutationVariables>(
+        sendRequestMutation,
+        { mailaddress },
+      );
 
     return {
       mailaddress,
       error: '',
     };
-  }).pipe(
-    catchTags({
-      'no mailaddress': () =>
-        succeed({
-          mailaddress: '',
-          error: 'メールアドレスを入力してください',
-        }),
-      'already sent': () =>
-        succeed({
-          mailaddress: '',
-          error: 'このユーザーにはすでにリクエストを送っています',
-        }),
-    }),
-  );
-
-  return runPromise(result);
+  } catch (e) {
+    return {
+      mailaddress: '',
+      error: 'このユーザーにはすでにリクエストを送っています',
+    };
+  }
 };
 
 const getUserByMailaddressQuery = gql`
