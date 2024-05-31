@@ -16,7 +16,9 @@ export class JwtAuthUsecase {
       catch: () => ({ _tag: 'can not generate jwt' }) as const,
     });
 
-  async verifyToken(token: string) {
-    return this.jwtService.verifyAsync(token);
-  }
+  verifyToken = (token: string) =>
+    tryPromise({
+      try: () => this.jwtService.verifyAsync(token),
+      catch: () => ({ _tag: 'can not verify token' }) as const,
+    });
 }
