@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { gen, runPromise } from 'effect/Effect';
 import { GoogleAuthUsecase } from 'src/context/Auth/usecase/googleAuth.usecase';
 import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 import { USER_REPOSITORY } from '../const/user.token';
@@ -13,16 +14,15 @@ export class LoginUsecase {
     private readonly googleAuthUsecase: GoogleAuthUsecase,
   ) {}
 
-  async execute(token: string): Promise<string | null> {
-    const mailaddress = await this.googleAuthUsecase.verifyToken(token);
+  execute = (token: string): Promise<string> => {
+    const self = this;
+    const result = gen(function* () {
+      const mailaddress = yield* self.googleAuthUsecase.verifyToken(token);
+      const user = yield* self.userRepository.getUserByMailaddress(mailaddress);
+      const jwt = yield* self.jwtAuthUsecase.generateToken({ id: user.id });
+      return jwt;
+    });
 
-    if (mailaddress) {
-      const user = await this.userRepository.getUserByMailaddress(mailaddress);
-      if (user) {
-        return this.jwtAuthUsecase.generateToken({ id: user.id });
-      } else {
-        return null;
-      }
-    }
-  }
+    return runPromise(result);
+  };
 }

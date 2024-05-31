@@ -1,6 +1,7 @@
+import { gen, runSync } from 'effect/Effect';
 import { Mailaddress } from './valueObject/mailaddress.value';
 
-type UserType = {
+type TempUserType = {
   id: string;
   mailaddress: string;
   token: string;
@@ -11,13 +12,22 @@ export class TempUserModel {
   mailaddress: Mailaddress;
   token: string;
 
-  private constructor(input: UserType) {
+  constructor(input: { id: string; mailaddress: Mailaddress; token: string }) {
     this.id = input.id;
-    this.mailaddress = Mailaddress.create(input.mailaddress);
+    this.mailaddress = input.mailaddress;
     this.token = input.token;
   }
 
-  public static create(input: UserType): TempUserModel {
-    return new TempUserModel(input);
+  public static create(input: TempUserType): TempUserModel {
+    const result = gen(function* () {
+      const mailaddress = yield* Mailaddress.create(input.mailaddress);
+      return new TempUserModel({
+        id: input.id,
+        mailaddress,
+        token: input.token,
+      });
+    });
+
+    return runSync(result);
   }
 }

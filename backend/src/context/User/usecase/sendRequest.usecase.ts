@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { gen, runPromise } from 'effect/Effect';
 import {
   COUPLE_REPOSITORY,
   REQUEST_REPOSITORY,
@@ -19,27 +20,25 @@ export class SendRequestUsecase {
     private readonly requestRepository: RequestRepositoryInterface,
   ) {}
 
-  async execute(
+  execute = (
     senderId: string,
     receiverMailaddress: string,
-  ): Promise<boolean> {
-    // TODO: 返却値見直す
-    // REF: https://github.com/exchange-wata/SweetheartSuite/pull/48
-    try {
-      const [sendUser, receivedUser] = await Promise.all([
-        this.userRepository.findByUserId(senderId),
-        this.userRepository.getUserByMailaddress(receiverMailaddress),
-      ]);
+  ): Promise<boolean> => {
+    const self = this;
+    const result = gen(function* () {
+      const sender = yield* self.userRepository.findByUserId(senderId);
+      const receiver =
+        yield* self.userRepository.getUserByMailaddress(receiverMailaddress);
 
-      const couple = await this.coupleRepository.findByUserId(receivedUser.id);
-      if (couple.length > 0) {
+      const couples = yield* self.coupleRepository.findByUserId(receiver.id);
+      if (couples.length > 0) {
         return false;
       }
 
-      await this.requestRepository.create(sendUser.id, receivedUser.id);
+      yield* self.requestRepository.create(sender.id, receiver.id);
       return true;
-    } catch (e: any) {
-      throw new Error(e);
-    }
-  }
+    });
+
+    return runPromise(result);
+  };
 }

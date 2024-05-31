@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { gen, runPromise } from 'effect/Effect';
 import { USER_REPOSITORY } from '../const/user.token';
 import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 import { UserModel } from '../domain/model/user.model';
@@ -11,8 +12,16 @@ export class GetUserByMailaddressUsecase {
     private readonly userRepository: UserRepositoryInterface,
   ) {}
 
-  async execute(mailaddress: string): Promise<UserModel> {
-    const validatedMailaddress = Mailaddress.create(mailaddress);
-    return this.userRepository.getUserByMailaddress(validatedMailaddress.value);
-  }
+  execute = (mailaddress: string): Promise<UserModel> => {
+    const self = this;
+    const result = gen(function* () {
+      const value = yield* Mailaddress.create(mailaddress);
+      const validatedMailaddress = value.value;
+      const user =
+        yield* self.userRepository.getUserByMailaddress(validatedMailaddress);
+      return user;
+    });
+
+    return runPromise(result);
+  };
 }

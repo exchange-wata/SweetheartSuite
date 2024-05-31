@@ -1,10 +1,11 @@
+import { runSync } from 'effect/Effect';
 import { Mailaddress } from 'src/context/User/domain/model/valueObject/mailaddress.value';
 
 describe('mailaddress vo のテスト', () => {
   it('正常系', () => {
     const input = 'aA0_.+-@example.com';
-    const { value } = Mailaddress.create(input);
-    expect(value).toBe(input);
+    const value = Mailaddress.create(input);
+    expect(runSync(value).value).toBe(input);
   });
 
   describe('異常系', () => {
@@ -16,7 +17,7 @@ describe('mailaddress vo のテスト', () => {
       ['連続するドット', 'test@example..com'],
       ['末尾にドット', 'test@example.com.'],
     ])('%s', (_, mailaddress) => {
-      expect(() => Mailaddress.create(mailaddress)).toThrow(
+      expect(() => runSync(Mailaddress.create(mailaddress))).toThrow(
         'Invalid email address',
       );
     });

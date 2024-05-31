@@ -7,7 +7,10 @@ export type BatchPayload = {
 };
 
 export interface TempUserRepositoryInterface {
-  create(mailaddress: string, token: string): Promise<TempUserModel>;
+  create(
+    mailaddress: string,
+    token: string,
+  ): Effect<TempUserModel, { _tag: typeof TempUserErrorMessage.CREATE }>;
   findByToken(
     token: string,
   ): Effect<TempUserModel, { _tag: typeof TempUserErrorMessage.FIND_BY_TOKEN }>;

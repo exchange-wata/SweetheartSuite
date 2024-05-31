@@ -1,3 +1,4 @@
+import { gen, runSync } from 'effect/Effect';
 import { Mailaddress } from './valueObject/mailaddress.value';
 
 type UserType = {
@@ -11,13 +12,25 @@ export class UserModel {
   name: string;
   mailaddress: Mailaddress;
 
-  private constructor(input: UserType) {
-    this.id = input.id;
-    this.name = input.name;
-    this.mailaddress = Mailaddress.create(input.mailaddress);
+  private constructor(input: {
+    id: string;
+    name: string;
+    mailaddress: Mailaddress;
+  }) {
+    (this.id = input.id), (this.name = input.name);
+    this.mailaddress = input.mailaddress;
   }
 
   public static create(input: UserType): UserModel {
-    return new UserModel(input);
+    const result = gen(function* () {
+      const mailaddress = yield* Mailaddress.create(input.mailaddress);
+      return new UserModel({
+        id: input.id,
+        name: input.name,
+        mailaddress,
+      });
+    });
+
+    return runSync(result);
   }
 }

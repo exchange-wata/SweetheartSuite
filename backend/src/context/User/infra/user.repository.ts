@@ -10,13 +10,18 @@ import { UserModel } from '../domain/model/user.model';
 export class UserRepository implements UserRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserByMailaddress(mailaddress: string): Promise<UserModel> {
-    const user = await this.prisma.user.findUnique({
-      where: { mailaddress },
-    });
-
-    return UserModel.create(user);
-  }
+  getUserByMailaddress = (mailaddress: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.user.findUnique({
+            where: { mailaddress },
+          }),
+        catch: () =>
+          ({ _tag: UserErrorMessage.GET_USER_BY_MAILADDRESS }) as const,
+      }),
+      andThen(UserModel.create),
+    );
 
   create = (name: string, mailaddress: string) =>
     pipe(
@@ -33,11 +38,15 @@ export class UserRepository implements UserRepositoryInterface {
       andThen(UserModel.create),
     );
 
-  async findByUserId(id: string): Promise<UserModel> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
-
-    return UserModel.create(user);
-  }
+  findByUserId = (id: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.user.findUnique({
+            where: { id },
+          }),
+        catch: () => ({ _tag: UserErrorMessage.FIND_BY_USER_ID }) as const,
+      }),
+      andThen(UserModel.create),
+    );
 }
