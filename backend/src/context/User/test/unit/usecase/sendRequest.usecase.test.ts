@@ -120,5 +120,31 @@ describe('SendRequestUsecase', () => {
       expect(requestRepository.create).toHaveBeenCalled();
       expect(result).toBe(false);
     });
+
+    it('リクエスト送受信者が同一人物の時、falseが返る', async () => {
+      const userRepository: Pick<
+        UserRepositoryInterface,
+        'getUserByMailaddress' | 'findByUserId'
+      > = {
+        findByUserId: jest.fn(() => Effect.succeed(sender)),
+        getUserByMailaddress: jest.fn(() => Effect.succeed(sender)),
+      };
+      const sendRequestUsacese = new SendRequestUsecase(
+        userRepository as UserRepositoryInterface,
+        coupleRepository as CoupleRepositoryInterface,
+        requestRepository as RequestRepositoryInterface,
+      );
+
+      const result = await sendRequestUsacese.execute(
+        sendUserMailaddress,
+        receivedUserMailaddress,
+      );
+
+      expect(userRepository.getUserByMailaddress).toHaveBeenCalled();
+      expect(userRepository.findByUserId).toHaveBeenCalled();
+      expect(coupleRepository.findByUserId).toHaveBeenCalled();
+      expect(requestRepository.create).toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
   });
 });
