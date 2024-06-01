@@ -8,7 +8,7 @@ export const RequestTypes = {
 
 export type RequestTypes = (typeof RequestTypes)[keyof typeof RequestTypes];
 
-const isRequestType = (typeId: number): boolean =>
+const isRequestType = (typeId: number): typeId is RequestTypes =>
   (Object.values(RequestTypes) as number[]).includes(typeId);
 
 export class RequestTypeId {
@@ -20,6 +20,6 @@ export class RequestTypeId {
 
   public static create = (typeId: number) =>
     isRequestType(typeId)
-      ? Effect.succeed(new RequestTypeId(typeId as RequestTypes))
+      ? Effect.succeed(new RequestTypeId(typeId))
       : Effect.fail({ _tag: 'Invalid request type id' } as const);
 }
