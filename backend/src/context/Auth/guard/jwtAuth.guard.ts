@@ -16,7 +16,7 @@ export class JwtAuthGuard implements CanActivate {
 
   canActivate = (context: ExecutionContext): Promise<boolean> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const ctx = GqlExecutionContext.create(context);
       const request = ctx.getContext().req;
       const token = yield* self.extractTokenFromHeader(request);
@@ -24,9 +24,7 @@ export class JwtAuthGuard implements CanActivate {
       request['user'] = payload;
 
       return true;
-    });
-
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 
   private extractTokenFromHeader = (request: Request) => {

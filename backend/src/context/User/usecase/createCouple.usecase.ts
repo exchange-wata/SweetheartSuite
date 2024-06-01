@@ -20,7 +20,7 @@ export class CreateCoupleUsecase {
     isAccepted: boolean,
   ): Promise<CoupleModel | null> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const requestTypeId = isAccepted
         ? RequestTypes.APPROVED
         : RequestTypes.REJECTED;
@@ -36,8 +36,6 @@ export class CreateCoupleUsecase {
         request.toUserId,
       );
       return couple;
-    });
-
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 }

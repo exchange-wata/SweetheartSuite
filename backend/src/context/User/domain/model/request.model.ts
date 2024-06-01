@@ -1,3 +1,4 @@
+import { gen, runSync } from 'effect/Effect';
 import { RequestTypeId } from './valueObject/requestTypeId.value';
 
 type CoupleType = {
@@ -13,14 +14,26 @@ export class RequestModel {
   toUserId: string;
   typeId: RequestTypeId;
 
-  private constructor(input: CoupleType) {
+  private constructor(input: {
+    id: string;
+    fromUserId: string;
+    toUserId: string;
+    typeId: RequestTypeId;
+  }) {
     this.id = input.id;
     this.fromUserId = input.fromUserId;
     this.toUserId = input.toUserId;
-    this.typeId = RequestTypeId.create(input.typeId);
+    this.typeId = input.typeId;
   }
 
-  public static create(input: CoupleType): RequestModel {
-    return new RequestModel(input);
-  }
+  public static create = (input: CoupleType): RequestModel =>
+    gen(function* () {
+      const typeId = yield* RequestTypeId.create(input.typeId);
+      return new RequestModel({
+        id: input.id,
+        fromUserId: input.fromUserId,
+        toUserId: input.toUserId,
+        typeId,
+      });
+    }).pipe(runSync);
 }

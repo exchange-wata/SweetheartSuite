@@ -21,16 +21,13 @@ export class UserModel {
     this.mailaddress = input.mailaddress;
   }
 
-  public static create(input: UserType): UserModel {
-    const result = gen(function* () {
+  public static create = (input: UserType): UserModel =>
+    gen(function* () {
       const mailaddress = yield* Mailaddress.create(input.mailaddress);
       return new UserModel({
         id: input.id,
         name: input.name,
         mailaddress,
       });
-    });
-
-    return runSync(result);
-  }
+    }).pipe(runSync);
 }

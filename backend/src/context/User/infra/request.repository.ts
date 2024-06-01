@@ -5,10 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RequestErrorMessage } from '../const/errorMessage/request.errorMessage';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import { RequestModel } from '../domain/model/request.model';
-import {
-  RequestTypeId,
-  RequestTypes,
-} from '../domain/model/valueObject/requestTypeId.value';
+import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
 
 @Injectable()
 export class RequestRepository implements RequestRepositoryInterface {
@@ -23,12 +20,7 @@ export class RequestRepository implements RequestRepositoryInterface {
           }),
         catch: () => ({ _tag: RequestErrorMessage.CREATE }) as const,
       }),
-      andThen((request) =>
-        RequestModel.create({
-          ...request,
-          typeId: RequestTypeId.create(request.typeId).value,
-        }),
-      ),
+      andThen(RequestModel.create),
     );
 
   update = (toUserId: string, typeId: RequestTypes) =>
@@ -47,11 +39,6 @@ export class RequestRepository implements RequestRepositoryInterface {
           }),
         catch: () => ({ _tag: RequestErrorMessage.UPDATE }) as const,
       }),
-      andThen((request) =>
-        RequestModel.create({
-          ...request,
-          typeId: RequestTypeId.create(request.typeId).value,
-        }),
-      ),
+      andThen(RequestModel.create),
     );
 }

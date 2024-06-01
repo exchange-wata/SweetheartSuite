@@ -16,7 +16,7 @@ export class CreateUserUsecase {
 
   execute = (name: string, token: string): Promise<UserModel> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const tempUser = yield* self.tempUserRepository.findByToken(token);
       const user = yield* self.userRepository.create(
         name,
@@ -24,7 +24,6 @@ export class CreateUserUsecase {
       );
       yield* self.tempUserRepository.deleteMany(user.mailaddress.value);
       return user;
-    });
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 }
