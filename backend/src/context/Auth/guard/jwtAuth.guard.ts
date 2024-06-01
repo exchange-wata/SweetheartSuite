@@ -5,33 +5,34 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Effect } from 'effect';
+import { gen, runPromise } from 'effect/Effect';
 import { Request } from 'express';
 import { JwtAuthUsecase } from '../usecase/jwtAuth.usecase';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtAuthService: JwtAuthUsecase) {}
+  constructor(private readonly jwtAuthUsecase: JwtAuthUsecase) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext().req;
-    const token = this.extractTokenFromHeader(request);
-
-    if (!token) {
-      throw new UnauthorizedException();
-    }
-
-    try {
-      const payload = await this.jwtAuthService.verifyToken(token);
+  canActivate = (context: ExecutionContext): Promise<boolean> => {
+    const self = this;
+    const result = gen(function* () {
+      const ctx = GqlExecutionContext.create(context);
+      const request = ctx.getContext().req;
+      const token = yield* self.extractTokenFromHeader(request);
+      const payload = yield* self.jwtAuthUsecase.verifyToken(token);
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
-    }
-    return true;
-  }
 
-  private extractTokenFromHeader(request: Request): string | undefined {
+      return true;
+    });
+
+    return runPromise(result);
+  };
+
+  private extractTokenFromHeader = (request: Request) => {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
-  }
+    return type === 'Bearer'
+      ? Effect.succeed(token)
+      : Effect.fail(new UnauthorizedException());
+  };
 }
