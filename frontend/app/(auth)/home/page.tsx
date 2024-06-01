@@ -60,6 +60,7 @@ const Request = ({
       <div className="text-lg">名前: {name}</div>
       <Button type="submit">リクエストを送る</Button>
       {state.error && <div>{state.error}</div>}
+      {!state.error && state.mailaddress && <div>リクエストしました</div>}
     </form>
   );
 };

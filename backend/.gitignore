@@ -5,3 +5,5 @@ node_modules
 postgres
 
 /.vscode
+
+.dockerignore

@@ -1,6 +1,6 @@
 'use server';
 
-import { GraphQLClient, gql } from 'graphql-request';
+import { gql } from 'graphql-request';
 import {
   GetUserByMailaddressQuery,
   GetUserByMailaddressQueryVariables,
@@ -17,41 +17,50 @@ type State = {
   error: string;
 };
 
-export const findUser = async (_: State, payload: FormData) => {
-  const mailaddress = payload.get('mailaddress')?.toString();
-  if (!mailaddress)
-    return {
-      mailaddress: '',
-      name: '',
-      error: 'メールアドレスを入力してください',
-    };
+export const findUser = async (_: State, payload: FormData) =>
+  gen(function* () {
+    const mailaddress = payload.get('mailaddress')?.toString();
+    if (!mailaddress) return yield* failWithTag('no mailaddress');
 
-  const client = new GraphQLClient(process.env.BACKEND_URL);
-  try {
-    const { getUserByMailaddress } = await client.request<
-      GetUserByMailaddressQuery,
-      GetUserByMailaddressQueryVariables
-    >(getUserByMailaddressQuery, { mailaddress });
+    const client = yield* authClient();
+    const result = yield* tryPromise({
+      try: () =>
+        client.request<
+          GetUserByMailaddressQuery,
+          GetUserByMailaddressQueryVariables
+        >(getUserByMailaddressQuery, { mailaddress }),
+      catch: () => tag('user not found'),
+    });
 
     return {
-      mailaddress: getUserByMailaddress.mailaddress,
-      name: getUserByMailaddress.name,
+      mailaddress: result.getUserByMailaddress.mailaddress,
+      name: result.getUserByMailaddress.name,
       error: '',
     };
-  } catch (e) {
-    return {
-      mailaddress: '',
-      name: '',
-      error: 'ユーザーが見つかりませんでした',
-    };
-  }
-};
+  })
+    .pipe(
+      catchTags({
+        'no mailaddress': () =>
+          succeed({
+            mailaddress: '',
+            name: '',
+            error: 'メールアドレスを入力してください',
+          }),
+        'user not found': () =>
+          succeed({
+            mailaddress: '',
+            name: '',
+            error: 'ユーザーが見つかりませんでした',
+          }),
+      }),
+    )
+    .pipe(runPromise);
 
 export const sendRequest = async (
   _: { mailaddress: string; error: string },
   payload: FormData,
-) => {
-  const result = gen(function* () {
+) =>
+  gen(function* () {
     const mailaddress = payload.get('mailaddress')?.toString();
 
     if (!mailaddress) return yield* failWithTag('no mailaddress');
@@ -71,23 +80,22 @@ export const sendRequest = async (
       mailaddress,
       error: '',
     };
-  }).pipe(
-    catchTags({
-      'no mailaddress': () =>
-        succeed({
-          mailaddress: '',
-          error: 'メールアドレスを入力してください',
-        }),
-      'already sent': () =>
-        succeed({
-          mailaddress: '',
-          error: 'このユーザーにはすでにリクエストを送っています',
-        }),
-    }),
-  );
-
-  return runPromise(result);
-};
+  })
+    .pipe(
+      catchTags({
+        'no mailaddress': () =>
+          succeed({
+            mailaddress: '',
+            error: 'メールアドレスを入力してください',
+          }),
+        'already sent': () =>
+          succeed({
+            mailaddress: '',
+            error: 'このユーザーにはすでにリクエストを送っています',
+          }),
+      }),
+    )
+    .pipe(runPromise);
 
 const getUserByMailaddressQuery = gql`
   query GetUserByMailaddress($mailaddress: String!) {
