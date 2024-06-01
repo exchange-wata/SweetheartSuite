@@ -14,14 +14,12 @@ export class GetUserByMailaddressUsecase {
 
   execute = (mailaddress: string): Promise<UserModel> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const value = yield* Mailaddress.create(mailaddress);
       const validatedMailaddress = value.value;
       const user =
         yield* self.userRepository.getUserByMailaddress(validatedMailaddress);
       return user;
-    });
-
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 }

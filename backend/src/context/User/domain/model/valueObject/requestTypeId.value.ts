@@ -1,3 +1,5 @@
+import { Effect } from 'effect';
+
 export const RequestTypes = {
   SENT: 1,
   APPROVED: 2,
@@ -6,7 +8,7 @@ export const RequestTypes = {
 
 export type RequestTypes = (typeof RequestTypes)[keyof typeof RequestTypes];
 
-const isRequestType = (typeId: number): boolean =>
+const isRequestType = (typeId: number): typeId is RequestTypes =>
   (Object.values(RequestTypes) as number[]).includes(typeId);
 
 export class RequestTypeId {
@@ -16,9 +18,8 @@ export class RequestTypeId {
     this.value = typeId;
   }
 
-  public static create(typeId: number): RequestTypeId | null {
-    return isRequestType(typeId)
-      ? new RequestTypeId(typeId as RequestTypes)
-      : null;
-  }
+  public static create = (typeId: number) =>
+    isRequestType(typeId)
+      ? Effect.succeed(new RequestTypeId(typeId))
+      : Effect.fail({ _tag: 'Invalid request type id' } as const);
 }

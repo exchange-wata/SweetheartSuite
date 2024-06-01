@@ -15,7 +15,7 @@ export class CreateTempUserUsecase {
 
   execute = (mailaddress: string): Promise<TempUserModel> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const value = yield* Mailaddress.create(mailaddress);
       const validatedMailaddress = value.value;
       const token = yield* createToken(validatedMailaddress);
@@ -24,7 +24,6 @@ export class CreateTempUserUsecase {
         token,
       );
       return tempUser;
-    });
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 }

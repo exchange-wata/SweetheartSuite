@@ -25,7 +25,7 @@ export class SendRequestUsecase {
     receiverMailaddress: string,
   ): Promise<boolean> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const sender = yield* self.userRepository.findByUserId(senderId);
       const receiver =
         yield* self.userRepository.getUserByMailaddress(receiverMailaddress);
@@ -37,8 +37,6 @@ export class SendRequestUsecase {
 
       yield* self.requestRepository.create(sender.id, receiver.id);
       return true;
-    });
-
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 }

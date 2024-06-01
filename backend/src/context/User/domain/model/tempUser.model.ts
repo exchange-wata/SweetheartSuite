@@ -18,16 +18,13 @@ export class TempUserModel {
     this.token = input.token;
   }
 
-  public static create(input: TempUserType): TempUserModel {
-    const result = gen(function* () {
+  public static create = (input: TempUserType): TempUserModel =>
+    gen(function* () {
       const mailaddress = yield* Mailaddress.create(input.mailaddress);
       return new TempUserModel({
         id: input.id,
         mailaddress,
         token: input.token,
       });
-    });
-
-    return runSync(result);
-  }
+    }).pipe(runSync);
 }

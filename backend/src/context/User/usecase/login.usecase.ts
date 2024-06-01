@@ -16,13 +16,11 @@ export class LoginUsecase {
 
   execute = (token: string): Promise<string> => {
     const self = this;
-    const result = gen(function* () {
+    return gen(function* () {
       const mailaddress = yield* self.googleAuthUsecase.verifyToken(token);
       const user = yield* self.userRepository.getUserByMailaddress(mailaddress);
       const jwt = yield* self.jwtAuthUsecase.generateToken({ id: user.id });
       return jwt;
-    });
-
-    return runPromise(result);
+    }).pipe(runPromise);
   };
 }
