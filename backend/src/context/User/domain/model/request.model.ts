@@ -2,7 +2,7 @@ import { Effect } from 'effect';
 import { gen, runSync } from 'effect/Effect';
 import { RequestTypeId } from './valueObject/requestTypeId.value';
 
-type CoupleType = {
+type RequestType = {
   id: string;
   fromUserId: string;
   toUserId: string;
@@ -27,7 +27,7 @@ export class RequestModel {
     this.typeId = input.typeId;
   }
 
-  public static create = (input: CoupleType): RequestModel =>
+  public static create = (input: RequestType): RequestModel =>
     gen(function* () {
       const typeId = yield* RequestTypeId.create(input.typeId);
       const userIds = yield* RequestModel.checkIds(input);
@@ -40,7 +40,7 @@ export class RequestModel {
     }).pipe(runSync);
 
   private static checkIds = (
-    input: Pick<CoupleType, 'fromUserId' | 'toUserId'>,
+    input: Pick<RequestType, 'fromUserId' | 'toUserId'>,
   ) =>
     input.fromUserId !== input.toUserId
       ? Effect.succeed(input)
