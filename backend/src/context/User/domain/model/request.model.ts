@@ -30,7 +30,7 @@ export class RequestModel {
   public static create = (input: RequestType): RequestModel =>
     gen(function* () {
       const typeId = yield* RequestTypeId.create(input.typeId);
-      const userIds = yield* RequestModel.checkIds(input);
+      const userIds = yield* RequestModel.confirmDifferentUserIds(input);
       return new RequestModel({
         id: input.id,
         fromUserId: userIds.fromUserId,
@@ -39,7 +39,7 @@ export class RequestModel {
       });
     }).pipe(runSync);
 
-  private static checkIds = (
+  private static confirmDifferentUserIds = (
     input: Pick<RequestType, 'fromUserId' | 'toUserId'>,
   ) =>
     input.fromUserId !== input.toUserId
