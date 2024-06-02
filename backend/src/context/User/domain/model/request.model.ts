@@ -1,3 +1,4 @@
+import { Effect } from 'effect';
 import { gen, runSync } from 'effect/Effect';
 import { RequestTypeId } from './valueObject/requestTypeId.value';
 
@@ -29,11 +30,19 @@ export class RequestModel {
   public static create = (input: CoupleType): RequestModel =>
     gen(function* () {
       const typeId = yield* RequestTypeId.create(input.typeId);
+      const userIds = yield* RequestModel.checkIds(input);
       return new RequestModel({
         id: input.id,
-        fromUserId: input.fromUserId,
-        toUserId: input.toUserId,
+        fromUserId: userIds.fromUserId,
+        toUserId: userIds.toUserId,
         typeId,
       });
     }).pipe(runSync);
+
+  private static checkIds = (
+    input: Pick<CoupleType, 'fromUserId' | 'toUserId'>,
+  ) =>
+    input.fromUserId !== input.toUserId
+      ? Effect.succeed(input)
+      : Effect.fail({ _tag: 'invalid user ids' });
 }

@@ -31,7 +31,7 @@ export class SendRequestUsecase {
         yield* self.userRepository.getUserByMailaddress(receiverMailaddress);
 
       const couples = yield* self.coupleRepository.findByUserId(receiver.id);
-      if (couples.length > 0 || sender.id === receiver.id) {
+      if (couples.length > 0) {
         return false;
       }
 
