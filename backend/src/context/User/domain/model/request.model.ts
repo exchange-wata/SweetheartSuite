@@ -44,5 +44,5 @@ export class RequestModel {
   ) =>
     input.fromUserId !== input.toUserId
       ? Effect.succeed(input)
-      : Effect.fail({ _tag: 'invalid user ids' });
+      : Effect.fail({ _tag: 'invalid same user ids' });
 }
