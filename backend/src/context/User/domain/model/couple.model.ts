@@ -33,5 +33,5 @@ export class CoupleModel {
   ) =>
     input.userId1 !== input.userId2
       ? Effect.succeed(input)
-      : Effect.fail({ _tag: 'invalid user ids' } as const);
+      : Effect.fail({ _tag: 'invalid same user ids' } as const);
 }
