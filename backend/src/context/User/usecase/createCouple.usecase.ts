@@ -29,7 +29,7 @@ export class CreateCoupleUsecase {
         requestTypeId,
       );
 
-      if (!isAccepted || request.fromUserId === receiverId) return null;
+      if (!isAccepted) return null;
 
       const couple = yield* self.coupleRepository.create(
         request.fromUserId,

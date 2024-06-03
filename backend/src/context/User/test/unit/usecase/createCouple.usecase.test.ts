@@ -51,14 +51,4 @@ describe('CreateCoupleUsecase', () => {
     expect(coupleRepository.create).toHaveBeenCalled();
     expect(result).toBeNull();
   });
-
-  it('リクエスト送受信者が同一人物の時、nullが返る', async () => {
-    const receiverId = 'sender-id';
-
-    const result = await createCoupleUsecase.execute(receiverId, true);
-
-    expect(requestRepository.update).toHaveBeenCalled();
-    expect(coupleRepository.create).toHaveBeenCalled();
-    expect(result).toBeNull();
-  });
 });
