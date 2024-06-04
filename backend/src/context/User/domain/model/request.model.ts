@@ -1,9 +1,9 @@
 import { Effect } from 'effect';
-import { gen, runSync } from 'effect/Effect';
+import { gen } from 'effect/Effect';
 import { RequestTypeId } from './valueObject/requestTypeId.value';
 
 type RequestType = {
-  id: string;
+  id?: string;
   fromUserId: string;
   toUserId: string;
   typeId: number;
@@ -27,17 +27,20 @@ export class RequestModel {
     this.typeId = input.typeId;
   }
 
-  public static create = (input: RequestType): RequestModel =>
+  public static create = (
+    input: RequestType,
+  ): Effect.Effect<RequestModel, { _tag: string }> =>
     gen(function* () {
+      const id = input.id ?? crypto.randomUUID();
       const typeId = yield* RequestTypeId.create(input.typeId);
       const userIds = yield* RequestModel.confirmDifferentUserIds(input);
       return new RequestModel({
-        id: input.id,
+        id,
         fromUserId: userIds.fromUserId,
         toUserId: userIds.toUserId,
         typeId,
       });
-    }).pipe(runSync);
+    });
 
   private static confirmDifferentUserIds = (
     input: Pick<RequestType, 'fromUserId' | 'toUserId'>,

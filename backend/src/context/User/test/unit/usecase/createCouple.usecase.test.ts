@@ -19,8 +19,25 @@ const couple = CoupleModel.create({
   userId2: 'to-user-id',
 });
 
-const requestRepository: Pick<RequestRepositoryInterface, 'update'> = {
-  update: jest.fn(() => Effect.succeed(request)),
+const requestRepository: Pick<
+  RequestRepositoryInterface,
+  'update' | 'findByToUserId'
+> = {
+  update: jest.fn(
+    () =>
+      Effect.succeed(request) as unknown as Effect.Effect<
+        RequestModel,
+        { _tag: string },
+        never
+      >,
+  ),
+  findByToUserId: jest.fn(
+    () =>
+      Effect.succeed({
+        ...request,
+        typeId: RequestTypes.SENT,
+      }) as unknown as Effect.Effect<RequestModel, { _tag: string }, never>,
+  ),
 };
 const coupleRepository: Pick<CoupleRepository, 'create'> = {
   create: jest.fn(() => Effect.succeed(couple)),
@@ -38,6 +55,7 @@ describe('CreateCoupleUsecase', () => {
     const result = await createCoupleUsecase.execute(receiverId, true);
 
     expect(requestRepository.update).toHaveBeenCalled();
+    expect(requestRepository.findByToUserId).toHaveBeenCalled();
     expect(coupleRepository.create).toHaveBeenCalled();
     expect(result).toBe(couple);
   });
@@ -48,6 +66,7 @@ describe('CreateCoupleUsecase', () => {
     const result = await createCoupleUsecase.execute(receiverId, false);
 
     expect(requestRepository.update).toHaveBeenCalled();
+    expect(requestRepository.findByToUserId).toHaveBeenCalled();
     expect(coupleRepository.create).toHaveBeenCalled();
     expect(result).toBeNull();
   });

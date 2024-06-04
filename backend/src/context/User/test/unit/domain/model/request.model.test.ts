@@ -1,3 +1,4 @@
+import { runSync } from 'effect/Effect';
 import { RequestModel } from 'src/context/User/domain/model/request.model';
 import { RequestTypes } from 'src/context/User/domain/model/valueObject/requestTypeId.value';
 
@@ -9,7 +10,7 @@ describe('request modelのテスト', () => {
       toUserId: 'c2f068b2-57bd-4074-9228-2a13e18141ee',
       typeId: RequestTypes.SENT,
     };
-    expect(RequestModel.create(input)).toBeInstanceOf(RequestModel);
+    expect(runSync(RequestModel.create(input))).toBeInstanceOf(RequestModel);
   });
 
   describe('異常系', () => {
@@ -20,7 +21,9 @@ describe('request modelのテスト', () => {
         toUserId: 'b6ac4860-21aa-43c7-bbcd-f8a47b86b362',
         typeId: RequestTypes.SENT,
       };
-      expect(() => RequestModel.create(input)).toThrow();
+      expect(() => runSync(RequestModel.create(input))).toThrow(
+        'invalid same user ids',
+      );
     });
   });
 });
