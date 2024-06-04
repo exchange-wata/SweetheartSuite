@@ -9,6 +9,8 @@ type RequestType = {
   typeId: number;
 };
 
+const crypto = require('crypto');
+
 export class RequestModel {
   id: string;
   fromUserId: string;
