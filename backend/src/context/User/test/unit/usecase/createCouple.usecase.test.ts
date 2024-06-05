@@ -23,18 +23,15 @@ const requestRepository: Pick<
   RequestRepositoryInterface,
   'update' | 'findByToUserId'
 > = {
-  update: jest.fn(
-    () =>
-      Effect.succeed(request) as unknown as Effect.Effect<
-        RequestModel,
-        { _tag: string },
-        never
-      >,
+  update: jest.fn(() => request),
+  findByToUserId: jest.fn(() =>
+    RequestModel.create({
+      id: 'request-id',
+      fromUserId: 'sender-id',
+      toUserId: 'receiver-id',
+      typeId: RequestTypes.SENT,
+    }),
   ),
-  findByToUserId: jest.fn(() => ({
-    ...request,
-    typeId: RequestTypes.SENT,
-  })),
 };
 const coupleRepository: Pick<CoupleRepository, 'create'> = {
   create: jest.fn(() => Effect.succeed(couple)),
