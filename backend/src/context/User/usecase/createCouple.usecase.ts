@@ -38,10 +38,11 @@ export class CreateCoupleUsecase {
 
       if (!isAccepted) return null;
 
-      const couple = yield* self.coupleRepository.create(
-        request.fromUserId,
-        request.toUserId,
-      );
+      const coupleModel = yield* CoupleModel.create({
+        userId1: request.fromUserId,
+        userId2: request.toUserId,
+      });
+      const couple = yield* self.coupleRepository.create(coupleModel);
       return couple;
     }).pipe(runPromise);
   };

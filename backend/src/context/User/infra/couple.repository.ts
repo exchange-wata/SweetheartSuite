@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { pipe } from 'effect';
+import { Effect, pipe } from 'effect';
 import { andThen, tryPromise } from 'effect/Effect';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CoupleErrorMessage } from '../const/errorMessage/couple.errorMessage';
@@ -21,15 +21,21 @@ export class CoupleRepository implements CoupleRepositoryInterface {
           }),
         catch: () => ({ _tag: CoupleErrorMessage.FIND_BY_USER_ID }) as const,
       }),
-      andThen((couples) => couples.map((v) => CoupleModel.create(v))),
+      Effect.flatMap((couples) =>
+        Effect.all(couples.map((v) => CoupleModel.create(v))),
+      ),
     );
 
-  create = (userId1: string, userId2: string) =>
+  create = (coupleModel: CoupleModel) =>
     pipe(
       tryPromise({
         try: () =>
           this.prisma.couple.create({
-            data: { userId1, userId2 },
+            data: {
+              id: coupleModel.id,
+              userId1: coupleModel.userId1,
+              userId2: coupleModel.userId2,
+            },
           }),
         catch: () => ({ _tag: CoupleErrorMessage.CREATE }) as const,
       }),

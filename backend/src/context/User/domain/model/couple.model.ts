@@ -1,8 +1,9 @@
+import * as crypto from 'crypto';
 import { Effect } from 'effect';
-import { gen, runSync } from 'effect/Effect';
+import { gen } from 'effect/Effect';
 
 type CoupleType = {
-  id: string;
+  id?: string;
   userId1: string;
   userId2: string;
 };
@@ -18,15 +19,16 @@ export class CoupleModel {
     this.userId2 = input.userId2;
   }
 
-  public static create = (input: CoupleType): CoupleModel =>
+  public static create = (input: CoupleType) =>
     gen(function* () {
+      const id = input.id ?? crypto.randomUUID();
       const userIds = yield* CoupleModel.confirmDifferentUserIds(input);
       return new CoupleModel({
-        id: input.id,
+        id,
         userId1: userIds.userId1,
         userId2: userIds.userId2,
       });
-    }).pipe(runSync);
+    });
 
   private static confirmDifferentUserIds = (
     input: Pick<CoupleType, 'userId1' | 'userId2'>,

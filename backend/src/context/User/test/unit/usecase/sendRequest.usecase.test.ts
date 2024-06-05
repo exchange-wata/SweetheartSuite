@@ -44,7 +44,7 @@ const userRepository: Pick<
 };
 
 const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> = {
-  findByUserId: jest.fn(() => Effect.succeed([couple])),
+  findByUserId: jest.fn(() => [couple]),
 };
 
 const requestRepository: Pick<RequestRepositoryInterface, 'create'> = {

@@ -1,3 +1,4 @@
+import { runSync } from 'effect/Effect';
 import { CoupleModel } from 'src/context/User/domain/model/couple.model';
 
 describe('couple modelのテスト', () => {
@@ -7,7 +8,7 @@ describe('couple modelのテスト', () => {
       userId1: 'b6ac4860-21aa-43c7-bbcd-f8a47b86b362',
       userId2: 'c2f068b2-57bd-4074-9228-2a13e18141ee',
     };
-    expect(CoupleModel.create(input)).toBeInstanceOf(CoupleModel);
+    expect(runSync(CoupleModel.create(input))).toBeInstanceOf(CoupleModel);
   });
 
   describe('異常系', () => {
@@ -17,7 +18,9 @@ describe('couple modelのテスト', () => {
         userId1: 'b6ac4860-21aa-43c7-bbcd-f8a47b86b362',
         userId2: 'b6ac4860-21aa-43c7-bbcd-f8a47b86b362',
       };
-      expect(() => CoupleModel.create(input)).toThrow();
+      expect(() => runSync(CoupleModel.create(input))).toThrow(
+        'invalid same user ids',
+      );
     });
   });
 });

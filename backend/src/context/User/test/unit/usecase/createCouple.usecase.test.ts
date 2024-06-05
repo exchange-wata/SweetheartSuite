@@ -1,4 +1,4 @@
-import { Effect } from 'effect';
+import { runSync } from 'effect/Effect';
 import { RequestRepositoryInterface } from 'src/context/User/domain/interface/request.repository.interface';
 import { CoupleModel } from 'src/context/User/domain/model/couple.model';
 import { RequestModel } from 'src/context/User/domain/model/request.model';
@@ -7,16 +7,20 @@ import { CoupleRepository } from 'src/context/User/infra/couple.repository';
 import { RequestRepository } from 'src/context/User/infra/request.repository';
 import { CreateCoupleUsecase } from 'src/context/User/usecase/createCouple.usecase';
 
+const requestId = 'request-id';
+const fromUserId = 'sender-id';
+const toUserId = 'receiver-id';
+
 const request = RequestModel.create({
-  id: 'request-id',
-  fromUserId: 'sender-id',
-  toUserId: 'receiver-id',
+  id: requestId,
+  fromUserId,
+  toUserId,
   typeId: RequestTypes.APPROVED,
 });
 const couple = CoupleModel.create({
   id: 'couple-id',
-  userId1: 'from-user-id',
-  userId2: 'to-user-id',
+  userId1: fromUserId,
+  userId2: toUserId,
 });
 
 const requestRepository: Pick<
@@ -26,15 +30,15 @@ const requestRepository: Pick<
   update: jest.fn(() => request),
   findByToUserId: jest.fn(() =>
     RequestModel.create({
-      id: 'request-id',
-      fromUserId: 'sender-id',
-      toUserId: 'receiver-id',
+      id: requestId,
+      fromUserId,
+      toUserId,
       typeId: RequestTypes.SENT,
     }),
   ),
 };
 const coupleRepository: Pick<CoupleRepository, 'create'> = {
-  create: jest.fn(() => Effect.succeed(couple)),
+  create: jest.fn(() => couple),
 };
 
 const createCoupleUsecase = new CreateCoupleUsecase(
@@ -44,20 +48,16 @@ const createCoupleUsecase = new CreateCoupleUsecase(
 
 describe('CreateCoupleUsecase', () => {
   it('リクエストが承認されたとき、couple modelが返る', async () => {
-    const receiverId = 'receiver-id';
-
-    const result = await createCoupleUsecase.execute(receiverId, true);
+    const result = await createCoupleUsecase.execute(toUserId, true);
 
     expect(requestRepository.update).toHaveBeenCalled();
     expect(requestRepository.findByToUserId).toHaveBeenCalled();
     expect(coupleRepository.create).toHaveBeenCalled();
-    expect(result).toBe(couple);
+    expect(result).toEqual(runSync(couple));
   });
 
   it('リクエストが拒否されたとき、nullが返る', async () => {
-    const receiverId = 'receiver-id';
-
-    const result = await createCoupleUsecase.execute(receiverId, false);
+    const result = await createCoupleUsecase.execute(toUserId, false);
 
     expect(requestRepository.update).toHaveBeenCalled();
     expect(requestRepository.findByToUserId).toHaveBeenCalled();
