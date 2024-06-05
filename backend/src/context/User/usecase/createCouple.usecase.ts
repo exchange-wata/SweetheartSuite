@@ -4,6 +4,7 @@ import { COUPLE_REPOSITORY, REQUEST_REPOSITORY } from '../const/user.token';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import { CoupleModel } from '../domain/model/couple.model';
+import { RequestModel } from '../domain/model/request.model';
 import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
 
 @Injectable()
@@ -24,10 +25,16 @@ export class CreateCoupleUsecase {
       const requestTypeId = isAccepted
         ? RequestTypes.APPROVED
         : RequestTypes.REJECTED;
-      const request = yield* self.requestRepository.update(
-        receiverId,
-        requestTypeId,
-      );
+
+      const currentRequest =
+        yield* self.requestRepository.findByToUserId(receiverId);
+      const updateRequestModel = yield* RequestModel.create({
+        fromUserId: currentRequest.fromUserId,
+        toUserId: receiverId,
+        typeId: requestTypeId,
+      });
+
+      const request = yield* self.requestRepository.update(updateRequestModel);
 
       if (!isAccepted) return null;
 

@@ -8,6 +8,8 @@ import {
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
+import { RequestModel } from '../domain/model/request.model';
+import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
 
 @Injectable()
 export class SendRequestUsecase {
@@ -35,7 +37,12 @@ export class SendRequestUsecase {
         return false;
       }
 
-      yield* self.requestRepository.create(sender.id, receiver.id);
+      const requestModel = yield* RequestModel.create({
+        fromUserId: sender.id,
+        toUserId: receiver.id,
+        typeId: RequestTypes.SENT,
+      });
+      yield* self.requestRepository.create(requestModel);
       return true;
     }).pipe(runPromise);
   };

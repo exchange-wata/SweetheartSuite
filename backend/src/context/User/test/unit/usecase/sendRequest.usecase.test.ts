@@ -48,7 +48,7 @@ const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> = {
 };
 
 const requestRepository: Pick<RequestRepositoryInterface, 'create'> = {
-  create: jest.fn(() => Effect.succeed(request)),
+  create: jest.fn(() => request),
 };
 
 const sendRequestUsacese = new SendRequestUsecase(
