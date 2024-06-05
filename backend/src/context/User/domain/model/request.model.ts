@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { Effect } from 'effect';
 import { gen } from 'effect/Effect';
 import { RequestTypeId } from './valueObject/requestTypeId.value';
@@ -8,8 +9,6 @@ type RequestType = {
   toUserId: string;
   typeId: number;
 };
-
-const crypto = require('crypto');
 
 export class RequestModel {
   id: string;

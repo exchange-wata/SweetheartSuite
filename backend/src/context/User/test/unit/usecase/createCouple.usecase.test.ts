@@ -31,13 +31,10 @@ const requestRepository: Pick<
         never
       >,
   ),
-  findByToUserId: jest.fn(
-    () =>
-      Effect.succeed({
-        ...request,
-        typeId: RequestTypes.SENT,
-      }) as unknown as Effect.Effect<RequestModel, { _tag: string }, never>,
-  ),
+  findByToUserId: jest.fn(() => ({
+    ...request,
+    typeId: RequestTypes.SENT,
+  })),
 };
 const coupleRepository: Pick<CoupleRepository, 'create'> = {
   create: jest.fn(() => Effect.succeed(couple)),
