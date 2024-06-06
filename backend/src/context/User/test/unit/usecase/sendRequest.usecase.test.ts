@@ -23,11 +23,13 @@ const receiver = UserModel.create({
   name,
   mailaddress: receivedUserMailaddress,
 });
-const couple = CoupleModel.create({
-  id: '7ff7e40a-3040-4119-836d-321c40d1b732',
-  userId1: senderId,
-  userId2: receiverId,
-});
+const couple = Effect.all([
+  CoupleModel.create({
+    id: '7ff7e40a-3040-4119-836d-321c40d1b732',
+    userId1: senderId,
+    userId2: receiverId,
+  }),
+]);
 const request = RequestModel.create({
   id: '0ef650d7-6a48-4395-954c-6770c21e34bb',
   fromUserId: senderId,
@@ -44,7 +46,7 @@ const userRepository: Pick<
 };
 
 const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> = {
-  findByUserId: jest.fn(() => Effect.succeed([couple])),
+  findByUserId: jest.fn(() => couple),
 };
 
 const requestRepository: Pick<RequestRepositoryInterface, 'create'> = {
