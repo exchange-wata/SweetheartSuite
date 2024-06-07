@@ -6,23 +6,39 @@ import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
 const senderId = '8d946a74-f3e1-464c-8cf5-f180e729892a';
 const receiverId = 'c2f068b2-57bd-4074-9228-2a13e18141ee';
 
-const couple = Effect.all([
-  CoupleModel.create({
-    id: '7ff7e40a-3040-4119-836d-321c40d1b732',
-    userId1: senderId,
-    userId2: receiverId,
-  }),
-]);
-const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> = {
-  findByUserId: jest.fn(() => couple),
-};
+const getUsecase = (
+  coupleModels: Array<
+    Effect.Effect<
+      CoupleModel,
+      {
+        _tag: string;
+      }
+    >
+  >,
+) => {
+  const couple =
+    coupleModels.length > 0 ? Effect.all(coupleModels) : Effect.all([]);
 
-const usecase = new GetCoupleUsecase(
-  coupleRepository as CoupleRepositoryInterface,
-);
+  const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> = {
+    findByUserId: jest.fn(() => couple),
+  };
+
+  const usecase = new GetCoupleUsecase(
+    coupleRepository as CoupleRepositoryInterface,
+  );
+
+  return [coupleRepository, usecase] as const;
+};
 
 describe('GetCoupleUsecase', () => {
   it('coupleが一組の時、trueが返る', async () => {
+    const [coupleRepository, usecase] = getUsecase([
+      CoupleModel.create({
+        id: '7ff7e40a-3040-4119-836d-321c40d1b732',
+        userId1: senderId,
+        userId2: receiverId,
+      }),
+    ]);
     const result = await usecase.execute(senderId);
 
     expect(result).toBe(true);
@@ -31,15 +47,7 @@ describe('GetCoupleUsecase', () => {
 
   describe('falseが返る時', () => {
     it('coupleが一組もいない時', async () => {
-      const couple = Effect.all([]);
-      const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> =
-        {
-          findByUserId: jest.fn(() => couple),
-        };
-
-      const usecase = new GetCoupleUsecase(
-        coupleRepository as CoupleRepositoryInterface,
-      );
+      const [coupleRepository, usecase] = getUsecase([]);
 
       const result = await usecase.execute(senderId);
 
@@ -47,7 +55,7 @@ describe('GetCoupleUsecase', () => {
       expect(coupleRepository.findByUserId).toHaveBeenCalled();
     });
     it('coupleが二組以上の時', async () => {
-      const couple = Effect.all([
+      const [coupleRepository, usecase] = getUsecase([
         CoupleModel.create({
           id: '7ff7e40a-3040-4119-836d-321c40d1b732',
           userId1: senderId,
@@ -59,14 +67,6 @@ describe('GetCoupleUsecase', () => {
           userId2: receiverId,
         }),
       ]);
-      const coupleRepository: Pick<CoupleRepositoryInterface, 'findByUserId'> =
-        {
-          findByUserId: jest.fn(() => couple),
-        };
-
-      const usecase = new GetCoupleUsecase(
-        coupleRepository as CoupleRepositoryInterface,
-      );
 
       const result = await usecase.execute(senderId);
 
