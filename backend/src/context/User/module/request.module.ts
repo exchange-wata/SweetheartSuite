@@ -10,6 +10,7 @@ import {
 import { CoupleRepository } from '../infra/couple.repository';
 import { RequestRepository } from '../infra/request.repository';
 import { UserRepository } from '../infra/user.repository';
+import { GetRequestUsecase } from '../usecase/getRequest.usecase';
 import { SendRequestUsecase } from '../usecase/sendRequest.usecase';
 
 const externalContext = [AuthModule];
@@ -34,6 +35,7 @@ const exportProviders = [
   providers: [
     RequestResolver,
     SendRequestUsecase,
+    GetRequestUsecase,
     PrismaService,
     ...exportProviders,
   ],

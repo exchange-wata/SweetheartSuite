@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RequestErrorMessage } from '../const/errorMessage/request.errorMessage';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import { RequestModel } from '../domain/model/request.model';
+import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
 
 @Injectable()
 export class RequestRepository implements RequestRepositoryInterface {
@@ -53,6 +54,21 @@ export class RequestRepository implements RequestRepositoryInterface {
           this.prisma.request.findUniqueOrThrow({ where: { toUserId } }),
         catch: () =>
           ({ _tag: RequestErrorMessage.FIND_BY_TO_USER_ID }) as const,
+      }),
+      andThen(RequestModel.create),
+    );
+
+  findByToUserIdAndTypeId = (toUserId: string, typeId: RequestTypes) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.request.findUniqueOrThrow({
+            where: { toUserId, typeId },
+          }),
+        catch: () =>
+          ({
+            _tag: RequestErrorMessage.FIND_BY_TO_USER_ID_AND_TYPE_ID,
+          }) as const,
       }),
       andThen(RequestModel.create),
     );
