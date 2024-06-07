@@ -6,12 +6,14 @@ import { COUPLE_REPOSITORY, REQUEST_REPOSITORY } from '../const/user.token';
 import { CoupleRepository } from '../infra/couple.repository';
 import { RequestRepository } from '../infra/request.repository';
 import { CreateCoupleUsecase } from '../usecase/createCouple.usecase';
+import { GetCoupleUsecase } from '../usecase/getCouple.usecase';
 
 @Module({
   imports: [AuthModule],
   providers: [
     CoupleResolver,
     CreateCoupleUsecase,
+    GetCoupleUsecase,
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },
     { provide: REQUEST_REPOSITORY, useClass: RequestRepository },
     PrismaService,
