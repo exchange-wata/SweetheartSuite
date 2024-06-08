@@ -2,14 +2,24 @@
 
 import { gql } from 'graphql-request';
 import {
+  CreateCoupleMutation,
+  CreateCoupleMutationVariables,
   GetUserByMailaddressQuery,
   GetUserByMailaddressQueryVariables,
   SendRequestMutation,
   SendRequestMutationVariables,
 } from '@/types/gql/graphql';
 import { authClient } from '@/lib/authClient';
-import { catchTags, gen, runPromise, succeed, tryPromise } from 'effect/Effect';
+import {
+  catchTags,
+  flatMap,
+  gen,
+  runPromise,
+  succeed,
+  tryPromise,
+} from 'effect/Effect';
 import { failWithTag, tag } from '@/lib/Effect.lib';
+import { pipe } from 'effect';
 
 type State = {
   mailaddress: string;
@@ -67,7 +77,7 @@ export const sendRequest = async (
 
     const client = yield* authClient();
 
-    yield* tryPromise({
+    const result = yield* tryPromise({
       try: () =>
         client.request<SendRequestMutation, SendRequestMutationVariables>(
           sendRequestMutation,
@@ -75,6 +85,12 @@ export const sendRequest = async (
         ),
       catch: () => tag('already sent'),
     });
+
+    if (result.sendRequest === false)
+      return {
+        mailaddress,
+        error: 'このユーザーにはすでにリクエストを送っています',
+      };
 
     return {
       mailaddress,
@@ -97,6 +113,38 @@ export const sendRequest = async (
     )
     .pipe(runPromise);
 
+export const accept = async () => {
+  pipe(
+    authClient(),
+    flatMap((client) =>
+      tryPromise(() =>
+        client.request<CreateCoupleMutation, CreateCoupleMutationVariables>(
+          createCoupleMutation,
+          { isAccepted: true },
+        ),
+      ),
+    ),
+  ).pipe(runPromise);
+
+  return true;
+};
+
+export const reject = async () => {
+  pipe(
+    authClient(),
+    flatMap((client) =>
+      tryPromise(() =>
+        client.request<CreateCoupleMutation, CreateCoupleMutationVariables>(
+          createCoupleMutation,
+          { isAccepted: false },
+        ),
+      ),
+    ),
+  ).pipe(runPromise);
+
+  return true;
+};
+
 const getUserByMailaddressQuery = gql`
   query GetUserByMailaddress($mailaddress: String!) {
     getUserByMailaddress(mailaddress: $mailaddress) {
@@ -109,5 +157,13 @@ const getUserByMailaddressQuery = gql`
 const sendRequestMutation = gql`
   mutation SendRequest($mailaddress: String!) {
     sendRequest(mailaddress: $mailaddress)
+  }
+`;
+
+const createCoupleMutation = gql`
+  mutation CreateCouple($isAccepted: Boolean!) {
+    createCouple(isAccepted: $isAccepted) {
+      id
+    }
   }
 `;

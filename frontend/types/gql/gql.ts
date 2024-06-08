@@ -13,8 +13,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted) {\n      id\n    }\n  }\n": types.CreateCoupleDocument,
     "\n  query GetUserByMailaddress($mailaddress: String!) {\n    getUserByMailaddress(mailaddress: $mailaddress) {\n      mailaddress\n      name\n    }\n  }\n": types.GetUserByMailaddressDocument,
     "\n  mutation SendRequest($mailaddress: String!) {\n    sendRequest(mailaddress: $mailaddress)\n  }\n": types.SendRequestDocument,
+    "\n  query GetRequest {\n    getRequest {\n      fromUserId\n    }\n  }\n": types.GetRequestDocument,
     "\n  query Login($token: String!) {\n    login(token: $token)\n  }\n": types.LoginDocument,
     "\n  mutation CreateTempUser($mailaddress: String!) {\n    createTempUser(mailaddress: $mailaddress) {\n      token\n    }\n  }\n": types.CreateTempUserDocument,
     "\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      id\n    }\n  }\n": types.CreateUserDocument,
@@ -37,11 +39,19 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted) {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query GetUserByMailaddress($mailaddress: String!) {\n    getUserByMailaddress(mailaddress: $mailaddress) {\n      mailaddress\n      name\n    }\n  }\n"): (typeof documents)["\n  query GetUserByMailaddress($mailaddress: String!) {\n    getUserByMailaddress(mailaddress: $mailaddress) {\n      mailaddress\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation SendRequest($mailaddress: String!) {\n    sendRequest(mailaddress: $mailaddress)\n  }\n"): (typeof documents)["\n  mutation SendRequest($mailaddress: String!) {\n    sendRequest(mailaddress: $mailaddress)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetRequest {\n    getRequest {\n      fromUserId\n    }\n  }\n"): (typeof documents)["\n  query GetRequest {\n    getRequest {\n      fromUserId\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
