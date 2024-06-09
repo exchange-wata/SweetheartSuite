@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
+import { contents } from './contents';
 import { couple } from './couple';
+import { list } from './list';
 import { user } from './user';
 
 export type UserSeedType = {
@@ -11,11 +13,23 @@ export type UserSeedType = {
 const prisma = new PrismaClient();
 
 export async function transaction() {
+  // list schema
+  await prisma.contents.deleteMany();
+  await prisma.list.deleteMany();
+
+  // user schema
+  await prisma.request.deleteMany();
   await prisma.couple.deleteMany();
   await prisma.user.deleteMany();
 
+  // user schema
   const users = await user();
-  await couple(chunkUsersForCouple(users));
+  const couples = await couple(chunkUsersForCouple(users));
+
+  // list schema
+  const lists = await list(couples);
+  const listIds = lists.map((list) => ({ id: list.id }));
+  await contents(listIds);
 }
 
 transaction()

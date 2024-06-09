@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
+import * as crypto from 'crypto';
 import { UserSeedType } from './transaction';
 
-const crypto = require('crypto');
 const prisma = new PrismaClient();
 
 export const couple = async (users: UserSeedType[][]) => {
@@ -15,4 +15,6 @@ export const couple = async (users: UserSeedType[][]) => {
   await prisma.couple.createMany({
     data: couples,
   });
+
+  return couples;
 };
