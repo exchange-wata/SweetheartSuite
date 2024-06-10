@@ -1,0 +1,32 @@
+{
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "**/node_modules/effect/dist/dts/Option.d.ts",
+    "**/node_modules/effect/dist/dts/Either.d.ts",
+    "**/node_modules/effect/dist/dts/STM.d.ts",
+    "**/node_modules/effect/dist/dts/Stream.d.ts",
+    "**/node_modules/effect/dist/dts/Exit.d.ts",
+    "**/node_modules/effect/dist/dts/Deferred.d.ts",
+    "**/node_modules/effect/dist/dts/Config.d.ts",
+    "**/node_modules/effect/dist/dts/Runtime.d.ts",
+    "**/node_modules/effect/dist/dts/Logger.d.ts",
+    "**/node_modules/effect/dist/dts/Request.d.ts",
+    "**/node_modules/effect/dist/dts/Fiber.d.ts",
+    "**/node_modules/effect/dist/dts/Schedule.d.ts",
+    "**/node_modules/effect/dist/dts/Layer.d.ts",
+    "**/node_modules/effect/dist/dts/Sink.d.ts",
+    "**/node_modules/effect/dist/dts/Channel.d.ts",
+    "**/node_modules/effect/dist/dts/Metric.d.ts",
+    "**/node_modules/effect/dist/dts/Tdeferred.d.ts"
+  ],
+
+  "eslint.experimental.useFlatConfig": true
+}

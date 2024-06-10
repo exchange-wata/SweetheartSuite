@@ -2,11 +2,11 @@ import { Center } from '@/components/layout/center';
 import { Card } from '@/components/ui/card';
 import { SendRequest } from './SendRequest';
 import { gql } from 'graphql-request';
-import { catchTag, gen, runPromise, succeed, tryPromise } from 'effect/Effect';
 import { authClient } from '@/lib/authClient';
 import { GetRequestQuery } from '@/types/gql/graphql';
 import { tag } from '@/lib/Effect.lib';
 import { RecievedRequest } from './RecievedRequest';
+import { gen, tryPromise, catchTag, succeed, runPromise } from 'effect/Effect';
 
 export default async function Home() {
   const {
