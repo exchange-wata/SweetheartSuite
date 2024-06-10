@@ -73,3 +73,27 @@ model RequestType {
 
   @@schema("user")
 }
+
+model List {
+  id        String @id @default(uuid())
+  coupleId  String @unique
+  contents  Contents[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  deletedAt DateTime?
+
+  @@schema("list")
+}
+
+model Contents {
+  id        String @id @default(uuid())
+  listId    String
+  content   String
+  isDone    Boolean @default(false)
+  list List @relation(references: [id], fields: [listId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  deletedAt DateTime?
+
+  @@schema("list")
+}
