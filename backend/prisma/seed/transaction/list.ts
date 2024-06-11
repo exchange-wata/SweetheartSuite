@@ -14,6 +14,7 @@ export const list = async (couples: CoupleSeedType[]) => {
     return {
       id: crypto.randomUUID(),
       coupleId: couple.id,
+      name: 'テスト',
     };
   });
   await prisma.list.createMany({

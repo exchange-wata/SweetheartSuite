@@ -77,6 +77,7 @@ model RequestType {
 model List {
   id        String @id @default(uuid())
   coupleId  String @unique
+  name      String
   contents  Contents[]
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
