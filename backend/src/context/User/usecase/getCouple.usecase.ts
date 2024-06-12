@@ -14,7 +14,7 @@ export class GetCoupleUsecase {
     const self = this;
     return gen(function* () {
       const couples = yield* self.coupleRepository.findByUserId(userId);
-      if (couples.length === 1) return true;
+      if (couples.length === 1) return couples;
 
       return false;
     }).pipe(runPromise);

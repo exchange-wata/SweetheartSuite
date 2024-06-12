@@ -18,8 +18,9 @@ export class CoupleResolver {
     return this.createCoupleUsecase.execute(user.userId, isAccepted);
   }
 
-  @Query(() => Boolean)
+  @Query(() => CouplePresenter)
   async getCouple(@User() user) {
-    return this.getCoupleUsecase.execute(user.userId);
+    const result = await this.getCoupleUsecase.execute(user.userId);
+    return result ? result.map((re) => CouplePresenter.create(re)) : result;
   }
 }

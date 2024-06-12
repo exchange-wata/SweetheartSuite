@@ -1,4 +1,5 @@
 import { Effect } from 'effect';
+import { runSync } from 'effect/Effect';
 import { CoupleRepositoryInterface } from 'src/context/User/domain/interface/couple.repository.interface';
 import { CoupleModel } from 'src/context/User/domain/model/couple.model';
 import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
@@ -31,17 +32,16 @@ const getUsecase = (
 };
 
 describe('GetCoupleUsecase', () => {
-  it('coupleが一組の時、trueが返る', async () => {
-    const [coupleRepository, usecase] = getUsecase([
-      CoupleModel.create({
-        id: '7ff7e40a-3040-4119-836d-321c40d1b732',
-        userId1: senderId,
-        userId2: receiverId,
-      }),
-    ]);
+  it('coupleが一組の時、couple modelが返る', async () => {
+    const couple = CoupleModel.create({
+      id: '7ff7e40a-3040-4119-836d-321c40d1b732',
+      userId1: senderId,
+      userId2: receiverId,
+    });
+    const [coupleRepository, usecase] = getUsecase([couple]);
     const result = await usecase.execute(senderId);
 
-    expect(result).toBe(true);
+    expect(result[0]).toStrictEqual(runSync(couple));
     expect(coupleRepository.findByUserId).toHaveBeenCalled();
   });
 
