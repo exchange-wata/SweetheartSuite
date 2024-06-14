@@ -20,7 +20,7 @@ export class ListRepository implements ListRepositoryInterface {
               coupleId: listModel.coupleId,
             },
           }),
-        catch: (error) => ({ _tag: error }) as const,
+        catch: () => ({ _tag: 'can not create list' }) as const,
       }),
       andThen(ListModel.create),
     );
