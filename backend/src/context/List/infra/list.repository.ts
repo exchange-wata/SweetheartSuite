@@ -18,7 +18,11 @@ export class ListRepository implements ListRepositoryInterface {
               coupleId: listModel.coupleId,
             },
           }),
-        catch: () => ({ _tag: 'can not create list' }) as const,
+        catch: (error) => {
+          console.error('Error creating list:', error);
+          return { _tag: 'cannot create list' } as const;
+        },
+        // catch: (error) => ({ _tag: error }) as const,
       }),
       andThen(ListModel.create),
     );
