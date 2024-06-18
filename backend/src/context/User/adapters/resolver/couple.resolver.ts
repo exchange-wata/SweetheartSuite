@@ -21,6 +21,6 @@ export class CoupleResolver {
   @Query(() => CouplePresenter)
   async getCouple(@User() user) {
     const result = await this.getCoupleUsecase.execute(user.userId);
-    return result ? result.map((re) => CouplePresenter.create(re)) : result;
+    return CouplePresenter.create(result);
   }
 }

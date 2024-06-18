@@ -41,17 +41,15 @@ describe('GetCoupleUsecase', () => {
     const [coupleRepository, usecase] = getUsecase([couple]);
     const result = await usecase.execute(senderId);
 
-    expect(result[0]).toStrictEqual(runSync(couple));
+    expect(result).toStrictEqual(runSync(couple));
     expect(coupleRepository.findByUserId).toHaveBeenCalled();
   });
 
-  describe('falseが返る時', () => {
+  describe('エラーになる返る時', () => {
     it('coupleが一組もいない時', async () => {
       const [coupleRepository, usecase] = getUsecase([]);
 
-      const result = await usecase.execute(senderId);
-
-      expect(result).toBe(false);
+      await expect(() => usecase.execute(senderId)).rejects.toThrow();
       expect(coupleRepository.findByUserId).toHaveBeenCalled();
     });
     it('coupleが二組以上の時', async () => {
@@ -68,9 +66,7 @@ describe('GetCoupleUsecase', () => {
         }),
       ]);
 
-      const result = await usecase.execute(senderId);
-
-      expect(result).toBe(false);
+      await expect(() => usecase.execute(senderId)).rejects.toThrow();
       expect(coupleRepository.findByUserId).toHaveBeenCalled();
     });
   });

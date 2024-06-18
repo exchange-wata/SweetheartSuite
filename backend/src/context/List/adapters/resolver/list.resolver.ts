@@ -16,9 +16,7 @@ export class ListResolver {
   @Mutation(() => ListPresenter)
   async createList(@User() user, @Args('name') name: string) {
     const couple = await this.getCoupleUsecase.execute(user.userId);
-    if (!couple || couple.length !== 1)
-      throw new Error('Invalid number of couples');
-    const listModel = await this.createListUsecase.execute(couple[0].id, name);
+    const listModel = await this.createListUsecase.execute(couple.id, name);
     return ListPresenter.create(listModel);
   }
 }
