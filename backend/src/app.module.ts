@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AuthModule } from './context/Auth/auth.module';
+import { ListModule } from './context/List/list.module';
 import { UserModule } from './context/User/user.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { UserModule } from './context/User/user.module';
     }),
     UserModule,
     AuthModule,
+    ListModule,
   ],
 })
 export class AppModule {}

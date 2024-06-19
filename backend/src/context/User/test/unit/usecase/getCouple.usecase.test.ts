@@ -1,4 +1,5 @@
 import { Effect } from 'effect';
+import { runSync } from 'effect/Effect';
 import { CoupleRepositoryInterface } from 'src/context/User/domain/interface/couple.repository.interface';
 import { CoupleModel } from 'src/context/User/domain/model/couple.model';
 import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
@@ -31,27 +32,24 @@ const getUsecase = (
 };
 
 describe('GetCoupleUsecase', () => {
-  it('coupleが一組の時、trueが返る', async () => {
-    const [coupleRepository, usecase] = getUsecase([
-      CoupleModel.create({
-        id: '7ff7e40a-3040-4119-836d-321c40d1b732',
-        userId1: senderId,
-        userId2: receiverId,
-      }),
-    ]);
+  it('coupleが一組の時、couple modelが返る', async () => {
+    const couple = CoupleModel.create({
+      id: '7ff7e40a-3040-4119-836d-321c40d1b732',
+      userId1: senderId,
+      userId2: receiverId,
+    });
+    const [coupleRepository, usecase] = getUsecase([couple]);
     const result = await usecase.execute(senderId);
 
-    expect(result).toBe(true);
+    expect(result).toStrictEqual(runSync(couple));
     expect(coupleRepository.findByUserId).toHaveBeenCalled();
   });
 
-  describe('falseが返る時', () => {
+  describe('エラーになる返る時', () => {
     it('coupleが一組もいない時', async () => {
       const [coupleRepository, usecase] = getUsecase([]);
 
-      const result = await usecase.execute(senderId);
-
-      expect(result).toBe(false);
+      await expect(() => usecase.execute(senderId)).rejects.toThrow();
       expect(coupleRepository.findByUserId).toHaveBeenCalled();
     });
     it('coupleが二組以上の時', async () => {
@@ -68,9 +66,7 @@ describe('GetCoupleUsecase', () => {
         }),
       ]);
 
-      const result = await usecase.execute(senderId);
-
-      expect(result).toBe(false);
+      await expect(() => usecase.execute(senderId)).rejects.toThrow();
       expect(coupleRepository.findByUserId).toHaveBeenCalled();
     });
   });
