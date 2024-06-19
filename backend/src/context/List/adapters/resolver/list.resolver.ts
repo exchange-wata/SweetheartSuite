@@ -16,7 +16,7 @@ export class ListResolver {
   @Mutation(() => ListPresenter)
   async createList(@User() user, @Args('name') name: string) {
     const couple = await this.getCoupleUsecase.execute(user.userId);
-    const listModel = await this.createListUsecase.execute(couple.id, name);
-    return ListPresenter.create(listModel);
+    const list = await this.createListUsecase.execute(couple.id, name);
+    return ListPresenter.create(list);
   }
 }
