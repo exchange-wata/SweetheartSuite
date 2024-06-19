@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { pipe } from 'effect';
-import { Effect, andThen, tryPromise } from 'effect/Effect';
+import { andThen, tryPromise } from 'effect/Effect';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { ListRepositoryInterface } from '../domain/interface/list.repository.interface';
 import { ListModel } from '../model/list.model';
@@ -9,7 +9,7 @@ import { ListModel } from '../model/list.model';
 export class ListRepository implements ListRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  findByListId = (listId: string): Effect<ListModel, { _tag: string }, never> =>
+  findByListId = (listId: string) =>
     pipe(
       tryPromise({
         try: () =>
