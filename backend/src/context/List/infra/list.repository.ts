@@ -24,4 +24,22 @@ export class ListRepository implements ListRepositoryInterface {
       }),
       andThen(ListModel.create),
     );
+
+  update = (listModel: ListModel) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.list.update({
+            where: {
+              id: listModel.id,
+              coupleId: listModel.coupleId,
+            },
+            data: {
+              name: listModel.name,
+            },
+          }),
+        catch: () => ({ _tag: 'can not update list' }) as const,
+      }),
+      andThen(ListModel.create),
+    );
 }
