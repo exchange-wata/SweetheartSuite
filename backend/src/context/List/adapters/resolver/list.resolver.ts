@@ -23,13 +23,8 @@ export class ListResolver {
   }
 
   @Mutation(() => ListPresenter)
-  async updateList(
-    @User() user,
-    @Args('listId') listId: string,
-    @Args('name') name: string,
-  ) {
-    const couple = await this.getCoupleUsecase.execute(user.userId);
-    const list = await this.updateListUsecase.execute(couple.id, listId, name);
+  async updateList(@Args('listId') listId: string, @Args('name') name: string) {
+    const list = await this.updateListUsecase.execute(listId, name);
     return ListPresenter.create(list);
   }
 }

@@ -21,7 +21,7 @@ const updateListUsecase = new UpdateListUsecase(
 
 describe('CreateListUsecase', () => {
   it('正常系', async () => {
-    const result = await updateListUsecase.execute(coupleId, listId, listName);
+    const result = await updateListUsecase.execute(listId, listName);
     expect(result).toStrictEqual(runSync(list));
   });
 });

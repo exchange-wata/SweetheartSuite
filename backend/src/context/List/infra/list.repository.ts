@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { pipe } from 'effect';
-import { andThen, tryPromise } from 'effect/Effect';
+import { Effect, andThen, tryPromise } from 'effect/Effect';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { ListRepositoryInterface } from '../domain/interface/list.repository.interface';
 import { ListModel } from '../model/list.model';
@@ -8,6 +8,16 @@ import { ListModel } from '../model/list.model';
 @Injectable()
 export class ListRepository implements ListRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
+
+  findByListId = (listId: string): Effect<ListModel, { _tag: string }, never> =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.list.findUniqueOrThrow({ where: { id: listId } }),
+        catch: () => ({ _tag: 'can not find list' }) as const,
+      }),
+      andThen(ListModel.create),
+    );
 
   create = (listModel: ListModel) =>
     pipe(

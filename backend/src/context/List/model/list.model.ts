@@ -27,4 +27,9 @@ export class ListModel {
         coupleId: input.coupleId,
       });
     });
+
+  public updateName = (name: string) => {
+    this.name = name;
+    return this;
+  };
 }
