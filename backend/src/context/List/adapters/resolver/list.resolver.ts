@@ -1,5 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
+import { UserHasList } from 'src/context/Authorization/decorator/userHasList.decorator';
 import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
 import { User } from '../../../User/decorator/user.decorator';
 import { CreateListUsecase } from '../../usecase/createList.usecase';
@@ -23,6 +24,7 @@ export class ListResolver {
   }
 
   @Mutation(() => ListPresenter)
+  @UserHasList()
   async updateList(@Args('listId') listId: string, @Args('name') name: string) {
     const list = await this.updateListUsecase.execute(listId, name);
     return ListPresenter.create(list);

@@ -8,6 +8,7 @@ import { ListResolver } from './adapters/resolver/list.resolver';
 import { LIST_REPOSITORY } from './const/list.token';
 import { ListRepository } from './infra/list.repository';
 import { CreateListUsecase } from './usecase/createList.usecase';
+import { FindByListIdUsecase } from './usecase/findByListId.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
 
 @Module({
@@ -17,6 +18,7 @@ import { UpdateListUsecase } from './usecase/updateList.usecase';
     CreateListUsecase,
     GetCoupleUsecase,
     UpdateListUsecase,
+    FindByListIdUsecase,
     PrismaService,
     { provide: LIST_REPOSITORY, useClass: ListRepository },
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },
