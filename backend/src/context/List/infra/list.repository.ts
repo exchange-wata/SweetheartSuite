@@ -9,6 +9,16 @@ import { ListModel } from '../model/list.model';
 export class ListRepository implements ListRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
+  findByListId = (listId: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.list.findUniqueOrThrow({ where: { id: listId } }),
+        catch: () => ({ _tag: 'can not find list' }) as const,
+      }),
+      andThen(ListModel.create),
+    );
+
   create = (listModel: ListModel) =>
     pipe(
       tryPromise({
@@ -21,6 +31,24 @@ export class ListRepository implements ListRepositoryInterface {
             },
           }),
         catch: () => ({ _tag: 'can not create list' }) as const,
+      }),
+      andThen(ListModel.create),
+    );
+
+  update = (listModel: ListModel) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.list.update({
+            where: {
+              id: listModel.id,
+              coupleId: listModel.coupleId,
+            },
+            data: {
+              name: listModel.name,
+            },
+          }),
+        catch: () => ({ _tag: 'can not update list' }) as const,
       }),
       andThen(ListModel.create),
     );
