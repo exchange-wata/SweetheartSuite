@@ -3,7 +3,7 @@ import { pipe } from 'effect';
 import { andThen, tryPromise } from 'effect/Effect';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { ListRepositoryInterface } from '../domain/interface/list.repository.interface';
-import { ListModel } from '../model/list.model';
+import { ListModel } from '../domain/model/list.model';
 
 @Injectable()
 export class ListRepository implements ListRepositoryInterface {

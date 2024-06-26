@@ -1,5 +1,5 @@
 import { Effect } from 'effect/Effect';
-import { ListModel } from '../../model/list.model';
+import { ListModel } from '../model/list.model';
 
 export interface ListRepositoryInterface {
   findByListId(listId: string): Effect<ListModel, { _tag: string }>;
