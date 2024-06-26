@@ -1,4 +1,4 @@
-import { Content } from 'src/context/List/domain/model/valueObject/content.value';
+import { Content } from 'src/context/List/domain/model/content.model';
 
 describe('content value object', () => {
   it('正常系', () => {

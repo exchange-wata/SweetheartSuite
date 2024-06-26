@@ -1,6 +1,4 @@
-import { gen, runSync } from 'effect/Effect';
-
-export type ContentType = {
+type ContentType = {
   id: string;
   content: string;
   isDone: boolean;
@@ -18,11 +16,9 @@ export class Content {
   }
 
   public static create = (input: ContentType): Content =>
-    gen(function* () {
-      return new Content({
-        id: input.id,
-        content: input.content,
-        isDone: input.isDone,
-      });
-    }).pipe(runSync);
+    new Content({
+      id: input.id,
+      content: input.content,
+      isDone: input.isDone,
+    });
 }
