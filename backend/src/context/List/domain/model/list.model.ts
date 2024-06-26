@@ -30,9 +30,9 @@ export class ListModel {
   public static create = (input: ListType) =>
     gen(function* () {
       const id = input.id ?? crypto.randomUUID();
-      const contents =
-        input.contents ??
-        input.contents.map((content) => Content.create(content));
+      const contents = input.contents
+        ? input.contents.map((content) => Content.create(content))
+        : [];
       return new ListModel({
         id,
         name: input.name,
