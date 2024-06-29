@@ -1,7 +1,7 @@
 import { Effect } from 'effect';
 import { runSync } from 'effect/Effect';
+import { ListModel } from '../../domain/model/list.model';
 import { ListRepository } from '../../infra/list.repository';
-import { ListModel } from '../../model/list.model';
 import { UpdateListUsecase } from '../../usecase/updateList.usecase';
 
 const coupleId = 'couple-id';

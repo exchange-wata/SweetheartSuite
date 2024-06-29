@@ -1,5 +1,5 @@
 import { runSync } from 'effect/Effect';
-import { ListModel } from 'src/context/List/model/list.model';
+import { ListModel } from 'src/context/List/domain/model/list.model';
 
 describe('couple modelのテスト', () => {
   describe('正常系', () => {
