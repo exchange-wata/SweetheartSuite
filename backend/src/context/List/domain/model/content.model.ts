@@ -4,7 +4,7 @@ type ContentType = {
   isDone: boolean;
 };
 
-export class Content {
+export class ContentModel {
   id: string;
   content: string;
   isDone: boolean;
@@ -15,8 +15,8 @@ export class Content {
     this.isDone = input.isDone;
   }
 
-  public static create = (input: ContentType): Content =>
-    new Content({
+  public static create = (input: ContentType): ContentModel =>
+    new ContentModel({
       id: input.id,
       content: input.content,
       isDone: input.isDone,
