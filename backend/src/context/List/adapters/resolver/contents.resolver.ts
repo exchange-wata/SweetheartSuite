@@ -12,13 +12,8 @@ export class ContentsResolver {
   async createContents(
     @Args('listId') listId: string,
     @Args('content') content: string,
-    @Args('isDone') isDone: boolean,
   ) {
-    const contents = await this.createContentsUsecase.execute(
-      listId,
-      content,
-      isDone,
-    );
+    const contents = await this.createContentsUsecase.execute(listId, content);
     return ContentsPresenter.create(contents);
   }
 }

@@ -11,13 +11,13 @@ export class CreateContentsUsecase {
     private readonly contentsRepository: ContentsRepositoryInterface,
   ) {}
 
-  execute = (listId: string, content: string, isDone: boolean) => {
+  execute = (listId: string, content: string) => {
     const self = this;
     return gen(function* () {
       const contentsModel = yield* ContentsModel.create({
         listId,
         content,
-        isDone,
+        isDone: false,
       });
       const contents = yield* self.contentsRepository.create(contentsModel);
       return contents;

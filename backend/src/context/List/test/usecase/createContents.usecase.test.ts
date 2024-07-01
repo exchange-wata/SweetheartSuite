@@ -6,13 +6,12 @@ import { CreateContentsUsecase } from '../../usecase/createContents.usecase';
 
 const content = 'テスト';
 const listId = 'list-id';
-const isDone = false;
 
 const contents = runSync(
   ContentsModel.create({
     listId,
     content,
-    isDone,
+    isDone: false,
   }),
 );
 const contentsRepository: Pick<ContentsRepository, 'create'> = {
@@ -24,7 +23,7 @@ const createContentsUsecase = new CreateContentsUsecase(
 
 describe('CreateContentsUsecase', () => {
   it('正常系', async () => {
-    const result = await createContentsUsecase.execute(listId, content, isDone);
+    const result = await createContentsUsecase.execute(listId, content);
     expect(result).toEqual(expect.objectContaining(contents));
   });
 });
