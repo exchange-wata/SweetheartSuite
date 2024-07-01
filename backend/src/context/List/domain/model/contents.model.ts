@@ -1,5 +1,4 @@
 import * as crypto from 'crypto';
-import { gen } from 'effect/Effect';
 
 type ContentType = {
   id?: string;
@@ -27,14 +26,10 @@ export class ContentsModel {
   }
 
   public static create = (input: ContentType) =>
-    gen(function* () {
-      const id = input.id ?? crypto.randomUUID();
-
-      return new ContentsModel({
-        id,
-        listId: input.listId,
-        content: input.content,
-        isDone: input.isDone,
-      });
+    new ContentsModel({
+      id: input.id ?? crypto.randomUUID(),
+      listId: input.listId,
+      content: input.content,
+      isDone: input.isDone,
     });
 }

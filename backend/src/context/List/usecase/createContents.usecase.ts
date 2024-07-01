@@ -14,7 +14,7 @@ export class CreateContentsUsecase {
   execute = (listId: string, content: string) => {
     const self = this;
     return gen(function* () {
-      const contentsModel = yield* ContentsModel.create({
+      const contentsModel = ContentsModel.create({
         listId,
         content,
         isDone: false,
