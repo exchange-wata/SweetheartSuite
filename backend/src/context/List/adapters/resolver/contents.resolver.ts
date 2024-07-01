@@ -1,10 +1,10 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-// import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
+import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 import { CreateContentsUsecase } from '../../usecase/createCotents.usecase';
 import { ContentsPresenter } from '../presenter/contents.presenter';
 
 @Resolver()
-// @JwtAuth()
+@JwtAuth()
 export class ContentsResolver {
   constructor(private readonly createContentsUsecase: CreateContentsUsecase) {}
 
