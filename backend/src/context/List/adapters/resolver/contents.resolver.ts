@@ -1,6 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
-import { CreateContentsUsecase } from '../../usecase/createCotents.usecase';
+import { CreateContentsUsecase } from '../../usecase/createContents.usecase';
 import { ContentsPresenter } from '../presenter/contents.presenter';
 
 @Resolver()

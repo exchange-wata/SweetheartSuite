@@ -9,7 +9,7 @@ import { ListResolver } from './adapters/resolver/list.resolver';
 import { CONTENTS_REPOSITORY, LIST_REPOSITORY } from './const/list.token';
 import { ContentsRepository } from './infra/contents.repository';
 import { ListRepository } from './infra/list.repository';
-import { CreateContentsUsecase } from './usecase/createCotents.usecase';
+import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
 
