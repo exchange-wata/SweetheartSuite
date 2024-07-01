@@ -1,5 +1,8 @@
+import * as crypto from 'crypto';
+import { gen } from 'effect/Effect';
+
 type ContentType = {
-  id: string;
+  id?: string;
   listId: string;
   content: string;
   isDone: boolean;
@@ -12,7 +15,7 @@ export class ContentsModel {
   isDone: boolean;
 
   private constructor(input: {
-    id: string;
+    id?: string;
     listId: string;
     content: string;
     isDone: boolean;
@@ -23,11 +26,15 @@ export class ContentsModel {
     this.isDone = input.isDone;
   }
 
-  public static create = (input: ContentType): ContentsModel =>
-    new ContentsModel({
-      id: input.id,
-      listId: input.listId,
-      content: input.content,
-      isDone: input.isDone,
+  public static create = (input: ContentType) =>
+    gen(function* () {
+      const id = input.id ?? crypto.randomUUID();
+
+      return new ContentsModel({
+        id,
+        listId: input.listId,
+        content: input.content,
+        isDone: input.isDone,
+      });
     });
 }
