@@ -14,7 +14,7 @@ export class CreateListUsecase {
   execute = (coupleId: string, listName: string) => {
     const self = this;
     return gen(function* () {
-      const listModel = yield* ListModel.create({ name: listName, coupleId });
+      const listModel = ListModel.create({ name: listName, coupleId });
       const list = yield* self.listRepository.create(listModel);
 
       return list;
