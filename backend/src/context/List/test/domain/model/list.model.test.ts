@@ -1,4 +1,3 @@
-import { runSync } from 'effect/Effect';
 import { ListModel } from 'src/context/List/domain/model/list.model';
 
 describe('couple modelのテスト', () => {
@@ -9,7 +8,7 @@ describe('couple modelのテスト', () => {
         name: 'テスト',
         coupleId: 'c2f068b2-57bd-4074-9228-2a13e18141ee',
       };
-      expect(runSync(ListModel.create(input))).toBeInstanceOf(ListModel);
+      expect(ListModel.create(input)).toBeInstanceOf(ListModel);
     });
 
     it('nameの更新', () => {
@@ -20,7 +19,7 @@ describe('couple modelのテスト', () => {
       };
       const updatedName = 'テスト2';
 
-      const currentListModel = runSync(ListModel.create(input));
+      const currentListModel = ListModel.create(input);
       const updatedListModel = currentListModel.updateName(updatedName);
       expect(updatedListModel.name).toEqual(updatedName);
     });

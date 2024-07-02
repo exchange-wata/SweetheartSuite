@@ -1,5 +1,4 @@
 import { Effect } from 'effect';
-import { runSync } from 'effect/Effect';
 import { ListModel } from '../../domain/model/list.model';
 import { ListRepository } from '../../infra/list.repository';
 import { UpdateListUsecase } from '../../usecase/updateList.usecase';
@@ -14,16 +13,14 @@ const list = ListModel.create({
   name: listName,
   coupleId,
 });
-const updatedList = runSync(
-  ListModel.create({
-    id: listId,
-    name: updatedListName,
-    coupleId,
-  }),
-);
+const updatedList = ListModel.create({
+  id: listId,
+  name: updatedListName,
+  coupleId,
+});
 
 const listRepository: Pick<ListRepository, 'update' | 'findByListId'> = {
-  findByListId: jest.fn(() => list),
+  findByListId: jest.fn(() => Effect.succeed(list)),
   update: jest.fn(() => Effect.succeed(updatedList)),
 };
 const updateListUsecase = new UpdateListUsecase(

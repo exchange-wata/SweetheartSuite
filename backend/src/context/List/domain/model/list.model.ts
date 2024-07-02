@@ -1,5 +1,4 @@
 import * as crypto from 'crypto';
-import { gen } from 'effect/Effect';
 
 type ListType = {
   id?: string;
@@ -19,13 +18,10 @@ export class ListModel {
   }
 
   public static create = (input: ListType) =>
-    gen(function* () {
-      const id = input.id ?? crypto.randomUUID();
-      return new ListModel({
-        id,
-        name: input.name,
-        coupleId: input.coupleId,
-      });
+    new ListModel({
+      id: input.id ?? crypto.randomUUID(),
+      name: input.name,
+      coupleId: input.coupleId,
     });
 
   public updateName = (name: string) => {
