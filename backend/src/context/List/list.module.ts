@@ -12,6 +12,7 @@ import { ListRepository } from './infra/list.repository';
 import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
 import { UpdateContentsUsecase } from './usecase/updateContents.usecase';
+import { UpdateContentsFlagUsecase } from './usecase/updateContentsFlag.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
 
 @Module({
@@ -24,6 +25,7 @@ import { UpdateListUsecase } from './usecase/updateList.usecase';
     UpdateListUsecase,
     CreateContentsUsecase,
     UpdateContentsUsecase,
+    UpdateContentsFlagUsecase,
     PrismaService,
     { provide: LIST_REPOSITORY, useClass: ListRepository },
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },

@@ -37,4 +37,9 @@ export class ContentsModel {
     this.content = content;
     return this;
   };
+
+  public updateFlag = (isDone: boolean) => {
+    this.isDone = isDone;
+    return this;
+  };
 }
