@@ -24,14 +24,9 @@ export class ContentsResolver {
   @Mutation(() => ContentsPresenter)
   async updateContents(
     @Args('id') id: string,
-    @Args('listId') listId: string,
     @Args('content') content: string,
   ) {
-    const contents = await this.updateContentsUsecase.execute(
-      id,
-      listId,
-      content,
-    );
+    const contents = await this.updateContentsUsecase.execute(id, content);
     return ContentsPresenter.create(contents);
   }
 }

@@ -32,4 +32,9 @@ export class ContentsModel {
       content: input.content,
       isDone: input.isDone,
     });
+
+  public updateContent = (content: string) => {
+    this.content = content;
+    return this;
+  };
 }

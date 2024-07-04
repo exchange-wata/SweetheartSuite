@@ -22,11 +22,8 @@ const updateContents = ContentsModel.create({
   isDone: false,
 });
 
-const contentsRepository: Pick<
-  ContentsRepository,
-  'findByIdAndListId' | 'update'
-> = {
-  findByIdAndListId: jest.fn(() => Effect.succeed(currentContents)),
+const contentsRepository: Pick<ContentsRepository, 'findById' | 'update'> = {
+  findById: jest.fn(() => Effect.succeed(currentContents)),
   update: jest.fn(() => Effect.succeed(updateContents)),
 };
 const updateContentsUsecase = new UpdateContentsUsecase(
@@ -35,7 +32,7 @@ const updateContentsUsecase = new UpdateContentsUsecase(
 
 describe('UpdateContentsUsecase', () => {
   it('正常系', async () => {
-    const result = await updateContentsUsecase.execute(id, listId, content);
+    const result = await updateContentsUsecase.execute(id, content);
     expect(result).toEqual(expect.objectContaining(updateContents));
   });
 });
