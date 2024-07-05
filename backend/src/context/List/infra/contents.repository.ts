@@ -25,4 +25,36 @@ export class ContentsRepository implements ContentsRepositoryInterface {
       }),
       andThen(ContentsModel.create),
     );
+
+  findById = (id: string) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.contents.findUniqueOrThrow({
+            where: {
+              id,
+            },
+          }),
+        catch: () => ({ _tag: 'can not find contents' }) as const,
+      }),
+      andThen(ContentsModel.create),
+    );
+
+  update = (contentsModel: ContentsModel) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.contents.update({
+            where: {
+              id: contentsModel.id,
+              listId: contentsModel.listId,
+            },
+            data: {
+              content: contentsModel.content,
+            },
+          }),
+        catch: () => ({ _tag: 'can not update contents' }) as const,
+      }),
+      andThen(ContentsModel.create),
+    );
 }
