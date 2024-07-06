@@ -25,13 +25,13 @@ const contentsRepository: Pick<ContentsRepository, 'findById' | 'update'> = {
   findById: jest.fn(() => Effect.succeed(currentContents)),
   update: jest.fn(() => Effect.succeed(updateContents)),
 };
-const updateContentsFlagUsecase = new UpdateContentsUsecase(
+const setCompletedContentsUsecase = new UpdateContentsUsecase(
   contentsRepository as ContentsRepository,
 );
 
 describe('UpdateContentsUsecase', () => {
   it('正常系', async () => {
-    const result = await updateContentsFlagUsecase.execute(id, content);
+    const result = await setCompletedContentsUsecase.execute(id, content);
     expect(result.isDone).toBe(true);
   });
 });

@@ -4,7 +4,7 @@ import { CONTENTS_REPOSITORY } from '../const/list.token';
 import { ContentsRepositoryInterface } from '../domain/interface/contents.repository.interface';
 
 @Injectable()
-export class UpdateContentsFlagUsecase {
+export class SetCompletedContentsUsecase {
   constructor(
     @Inject(CONTENTS_REPOSITORY)
     private readonly contentsRepository: ContentsRepositoryInterface,
@@ -14,7 +14,7 @@ export class UpdateContentsFlagUsecase {
     const self = this;
     return gen(function* () {
       const currentContents = yield* self.contentsRepository.findById(id);
-      const updateContentsModel = currentContents.updateFlag(isDone);
+      const updateContentsModel = currentContents.setCompleted(isDone);
       const contents =
         yield* self.contentsRepository.update(updateContentsModel);
       return contents;
