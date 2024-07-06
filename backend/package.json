@@ -33,7 +33,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "^5.14.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "effect": "^3.2.5",
     "google-auth-library": "^9.10.0",
     "graphql": "^16.8.1",
