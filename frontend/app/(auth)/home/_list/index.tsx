@@ -1,58 +1,45 @@
-'use client';
-
-import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { createList } from './action';
 import { Center } from '@/components/layout/center';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { gql } from 'graphql-request';
+import { CreateListDialog } from './CreateListDialog';
+import { authClient } from '@/lib/authClient';
+import { gen, runPromise, tryPromise } from 'effect/Effect';
+import { GetListsQuery, GetListsQueryVariables } from '@/types/gql/graphql';
 
-export const HomeList = () => {
-  const [visible, setVisible] = useState(false);
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<{ name: string }>();
-
-  const onSubmit = async ({ name }: { name: string }) => {
-    await createList({ name });
-    setVisible(false);
-  };
+export const HomeList = async () => {
+  const lists = await gen(function* () {
+    const client = yield* authClient();
+    return yield* tryPromise(() =>
+      client.request<GetListsQuery, GetListsQueryVariables>(getListsQuery),
+    );
+  }).pipe(runPromise);
 
   return (
     <Center className="m-10">
-      <Card className="w-[350px] h-[400px] flex-col items-center justify-center p-5">
+      <Card className="w-[350px] flex-col items-center justify-center p-5">
         <CardHeader className="items-center">やりたいことリスト</CardHeader>
         <CardContent>
-          <Dialog open={visible} onOpenChange={setVisible}>
-            <DialogTrigger asChild>
-              <Button> リスト作成</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogTitle>リスト作成</DialogTitle>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                  type="text"
-                  placeholder="リストの名前"
-                  {...register('name', {
-                    required: 'リストの名前を入力してください',
-                  })}
-                />
-                {errors.name && <p>{errors.name.message}</p>}
-                <Button type="submit">作成</Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <CreateListDialog />
+          {lists.getLists.map((list) => (
+            <ListColumn listName={list.name} />
+          ))}
         </CardContent>
       </Card>
     </Center>
   );
 };
+
+const ListColumn = ({ listName }: { listName: string }) => (
+  <div className="flex flex-col justify-center border p-4">
+    <h1>{listName}</h1>
+  </div>
+);
+
+const getListsQuery = gql`
+  query GetLists {
+    getLists {
+      id
+      name
+    }
+  }
+`;

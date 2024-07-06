@@ -1,19 +1,28 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
 import { User } from '../../../User/decorator/user.decorator';
 import { CreateListUsecase } from '../../usecase/createList.usecase';
 import { UpdateListUsecase } from '../../usecase/updateList.usecase';
 import { ListPresenter } from '../presenter/list.presenter';
+import { GetListsUsecase } from '../../usecase/getLists.usecase';
 
 @Resolver()
 @JwtAuth()
 export class ListResolver {
   constructor(
+    private readonly getListsUsecase: GetListsUsecase,
     private readonly createListUsecase: CreateListUsecase,
     private readonly getCoupleUsecase: GetCoupleUsecase,
     private readonly updateListUsecase: UpdateListUsecase,
   ) {}
+
+  @Query(() => [ListPresenter])
+  async getLists(@User() user) {
+    const couple = await this.getCoupleUsecase.execute(user.userId);
+    const lists = await this.getListsUsecase.execute(couple.id);
+    return lists.map(ListPresenter.create);
+  }
 
   @Mutation(() => ListPresenter)
   async createList(@User() user, @Args('name') name: string) {

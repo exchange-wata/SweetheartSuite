@@ -8,9 +8,10 @@ import {
 } from '@/types/gql/graphql';
 import { catchTags, gen, runPromise, succeed, tryPromise } from 'effect/Effect';
 import { gql } from 'graphql-request';
+import { revalidatePath } from 'next/cache';
 
-export const createList = async ({ name }: { name: string }) =>
-  gen(function* () {
+export const createList = async ({ name }: { name: string }) => {
+  const result = await gen(function* () {
     if (!name) return yield* failWithTag('input no name');
 
     const client = yield* authClient();
@@ -44,6 +45,11 @@ export const createList = async ({ name }: { name: string }) =>
       }),
     )
     .pipe(runPromise);
+
+  revalidatePath('/home');
+
+  return result;
+};
 
 const createListMutation = gql`
   mutation CreateList($name: String!) {

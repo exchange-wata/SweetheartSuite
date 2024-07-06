@@ -13,12 +13,14 @@ import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
 import { UpdateContentsUsecase } from './usecase/updateContents.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
+import { GetListsUsecase } from './usecase/getLists.usecase';
 
 @Module({
   imports: [AuthModule],
   providers: [
     ListResolver,
     ContentsResolver,
+    GetListsUsecase,
     CreateListUsecase,
     GetCoupleUsecase,
     UpdateListUsecase,

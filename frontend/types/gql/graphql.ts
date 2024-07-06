@@ -16,6 +16,14 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type ContentsPresenter = {
+  __typename?: 'ContentsPresenter';
+  content: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  isDone: Scalars['Boolean']['output'];
+  listId: Scalars['String']['output'];
+};
+
 export type CouplePresenter = {
   __typename?: 'CouplePresenter';
   id: Scalars['String']['output'];
@@ -32,12 +40,19 @@ export type ListPresenter = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createContents: ContentsPresenter;
   createCouple?: Maybe<CouplePresenter>;
   createList: ListPresenter;
   createTempUser: TempUserPresenter;
   createUser: UserPresenter;
   sendRequest: Scalars['Boolean']['output'];
   updateList: ListPresenter;
+};
+
+
+export type MutationCreateContentsArgs = {
+  content: Scalars['String']['input'];
+  listId: Scalars['String']['input'];
 };
 
 
@@ -75,6 +90,7 @@ export type MutationUpdateListArgs = {
 export type Query = {
   __typename?: 'Query';
   getCouple: CouplePresenter;
+  getLists: Array<ListPresenter>;
   getRequest: RequestPresenter;
   getUserByMailaddress: UserPresenter;
   login: Scalars['String']['output'];
@@ -118,6 +134,11 @@ export type CreateListMutationVariables = Exact<{
 
 
 export type CreateListMutation = { __typename?: 'Mutation', createList: { __typename?: 'ListPresenter', id: string } };
+
+export type GetListsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetListsQuery = { __typename?: 'Query', getLists: Array<{ __typename?: 'ListPresenter', id: string, name: string }> };
 
 export type GetUserByMailaddressQueryVariables = Exact<{
   mailaddress: Scalars['String']['input'];
@@ -174,6 +195,7 @@ export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __type
 
 
 export const CreateListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateListMutation, CreateListMutationVariables>;
+export const GetListsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetListsQuery, GetListsQueryVariables>;
 export const GetUserByMailaddressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserByMailaddress"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserByMailaddress"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"mailaddress"},"value":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mailaddress"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetUserByMailaddressQuery, GetUserByMailaddressQueryVariables>;
 export const SendRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SendRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sendRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"mailaddress"},"value":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}}}]}]}}]} as unknown as DocumentNode<SendRequestMutation, SendRequestMutationVariables>;
 export const CreateCoupleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCouple"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isAccepted"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCouple"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"isAccepted"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isAccepted"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateCoupleMutation, CreateCoupleMutationVariables>;
