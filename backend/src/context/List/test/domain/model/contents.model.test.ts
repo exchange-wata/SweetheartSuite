@@ -22,7 +22,7 @@ describe('contents model', () => {
   it('isDoneフラグの更新', () => {
     const updatedFlag = true;
 
-    const updatedListModel = contentModel.updateFlag(updatedFlag);
+    const updatedListModel = contentModel.setCompleted(updatedFlag);
     expect(updatedListModel.isDone).toBe(updatedFlag);
   });
 });

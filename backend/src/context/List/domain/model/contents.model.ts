@@ -38,7 +38,7 @@ export class ContentsModel {
     return this;
   };
 
-  public updateFlag = (isDone: boolean) => {
+  public setCompleted = (isDone: boolean) => {
     this.isDone = isDone;
     return this;
   };
