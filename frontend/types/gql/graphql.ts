@@ -46,6 +46,7 @@ export type Mutation = {
   createTempUser: TempUserPresenter;
   createUser: UserPresenter;
   sendRequest: Scalars['Boolean']['output'];
+  updateContents: ContentsPresenter;
   updateList: ListPresenter;
 };
 
@@ -82,6 +83,12 @@ export type MutationSendRequestArgs = {
 };
 
 
+export type MutationUpdateContentsArgs = {
+  content: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateListArgs = {
   listId: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -89,11 +96,17 @@ export type MutationUpdateListArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getContentsByListId: Array<ContentsPresenter>;
   getCouple: CouplePresenter;
   getLists: Array<ListPresenter>;
   getRequest: RequestPresenter;
   getUserByMailaddress: UserPresenter;
   login: Scalars['String']['output'];
+};
+
+
+export type QueryGetContentsByListIdArgs = {
+  listId: Scalars['String']['input'];
 };
 
 
@@ -127,6 +140,13 @@ export type UserPresenter = {
   mailaddress: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
+
+export type GetContentsByListIdQueryVariables = Exact<{
+  listId: Scalars['String']['input'];
+}>;
+
+
+export type GetContentsByListIdQuery = { __typename?: 'Query', getContentsByListId: Array<{ __typename?: 'ContentsPresenter', id: string, content: string, isDone: boolean }> };
 
 export type CreateListMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -194,6 +214,7 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserPresenter', id: string } };
 
 
+export const GetContentsByListIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getContentsByListId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"listId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getContentsByListId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"listId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"listId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"isDone"}}]}}]}}]} as unknown as DocumentNode<GetContentsByListIdQuery, GetContentsByListIdQueryVariables>;
 export const CreateListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateListMutation, CreateListMutationVariables>;
 export const GetListsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetListsQuery, GetListsQueryVariables>;
 export const GetUserByMailaddressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserByMailaddress"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserByMailaddress"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"mailaddress"},"value":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mailaddress"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetUserByMailaddressQuery, GetUserByMailaddressQueryVariables>;
