@@ -38,8 +38,8 @@ export class ContentsModel {
     return this;
   };
 
-  public setCompleted = (isDone: boolean) => {
-    this.isDone = isDone;
+  public setCompleted = () => {
+    this.isDone = true;
     return this;
   };
 }

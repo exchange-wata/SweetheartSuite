@@ -10,11 +10,11 @@ export class SetCompletedContentsUsecase {
     private readonly contentsRepository: ContentsRepositoryInterface,
   ) {}
 
-  execute = (id: string, isDone: boolean) => {
+  execute = (id: string) => {
     const self = this;
     return gen(function* () {
       const currentContents = yield* self.contentsRepository.findById(id);
-      const updateContentsModel = currentContents.setCompleted(isDone);
+      const updateContentsModel = currentContents.setCompleted();
       const contents =
         yield* self.contentsRepository.update(updateContentsModel);
       return contents;

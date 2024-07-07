@@ -33,11 +33,10 @@ export class ContentsResolver {
   }
 
   @Mutation(() => ContentsPresenter)
-  async updateContentsFlag(
+  async setCompletedContents(
     @Args('id') id: string,
-    @Args('isDone') isDone: boolean,
   ) {
-    const contents = await this.setCompletedContentsUsecase.execute(id, isDone);
+    const contents = await this.setCompletedContentsUsecase.execute(id);
     return ContentsPresenter.create(contents);
   }
 }

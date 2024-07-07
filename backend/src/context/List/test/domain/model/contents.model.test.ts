@@ -20,9 +20,7 @@ describe('contents model', () => {
   });
 
   it('isDoneフラグの更新', () => {
-    const updatedFlag = true;
-
-    const updatedListModel = contentModel.setCompleted(updatedFlag);
-    expect(updatedListModel.isDone).toBe(updatedFlag);
+    const updatedListModel = contentModel.setCompleted();
+    expect(updatedListModel.isDone).toBe(true);
   });
 });
