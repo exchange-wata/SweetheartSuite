@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   api:
     build:
@@ -14,7 +12,7 @@ services:
       - ./prisma:/app/prisma
     depends_on:
       - postgres
-    entrypoint: ['sh', '-c', 'npx prisma migrate deploy && npm run start:dev']
+    entrypoint: ['sh', '-c', 'npx prisma migrate deploy && npm run build && npm run start:dev']
 
   postgres:
     image: postgres:16.0
