@@ -47,10 +47,11 @@ export class ContentsRepository implements ContentsRepositoryInterface {
           this.prisma.contents.update({
             where: {
               id: contentsModel.id,
-              listId: contentsModel.listId,
             },
             data: {
               content: contentsModel.content,
+              isDone: contentsModel.isDone,
+              updatedAt: new Date(),
             },
           }),
         catch: () => ({ _tag: 'can not update contents' }) as const,

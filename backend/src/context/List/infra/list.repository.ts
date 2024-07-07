@@ -63,6 +63,7 @@ export class ListRepository implements ListRepositoryInterface {
             },
             data: {
               name: listModel.name,
+              updatedAt: new Date(),
             },
           }),
         catch: () => ({ _tag: 'can not update list' }) as const,

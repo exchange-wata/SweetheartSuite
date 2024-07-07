@@ -1,6 +1,7 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 import { CreateContentsUsecase } from '../../usecase/createContents.usecase';
+import { SetCompletedContentsUsecase } from '../../usecase/setCompletedContents.usecase';
 import { UpdateContentsUsecase } from '../../usecase/updateContents.usecase';
 import { ContentsPresenter } from '../presenter/contents.presenter';
 
@@ -10,6 +11,7 @@ export class ContentsResolver {
   constructor(
     private readonly createContentsUsecase: CreateContentsUsecase,
     private readonly updateContentsUsecase: UpdateContentsUsecase,
+    private readonly setCompletedContentsUsecase: SetCompletedContentsUsecase,
   ) {}
 
   @Mutation(() => ContentsPresenter)
@@ -27,6 +29,14 @@ export class ContentsResolver {
     @Args('content') content: string,
   ) {
     const contents = await this.updateContentsUsecase.execute(id, content);
+    return ContentsPresenter.create(contents);
+  }
+
+  @Mutation(() => ContentsPresenter)
+  async setCompletedContents(
+    @Args('id') id: string,
+  ) {
+    const contents = await this.setCompletedContentsUsecase.execute(id);
     return ContentsPresenter.create(contents);
   }
 }

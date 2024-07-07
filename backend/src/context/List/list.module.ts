@@ -11,6 +11,7 @@ import { ContentsRepository } from './infra/contents.repository';
 import { ListRepository } from './infra/list.repository';
 import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
+import { SetCompletedContentsUsecase } from './usecase/setCompletedContents.usecase';
 import { UpdateContentsUsecase } from './usecase/updateContents.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
 import { GetListsUsecase } from './usecase/getLists.usecase';
@@ -26,6 +27,7 @@ import { GetListsUsecase } from './usecase/getLists.usecase';
     UpdateListUsecase,
     CreateContentsUsecase,
     UpdateContentsUsecase,
+    SetCompletedContentsUsecase,
     PrismaService,
     { provide: LIST_REPOSITORY, useClass: ListRepository },
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },

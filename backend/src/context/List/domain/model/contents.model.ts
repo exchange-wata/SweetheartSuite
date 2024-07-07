@@ -37,4 +37,9 @@ export class ContentsModel {
     this.content = content;
     return this;
   };
+
+  public setCompleted = () => {
+    this.isDone = true;
+    return this;
+  };
 }
