@@ -1,7 +1,4 @@
 import { Effect } from 'effect';
-import { ListRepository } from '../../infra/list.repository';
-import { GetListsUsecase } from '../../usecase/getLists.usecase';
-import { ListModel } from '../../domain/model/list.model';
 import { ContentsRepositoryInterface } from '../../domain/interface/contents.repository.interface';
 import { ContentsModel } from '../../domain/model/contents.model';
 import { GetContentsByListIdUsecase } from '../../usecase/getContentsByListId.usecase';
@@ -15,7 +12,7 @@ const getContentsByListIdUsecase = new GetContentsByListIdUsecase(
   contentsRepository as ContentsRepositoryInterface,
 );
 
-describe('GetListsUsecase', () => {
+describe('GetContentsByListIdUsecase', () => {
   it('正常系', async () => {
     const result = await getContentsByListIdUsecase.execute('list-id1');
     expect(result).toEqual(expect.objectContaining([contents[0], contents[1]]));
