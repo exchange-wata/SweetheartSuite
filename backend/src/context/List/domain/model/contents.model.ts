@@ -42,4 +42,9 @@ export class ContentsModel {
     this.isDone = true;
     return this;
   };
+
+  public setIncomplete = () => {
+    this.isDone = false;
+    return this;
+  };
 }
