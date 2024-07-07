@@ -13,5 +13,9 @@
     },
     "baseUrl": "./"
   },
-  "minify": false
+  "minify": false,
+  "module": {
+    "type": "commonjs"
+  },
+  "sourceMaps": true
 }
