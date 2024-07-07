@@ -19,8 +19,13 @@ describe('contents model', () => {
     expect(updatedListModel.content).toEqual(updatedContent);
   });
 
-  it('isDoneフラグの更新', () => {
+  it('isDoneフラグの更新(完了)', () => {
     const updatedListModel = contentModel.setCompleted();
     expect(updatedListModel.isDone).toBe(true);
+  });
+
+  it('isDoneフラグの更新(未完了)', () => {
+    const updatedListModel = contentModel.setIncomplete();
+    expect(updatedListModel.isDone).toBe(false);
   });
 });

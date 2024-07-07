@@ -11,11 +11,12 @@ import { ContentsRepository } from './infra/contents.repository';
 import { ListRepository } from './infra/list.repository';
 import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
+import { GetContentsByListIdUsecase } from './usecase/getContentsByListId.usecase';
+import { GetListsUsecase } from './usecase/getLists.usecase';
 import { SetCompletedContentsUsecase } from './usecase/setCompletedContents.usecase';
+import { SetIncompleteContentsUsecase } from './usecase/setIncompleteContents.usecase';
 import { UpdateContentsUsecase } from './usecase/updateContents.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
-import { GetListsUsecase } from './usecase/getLists.usecase';
-import { GetContentsByListIdUsecase } from './usecase/getContentsByListId.usecase';
 
 @Module({
   imports: [AuthModule],
@@ -30,6 +31,7 @@ import { GetContentsByListIdUsecase } from './usecase/getContentsByListId.usecas
     GetContentsByListIdUsecase,
     UpdateContentsUsecase,
     SetCompletedContentsUsecase,
+    SetIncompleteContentsUsecase,
     PrismaService,
     { provide: LIST_REPOSITORY, useClass: ListRepository },
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },
