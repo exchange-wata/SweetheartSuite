@@ -25,7 +25,8 @@
     "**/node_modules/effect/dist/dts/Sink.d.ts",
     "**/node_modules/effect/dist/dts/Channel.d.ts",
     "**/node_modules/effect/dist/dts/Metric.d.ts",
-    "**/node_modules/effect/dist/dts/Tdeferred.d.ts"
+    "**/node_modules/effect/dist/dts/Tdeferred.d.ts",
+    "@radix/**"
   ],
 
   "eslint.experimental.useFlatConfig": true

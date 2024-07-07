@@ -1,0 +1,118 @@
+'use server';
+
+import { failWithTag, tag } from '@/lib/Effect.lib';
+import { authClient } from '@/lib/authClient';
+import {
+  CreateContentsMutation,
+  CreateContentsMutationVariables,
+  SetCompletedContentsMutation,
+  SetCompletedContentsMutationVariables,
+  SetIncompleteContentsMutation,
+  SetIncompleteContentsMutationVariables,
+} from '@/types/gql/graphql';
+import { catchTags, gen, runPromise, succeed, tryPromise } from 'effect/Effect';
+import { gql } from 'graphql-request';
+import { revalidatePath } from 'next/cache';
+
+export const createContents = async ({
+  listId,
+  content,
+}: {
+  listId: string;
+  content: string;
+}) => {
+  const result = await gen(function* () {
+    if (!content) return yield* failWithTag('input no content');
+
+    const client = yield* authClient();
+
+    const result = yield* tryPromise({
+      try: () =>
+        client.request<CreateContentsMutation, CreateContentsMutationVariables>(
+          createContentsMutation,
+          { listId, content },
+        ),
+      catch: () => tag('fail create list'),
+    });
+
+    return {
+      list: { id: result.createContents.id },
+      error: '',
+    };
+  })
+    .pipe(
+      catchTags({
+        'input no content': () =>
+          succeed({
+            error: 'やることを入力してください',
+          }),
+        'fail create list': () =>
+          succeed({
+            error: 'やることの作成に失敗しました',
+          }),
+      }),
+    )
+    .pipe(runPromise);
+
+  revalidatePath(`/home/${listId}`);
+
+  return result;
+};
+
+const createContentsMutation = gql`
+  mutation CreateContents($listId: String!, $content: String!) {
+    createContents(listId: $listId, content: $content) {
+      id
+    }
+  }
+`;
+
+export const setCompletedContents = async ({
+  contentsId,
+}: {
+  contentsId: string;
+}) =>
+  gen(function* () {
+    const client = yield* authClient();
+
+    yield* tryPromise(() =>
+      client.request<
+        SetCompletedContentsMutation,
+        SetCompletedContentsMutationVariables
+      >(setCompletedContentsMutation, { setCompletedContentsId: contentsId }),
+    );
+  }).pipe(runPromise);
+
+const setCompletedContentsMutation = gql`
+  mutation SetCompletedContents($setCompletedContentsId: String!) {
+    setCompletedContents(id: $setCompletedContentsId) {
+      id
+    }
+  }
+`;
+
+export const setIncompleteContents = async ({
+  contentsId,
+}: {
+  contentsId: string;
+}) =>
+  gen(function* () {
+    const client = yield* authClient();
+
+    yield* tryPromise(() =>
+      client.request<
+        SetIncompleteContentsMutation,
+        SetIncompleteContentsMutationVariables
+      >(setIncompleteContentsMutation, {
+        setIncompleteContentsId: contentsId,
+      }),
+    );
+  }).pipe(runPromise);
+
+const setIncompleteContentsMutation = gql`
+  mutation SetIncompleteContents($setIncompleteContentsId: String!) {
+    setIncompleteContents(id: $setIncompleteContentsId) {
+      id
+    }
+  }
+`;
