@@ -1,18 +1,26 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 import { CreateContentsUsecase } from '../../usecase/createContents.usecase';
 import { SetCompletedContentsUsecase } from '../../usecase/setCompletedContents.usecase';
 import { UpdateContentsUsecase } from '../../usecase/updateContents.usecase';
 import { ContentsPresenter } from '../presenter/contents.presenter';
+import { GetContentsByListIdUsecase } from '../../usecase/getContentsByListId.usecase';
 
 @Resolver()
 @JwtAuth()
 export class ContentsResolver {
   constructor(
+    private readonly getContentsByListIdUsecase: GetContentsByListIdUsecase,
     private readonly createContentsUsecase: CreateContentsUsecase,
     private readonly updateContentsUsecase: UpdateContentsUsecase,
     private readonly setCompletedContentsUsecase: SetCompletedContentsUsecase,
   ) {}
+
+  @Query(() => [ContentsPresenter])
+  async getContentsByListId(@Args('listId') listId: string) {
+    const contents = await this.getContentsByListIdUsecase.execute(listId);
+    return contents.map(ContentsPresenter.create);
+  }
 
   @Mutation(() => ContentsPresenter)
   async createContents(

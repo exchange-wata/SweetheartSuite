@@ -15,6 +15,7 @@ import { SetCompletedContentsUsecase } from './usecase/setCompletedContents.usec
 import { UpdateContentsUsecase } from './usecase/updateContents.usecase';
 import { UpdateListUsecase } from './usecase/updateList.usecase';
 import { GetListsUsecase } from './usecase/getLists.usecase';
+import { GetContentsByListIdUsecase } from './usecase/getContentsByListId.usecase';
 
 @Module({
   imports: [AuthModule],
@@ -26,6 +27,7 @@ import { GetListsUsecase } from './usecase/getLists.usecase';
     GetCoupleUsecase,
     UpdateListUsecase,
     CreateContentsUsecase,
+    GetContentsByListIdUsecase,
     UpdateContentsUsecase,
     SetCompletedContentsUsecase,
     PrismaService,

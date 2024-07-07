@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LIST_REPOSITORY } from '../const/list.token';
 import { ListRepositoryInterface } from '../domain/interface/list.repository.interface';
-import { gen, runPromise } from 'effect/Effect';
+import { runPromise } from 'effect/Effect';
 
 @Injectable()
 export class GetListsUsecase {

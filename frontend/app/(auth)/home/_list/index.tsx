@@ -5,6 +5,7 @@ import { CreateListDialog } from './CreateListDialog';
 import { authClient } from '@/lib/authClient';
 import { gen, runPromise, tryPromise } from 'effect/Effect';
 import { GetListsQuery, GetListsQueryVariables } from '@/types/gql/graphql';
+import Link from 'next/link';
 
 export const HomeList = async () => {
   const lists = await gen(function* () {
@@ -21,7 +22,7 @@ export const HomeList = async () => {
         <CardContent>
           <CreateListDialog />
           {lists.getLists.map((list) => (
-            <ListColumn listName={list.name} />
+            <ListColumn listId={list.id} listName={list.name} />
           ))}
         </CardContent>
       </Card>
@@ -29,9 +30,15 @@ export const HomeList = async () => {
   );
 };
 
-const ListColumn = ({ listName }: { listName: string }) => (
+const ListColumn = ({
+  listId,
+  listName,
+}: {
+  listId: string;
+  listName: string;
+}) => (
   <div className="flex flex-col justify-center border p-4">
-    <h1>{listName}</h1>
+    <Link href={`/home/${listId}`}>{listName}</Link>
   </div>
 );
 
