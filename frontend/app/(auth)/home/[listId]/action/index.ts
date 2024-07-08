@@ -32,7 +32,7 @@ export const createContents = async ({
           createContentsMutation,
           { listId, content },
         ),
-      catch: () => tag('fail create list'),
+      catch: () => tag('fail create contents'),
     });
 
     return {
@@ -46,7 +46,7 @@ export const createContents = async ({
           succeed({
             error: 'やることを入力してください',
           }),
-        'fail create list': () =>
+        'fail create contents': () =>
           succeed({
             error: 'やることの作成に失敗しました',
           }),
