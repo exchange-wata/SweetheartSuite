@@ -9,6 +9,7 @@ import { ListResolver } from './adapters/resolver/list.resolver';
 import { CONTENTS_REPOSITORY, LIST_REPOSITORY } from './const/list.token';
 import { ContentsRepository } from './infra/contents.repository';
 import { ListRepository } from './infra/list.repository';
+import { ArchiveListUsecase } from './usecase/archiveList.usecase';
 import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
 import { GetContentsByListIdUsecase } from './usecase/getContentsByListId.usecase';
@@ -32,6 +33,7 @@ import { UpdateListUsecase } from './usecase/updateList.usecase';
     UpdateContentsUsecase,
     SetCompletedContentsUsecase,
     SetIncompleteContentsUsecase,
+    ArchiveListUsecase,
     PrismaService,
     { provide: LIST_REPOSITORY, useClass: ListRepository },
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },

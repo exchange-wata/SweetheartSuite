@@ -63,6 +63,7 @@ export class ListRepository implements ListRepositoryInterface {
             },
             data: {
               name: listModel.name,
+              isArchived: listModel.isArchived,
               updatedAt: new Date(),
             },
           }),

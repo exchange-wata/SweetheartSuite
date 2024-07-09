@@ -2,10 +2,11 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
 import { User } from '../../../User/decorator/user.decorator';
+import { ArchiveListUsecase } from '../../usecase/archiveList.usecase';
 import { CreateListUsecase } from '../../usecase/createList.usecase';
+import { GetListsUsecase } from '../../usecase/getLists.usecase';
 import { UpdateListUsecase } from '../../usecase/updateList.usecase';
 import { ListPresenter } from '../presenter/list.presenter';
-import { GetListsUsecase } from '../../usecase/getLists.usecase';
 
 @Resolver()
 @JwtAuth()
@@ -15,6 +16,7 @@ export class ListResolver {
     private readonly createListUsecase: CreateListUsecase,
     private readonly getCoupleUsecase: GetCoupleUsecase,
     private readonly updateListUsecase: UpdateListUsecase,
+    private readonly archiveListUsecase: ArchiveListUsecase,
   ) {}
 
   @Query(() => [ListPresenter])
@@ -34,6 +36,12 @@ export class ListResolver {
   @Mutation(() => ListPresenter)
   async updateList(@Args('listId') listId: string, @Args('name') name: string) {
     const list = await this.updateListUsecase.execute(listId, name);
+    return ListPresenter.create(list);
+  }
+
+  @Mutation(() => ListPresenter)
+  async archiveList(@Args('listId') listId: string) {
+    const list = await this.archiveListUsecase.execute(listId)
     return ListPresenter.create(list);
   }
 }
