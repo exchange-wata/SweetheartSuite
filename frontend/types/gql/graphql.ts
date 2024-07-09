@@ -46,6 +46,8 @@ export type Mutation = {
   createTempUser: TempUserPresenter;
   createUser: UserPresenter;
   sendRequest: Scalars['Boolean']['output'];
+  setCompletedContents: ContentsPresenter;
+  setIncompleteContents: ContentsPresenter;
   updateContents: ContentsPresenter;
   updateList: ListPresenter;
 };
@@ -80,6 +82,16 @@ export type MutationCreateUserArgs = {
 
 export type MutationSendRequestArgs = {
   mailaddress: Scalars['String']['input'];
+};
+
+
+export type MutationSetCompletedContentsArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationSetIncompleteContentsArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -141,6 +153,33 @@ export type UserPresenter = {
   name: Scalars['String']['output'];
 };
 
+export type CreateContentsMutationVariables = Exact<{
+  listId: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+}>;
+
+
+export type CreateContentsMutation = { __typename?: 'Mutation', createContents: { __typename?: 'ContentsPresenter', id: string } };
+
+export type SetCompletedContentsMutationVariables = Exact<{
+  setCompletedContentsId: Scalars['String']['input'];
+}>;
+
+
+export type SetCompletedContentsMutation = { __typename?: 'Mutation', setCompletedContents: { __typename?: 'ContentsPresenter', id: string } };
+
+export type SetIncompleteContentsMutationVariables = Exact<{
+  setIncompleteContentsId: Scalars['String']['input'];
+}>;
+
+
+export type SetIncompleteContentsMutation = { __typename?: 'Mutation', setIncompleteContents: { __typename?: 'ContentsPresenter', id: string } };
+
+export type GetListsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetListsQuery = { __typename?: 'Query', getLists: Array<{ __typename?: 'ListPresenter', id: string, name: string }> };
+
 export type GetContentsByListIdQueryVariables = Exact<{
   listId: Scalars['String']['input'];
 }>;
@@ -154,11 +193,6 @@ export type CreateListMutationVariables = Exact<{
 
 
 export type CreateListMutation = { __typename?: 'Mutation', createList: { __typename?: 'ListPresenter', id: string } };
-
-export type GetListsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetListsQuery = { __typename?: 'Query', getLists: Array<{ __typename?: 'ListPresenter', id: string, name: string }> };
 
 export type GetUserByMailaddressQueryVariables = Exact<{
   mailaddress: Scalars['String']['input'];
@@ -214,9 +248,12 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'UserPresenter', id: string } };
 
 
+export const CreateContentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateContents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"listId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createContents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"listId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"listId"}}},{"kind":"Argument","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateContentsMutation, CreateContentsMutationVariables>;
+export const SetCompletedContentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetCompletedContents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"setCompletedContentsId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setCompletedContents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"setCompletedContentsId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetCompletedContentsMutation, SetCompletedContentsMutationVariables>;
+export const SetIncompleteContentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SetIncompleteContents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"setIncompleteContentsId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"setIncompleteContents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"setIncompleteContentsId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SetIncompleteContentsMutation, SetIncompleteContentsMutationVariables>;
+export const GetListsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetListsQuery, GetListsQueryVariables>;
 export const GetContentsByListIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getContentsByListId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"listId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getContentsByListId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"listId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"listId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"isDone"}}]}}]}}]} as unknown as DocumentNode<GetContentsByListIdQuery, GetContentsByListIdQueryVariables>;
 export const CreateListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateListMutation, CreateListMutationVariables>;
-export const GetListsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetListsQuery, GetListsQueryVariables>;
 export const GetUserByMailaddressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserByMailaddress"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserByMailaddress"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"mailaddress"},"value":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mailaddress"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetUserByMailaddressQuery, GetUserByMailaddressQueryVariables>;
 export const SendRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SendRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sendRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"mailaddress"},"value":{"kind":"Variable","name":{"kind":"Name","value":"mailaddress"}}}]}]}}]} as unknown as DocumentNode<SendRequestMutation, SendRequestMutationVariables>;
 export const CreateCoupleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCouple"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isAccepted"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCouple"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"isAccepted"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isAccepted"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateCoupleMutation, CreateCoupleMutationVariables>;

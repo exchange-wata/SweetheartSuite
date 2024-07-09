@@ -22,7 +22,7 @@ export const HomeList = async () => {
         <CardContent>
           <CreateListDialog />
           {lists.getLists.map((list) => (
-            <ListColumn listId={list.id} listName={list.name} />
+            <ListRow listId={list.id} listName={list.name} />
           ))}
         </CardContent>
       </Card>
@@ -30,14 +30,14 @@ export const HomeList = async () => {
   );
 };
 
-const ListColumn = ({
+const ListRow = ({
   listId,
   listName,
 }: {
   listId: string;
   listName: string;
 }) => (
-  <div className="flex flex-col justify-center border p-4">
+  <div className="flex flex-row items-center border p-4">
     <Link href={`/home/${listId}`}>{listName}</Link>
   </div>
 );

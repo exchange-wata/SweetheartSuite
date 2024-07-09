@@ -4,11 +4,24 @@ import { authClient } from '@/lib/authClient';
 import {
   GetContentsByListIdQuery,
   GetContentsByListIdQueryVariables,
+  GetListsQuery,
+  GetListsQueryVariables,
 } from '@/types/gql/graphql';
 import { gen, runPromise, tryPromise } from 'effect/Effect';
 import { gql } from 'graphql-request';
+import { CreateContentsDialog } from './CreateContentsDialog';
+import { ContentsRow } from './ContentsRow';
 
 export default async function List({ params }: { params: { listId: string } }) {
+  const lists = await gen(function* () {
+    const client = yield* authClient();
+    return yield* tryPromise(() =>
+      client.request<GetListsQuery, GetListsQueryVariables>(getListsQuery),
+    );
+  }).pipe(runPromise);
+
+  const list = lists.getLists.find((list) => list.id === params.listId)!;
+
   const contents = await gen(function* () {
     const client = yield* authClient();
     return yield* tryPromise(() =>
@@ -22,10 +35,11 @@ export default async function List({ params }: { params: { listId: string } }) {
   return (
     <Center className="m-10">
       <Card className="w-[350px] flex-col items-center justify-center p-5">
-        <CardHeader className="items-center">TODO リスト名表示</CardHeader>
+        <CardHeader className="items-center">{list.name}</CardHeader>
         <CardContent>
+          <CreateContentsDialog listId={params.listId} />
           {contents.getContentsByListId.map((content) => (
-            <ContentsColumn
+            <ContentsRow
               contentsId={content.id}
               content={content.content}
               isDone={content.isDone}
@@ -37,19 +51,14 @@ export default async function List({ params }: { params: { listId: string } }) {
   );
 }
 
-const ContentsColumn = ({
-  content,
-  isDone,
-}: {
-  contentsId: string;
-  content: string;
-  isDone: boolean;
-}) => (
-  <div className="flex flex-col justify-center border p-4">
-    {content}
-    {isDone}
-  </div>
-);
+const getListsQuery = gql`
+  query GetLists {
+    getLists {
+      id
+      name
+    }
+  }
+`;
 
 const getContentsQuery = gql`
   query getContentsByListId($listId: String!) {
