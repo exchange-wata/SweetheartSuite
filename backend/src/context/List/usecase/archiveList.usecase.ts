@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Effect } from 'effect';
 import { gen, runPromise } from 'effect/Effect';
 import { CONTENTS_REPOSITORY, LIST_REPOSITORY } from '../const/list.token';
 import { ContentsRepositoryInterface } from '../domain/interface/contents.repository.interface';
@@ -20,16 +21,16 @@ export class ArchiveListUsecase {
       const contents = yield* self.contentsRepository.findByListId(listId)
       const currentListModel = yield* self.listRepository.findByListId(listId)
 
-      if (self.areAllContentsDone(contents)) {
-        const updatedListModel = currentListModel.setCompleted()
-        const list = yield* self.listRepository.update(updatedListModel)
-        return list
-      } else {
-        return currentListModel
-      }
+      yield* self.areAllContentsDone(contents)
+
+      const updatedListModel = currentListModel.setCompleted()
+      const list = yield* self.listRepository.update(updatedListModel)
+      return list
     }).pipe(runPromise);
   };
 
-  private areAllContentsDone = (contents: ContentsModel[]): boolean => 
+  private areAllContentsDone = (contents: ContentsModel[]) => 
     contents.every(content => content.isDone)
+      ? Effect.succeed(true)
+      : Effect.fail(new Error('contents are not all done.'))
 }
