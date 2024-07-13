@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create .env file
         run: |
@@ -23,13 +23,10 @@ jobs:
           ls -al backend
 
   ecr_push_and_build:
-    runs-on: ubuntu-latest
     needs: create_env_file
     permissions:
       id-token: write
       contents: read
-    steps:
-      - uses: actions/checkout@v3
 
       # AWS認証
       - uses: aws-actions/configure-aws-credentials@v1
@@ -47,6 +44,8 @@ jobs:
           REPOSITORY: 'sweetheart-suite'
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          ls -al 
+          ls -al backend
         #  docker-compose -f ./backend/docker-compose.prd.yml build
         #  docker images
         #  docker tag ${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}:${{ env.IMAGE_TAG }}
