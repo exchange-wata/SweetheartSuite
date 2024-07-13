@@ -24,9 +24,13 @@ jobs:
       - uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
 
-      # (デバッグ用)
-      - name: Display directory
-        run: ls -l
+      # Docker バージョン確認 (デバッグ用)
+      - name: Check Docker version
+        run: docker --version
+
+      # Docker-Compose バージョン確認 (デバッグ用)
+      - name: Check Docker-Compose version
+        run: docker-compose --version
 
       - name: build and push docker image to ecr
         env:
@@ -34,5 +38,5 @@ jobs:
           REPOSITORY: 'sweetheart-suite'
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker-compose -f docker-compose.prod.yml build --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker-compose -f ./backend/docker-compose.prod.yml build --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
