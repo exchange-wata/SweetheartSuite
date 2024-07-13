@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  ECR push and build:
+  ecr_push_and_build:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
