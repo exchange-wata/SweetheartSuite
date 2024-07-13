@@ -36,4 +36,4 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker-compose -f ./backend/docker-compose.prd.yml build
-          docker push docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
