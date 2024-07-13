@@ -8,7 +8,6 @@ on:
 jobs:
   ecr_push_and_build:
     runs-on: ubuntu-latest
-    needs: create_env_file
     permissions:
       id-token: write
       contents: read
