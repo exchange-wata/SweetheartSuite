@@ -13,9 +13,8 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v3
-    
-    # AWS認証
-    steps:
+
+      # AWS認証
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: 'ap-northeast-1'
@@ -28,7 +27,7 @@ jobs:
       - name: build and push docker image to ecr
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: "sweetheart-suite"
+          REPOSITORY: 'sweetheart-suite'
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker-compose -f docker-compose.prod.yml build --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
