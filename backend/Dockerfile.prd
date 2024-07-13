@@ -2,8 +2,8 @@ FROM node:16
 
 WORKDIR /app
 
-COPY ./backend/package*.json package*.json
-COPY ./backend/.env .env 
+COPY package*.json ./backend/package*.json 
+COPY .env ./backend/.env
 
 RUN npm ci
 
