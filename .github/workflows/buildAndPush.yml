@@ -31,5 +31,4 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker-compose -f ./backend/docker-compose.prod.yml build --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
-        # ビルドされたイメージを確認 (デバッグ用)
           docker images
