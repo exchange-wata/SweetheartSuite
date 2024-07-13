@@ -30,6 +30,6 @@ jobs:
           REPOSITORY: 'sweetheart-suite'
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker-compose -f ./backend/docker-compose.prod.yml build --tag ${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker-compose -f ./backend/docker-compose.prod.yml build
           docker images
           docker tag ${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}:${{ env.IMAGE_TAG }}
