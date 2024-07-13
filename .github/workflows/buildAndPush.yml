@@ -17,6 +17,10 @@ jobs:
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./backend/.env
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > ./backend/.env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > ./backend/.env
+      - name: debug
+        run: |
+          ls -al 
+          ls -al backend
 
   ecr_push_and_build:
     runs-on: ubuntu-latest
@@ -43,7 +47,6 @@ jobs:
           REPOSITORY: 'sweetheart-suite'
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ls -al backend
         #  docker-compose -f ./backend/docker-compose.prd.yml build
         #  docker images
         #  docker tag ${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}:${{ env.IMAGE_TAG }}
