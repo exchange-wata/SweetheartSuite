@@ -24,6 +24,10 @@ jobs:
       - uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
 
+      # (デバッグ用)
+      - name: Display directory
+        run: ls -l
+
       - name: build and push docker image to ecr
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
