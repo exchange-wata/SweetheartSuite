@@ -31,4 +31,4 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker-compose -f ./backend/docker-compose.prod.yml build --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
-          docker images
+          docker tag ${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}:latest
