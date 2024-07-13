@@ -1,0 +1,20 @@
+name: example
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  s3ls:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: 'us-northeast-1'
+          role-to-assume: 'arn:aws:iam::455866697485:role/arn:aws:iam::455866697485:role/oidc-SweetheartSuite'
+
+      - run: aws s3 ls s3://oidc-example

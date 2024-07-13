@@ -1,0 +1,12 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+    entrypoint: ['sh', '-c', 'npm run build && npm run start:dev']
