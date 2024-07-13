@@ -18,12 +18,6 @@ jobs:
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env
 
-      - name: Show .env file
-        run: |
-          echo '----------------------------------'
-          cat .env
-          echo '----------------------------------'
-
   ecr_push_and_build:
     runs-on: ubuntu-latest
     needs: create_env_file
@@ -49,6 +43,6 @@ jobs:
           REPOSITORY: 'sweetheart-suite'
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker-compose -f ./backend/docker-compose.prod.yml build
+          docker-compose -f ./backend/docker-compose.prd.yml build
           docker images
           docker tag ${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ env.REGISTRY }}:${{ env.IMAGE_TAG }}
