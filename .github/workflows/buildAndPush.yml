@@ -6,6 +6,23 @@ on:
       - main
 
 jobs:
+  create env file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+        run: echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > .env
+        run: echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env
+
+      - name: Show .env file
+        run: |
+          echo '----------------------------------'
+          cat .env
+          echo '----------------------------------'
+
   ecr_push_and_build:
     runs-on: ubuntu-latest
     permissions:
