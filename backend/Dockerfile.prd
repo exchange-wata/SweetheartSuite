@@ -16,3 +16,6 @@ EXPOSE 3001
 RUN apt-get update -y && apt-get install -y openssl
 
 RUN npm install @prisma/client prisma
+
+# デバッグ
+CMD ["echo", "hello"]
