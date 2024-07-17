@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AuthModule } from './context/Auth/auth.module';
 import { ListModule } from './context/List/list.module';
 import { UserModule } from './context/User/user.module';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -23,5 +24,6 @@ import { UserModule } from './context/User/user.module';
     AuthModule,
     ListModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
