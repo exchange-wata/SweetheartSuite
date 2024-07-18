@@ -9,7 +9,6 @@ services:
     volumes:
       - ./src:/app/src
       - ./prisma:/app/prisma
-    command: ['sh', '-c', 'echo "hello2" && npm run build && npm run start:dev']
 
   postgres:
     image: postgres:16.0
