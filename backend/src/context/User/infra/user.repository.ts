@@ -14,7 +14,7 @@ export class UserRepository implements UserRepositoryInterface {
     pipe(
       tryPromise({
         try: () =>
-          this.prisma.user.findUnique({
+          this.prisma.user.findUniqueOrThrow({
             where: { mailaddress },
           }),
         catch: () =>
@@ -42,7 +42,7 @@ export class UserRepository implements UserRepositoryInterface {
     pipe(
       tryPromise({
         try: () =>
-          this.prisma.user.findUnique({
+          this.prisma.user.findUniqueOrThrow({
             where: { id },
           }),
         catch: () => ({ _tag: UserErrorMessage.FIND_BY_USER_ID }) as const,

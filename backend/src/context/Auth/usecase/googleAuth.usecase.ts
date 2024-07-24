@@ -19,8 +19,8 @@ export class GoogleAuthUsecase {
             idToken: token,
             audience: process.env.GOOGLE_CLIENT_ID,
           }),
-        catch: () => ({ _tag: 'Invalid token' }) as const,
+        catch: (e) => ({ _tag: `Invalid token: ${e}` }) as const,
       }),
-      andThen((v) => v.getPayload().email),
+      andThen((v) => v.getPayload()?.email),
     );
 }
