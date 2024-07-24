@@ -20,15 +20,17 @@ export class ListResolver {
   ) {}
 
   @Query(() => [ListPresenter])
-  async getLists(@User() user) {
+  async getLists(@User() user: any) {
     const couple = await this.getCoupleUsecase.execute(user.userId);
+    if (couple === undefined) throw new Error('couple could not find');
     const lists = await this.getListsUsecase.execute(couple.id);
     return lists.map(ListPresenter.create);
   }
 
   @Mutation(() => ListPresenter)
-  async createList(@User() user, @Args('name') name: string) {
+  async createList(@User() user: any, @Args('name') name: string) {
     const couple = await this.getCoupleUsecase.execute(user.userId);
+    if (couple === undefined) throw new Error('couple could not find');
     const list = await this.createListUsecase.execute(couple.id, name);
     return ListPresenter.create(list);
   }
@@ -41,7 +43,7 @@ export class ListResolver {
 
   @Mutation(() => ListPresenter)
   async archiveList(@Args('listId') listId: string) {
-    const list = await this.archiveListUsecase.execute(listId)
+    const list = await this.archiveListUsecase.execute(listId);
     return ListPresenter.create(list);
   }
 }

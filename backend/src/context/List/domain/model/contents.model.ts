@@ -19,7 +19,7 @@ export class ContentsModel {
     content: string;
     isDone: boolean;
   }) {
-    this.id = input.id;
+    this.id = input.id ?? crypto.randomUUID();
     this.listId = input.listId;
     this.content = input.content;
     this.isDone = input.isDone;

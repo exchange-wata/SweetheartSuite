@@ -14,13 +14,17 @@ export class CoupleResolver {
   ) {}
 
   @Mutation(() => CouplePresenter, { nullable: true })
-  async createCouple(@User() user, @Args('isAccepted') isAccepted: boolean) {
+  async createCouple(
+    @User() user: any,
+    @Args('isAccepted') isAccepted: boolean,
+  ) {
     return this.createCoupleUsecase.execute(user.userId, isAccepted);
   }
 
   @Query(() => CouplePresenter)
-  async getCouple(@User() user) {
+  async getCouple(@User() user: any) {
     const result = await this.getCoupleUsecase.execute(user.userId);
+    if (result === undefined) throw new Error('couple could not find');
     return CouplePresenter.create(result);
   }
 }

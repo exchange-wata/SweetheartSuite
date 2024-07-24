@@ -14,7 +14,7 @@ export class CoupleModel {
   userId2: string;
 
   private constructor(input: CoupleType) {
-    this.id = input.id;
+    this.id = input.id ?? crypto.randomUUID();
     this.userId1 = input.userId1;
     this.userId2 = input.userId2;
   }

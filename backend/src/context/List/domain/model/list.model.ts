@@ -4,16 +4,21 @@ type ListType = {
   id?: string;
   name: string;
   coupleId: string;
-  isArchived?: boolean
+  isArchived?: boolean;
 };
 
 export class ListModel {
   id: string;
   name: string;
   coupleId: string;
-  isArchived: boolean
+  isArchived: boolean;
 
-  private constructor(input: { id: string; name: string; coupleId: string, isArchived: boolean }) {
+  private constructor(input: {
+    id: string;
+    name: string;
+    coupleId: string;
+    isArchived: boolean;
+  }) {
     this.id = input.id;
     this.name = input.name;
     this.coupleId = input.coupleId;
@@ -25,7 +30,7 @@ export class ListModel {
       id: input.id ?? crypto.randomUUID(),
       name: input.name,
       coupleId: input.coupleId,
-      isArchived: input.isArchived,
+      isArchived: !!input.isArchived,
     });
 
   public updateName = (name: string) => {

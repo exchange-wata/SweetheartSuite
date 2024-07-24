@@ -16,7 +16,7 @@ export class RequestResolver {
 
   @Mutation(() => Boolean)
   async sendRequest(
-    @User() user,
+    @User() user: any,
     @Args('mailaddress') mailaddress: string,
   ): Promise<Boolean> {
     const userId = user.userId;
@@ -24,7 +24,7 @@ export class RequestResolver {
   }
 
   @Query(() => RequestPresenter)
-  async getRequest(@User() user) {
+  async getRequest(@User() user: any) {
     const userId = user.userId;
     const request = await this.getRequestUsacese.execute(
       userId,
