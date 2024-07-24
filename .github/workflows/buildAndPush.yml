@@ -37,12 +37,3 @@ jobs:
           docker-compose -f ./backend/docker-compose.prd.yml build
           docker tag backend_api ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
-
-      - name: Force new deployment and wait for services stability in ECS
-        env:
-          CLUSTER_NAME: 'sweetheartsuite-cluster'
-          SERVICE_NAME: 'backend'
-        run: |
-          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.SERVICE_NAME }} --force-new-deployment
-          aws ecs wait services-stable --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.SERVICE_NAME }}
-          aws ecs describe-services --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.SERVICE_NAME }}
