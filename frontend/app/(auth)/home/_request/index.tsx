@@ -9,10 +9,11 @@ import { SendRequest } from './SendRequest';
 import { tag } from '@/lib/Effect.lib';
 
 export const HomeRequest = async () => {
+  const client = authClient();
+
   const {
     getRequest: { fromUserId },
   } = await gen(function* () {
-    const client = yield* authClient();
     return yield* tryPromise({
       try: () => client.request<GetRequestQuery>(getRequestQuery),
       catch: () => tag('no request'),

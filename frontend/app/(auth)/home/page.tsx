@@ -7,10 +7,11 @@ import { HomeRequest } from './_request';
 import { HomeList } from './_list';
 
 export default async function Home() {
+  const client = authClient();
+
   const {
     getCouple: { id: coupleId },
   } = await gen(function* () {
-    const client = yield* authClient();
     return yield* tryPromise({
       try: () => client.request<GetCoupleQuery>(getCoupleQuery),
       catch: () => tag('no couple'),

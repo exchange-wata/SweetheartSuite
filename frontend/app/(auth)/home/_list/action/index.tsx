@@ -11,10 +11,10 @@ import { gql } from 'graphql-request';
 import { revalidatePath } from 'next/cache';
 
 export const createList = async ({ name }: { name: string }) => {
+  const client = authClient();
+
   const result = await gen(function* () {
     if (!name) return yield* failWithTag('input no name');
-
-    const client = yield* authClient();
 
     const result = yield* tryPromise({
       try: () =>

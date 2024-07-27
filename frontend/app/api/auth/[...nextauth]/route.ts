@@ -19,8 +19,6 @@ import {
   runPromise,
 } from 'effect/Effect';
 
-export const AUTHORIZATION = 'authorization';
-
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -65,7 +63,7 @@ const handler = NextAuth({
           catch: () => ({ _tag: 'User Not Found' } as const),
         });
 
-        cookies().set(AUTHORIZATION, `Bearer ${login}`);
+        cookies().set('authorization', `Bearer ${login}`);
 
         return true;
       });
@@ -116,7 +114,7 @@ const handler = NextAuth({
   },
   events: {
     async signOut() {
-      cookies().set(AUTHORIZATION, '', { maxAge: 0 });
+      cookies().set('authorization', '', { maxAge: 0 });
     },
   },
 });

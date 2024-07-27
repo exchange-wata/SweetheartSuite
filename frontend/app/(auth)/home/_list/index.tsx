@@ -3,17 +3,15 @@ import { Center } from '@/components/layout/center';
 import { gql } from 'graphql-request';
 import { CreateListDialog } from './CreateListDialog';
 import { authClient } from '@/lib/authClient';
-import { gen, runPromise, tryPromise } from 'effect/Effect';
 import { GetListsQuery, GetListsQueryVariables } from '@/types/gql/graphql';
 import Link from 'next/link';
 
 export const HomeList = async () => {
-  const lists = await gen(function* () {
-    const client = yield* authClient();
-    return yield* tryPromise(() =>
-      client.request<GetListsQuery, GetListsQueryVariables>(getListsQuery),
-    );
-  }).pipe(runPromise);
+  const client = authClient();
+
+  const lists = await client.request<GetListsQuery, GetListsQueryVariables>(
+    getListsQuery,
+  );
 
   return (
     <Center className="m-10">

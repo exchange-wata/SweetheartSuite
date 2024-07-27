@@ -2,25 +2,32 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { action } from './action';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Center } from '@/components/layout/center';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-export default function SignUp({
-  searchParams,
-}: {
-  searchParams: { tempToken: string };
-}) {
+export default function SignUp() {
+  return (
+    <Suspense>
+      <Inner />
+    </Suspense>
+  );
+}
+
+const Inner = () => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get('tempToken')!;
+
   const [name, setName] = useState('');
   const router = useRouter();
 
   const handleSubmit = async () => {
     const { id } = await action({
       name,
-      token: searchParams.tempToken,
+      token,
     });
     signIn('credentials', { id });
     router.push('/home');
@@ -49,4 +56,4 @@ export default function SignUp({
       </Card>
     </Center>
   );
-}
+};

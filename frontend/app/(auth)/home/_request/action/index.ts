@@ -10,16 +10,8 @@ import {
   SendRequestMutationVariables,
 } from '@/types/gql/graphql';
 import { authClient } from '@/lib/authClient';
-import {
-  catchTags,
-  flatMap,
-  gen,
-  runPromise,
-  succeed,
-  tryPromise,
-} from 'effect/Effect';
+import { catchTags, gen, runPromise, succeed, tryPromise } from 'effect/Effect';
 import { failWithTag, tag } from '@/lib/Effect.lib';
-import { pipe } from 'effect';
 
 type State = {
   mailaddress: string;
@@ -27,12 +19,13 @@ type State = {
   error: string;
 };
 
-export const findUser = async (_: State, payload: FormData) =>
-  gen(function* () {
+export const findUser = async (_: State, payload: FormData) => {
+  const client = authClient();
+
+  return gen(function* () {
     const mailaddress = payload.get('mailaddress')?.toString();
     if (!mailaddress) return yield* failWithTag('no mailaddress');
 
-    const client = yield* authClient();
     const result = yield* tryPromise({
       try: () =>
         client.request<
@@ -65,17 +58,18 @@ export const findUser = async (_: State, payload: FormData) =>
       }),
     )
     .pipe(runPromise);
+};
 
 export const sendRequest = async (
   _: { mailaddress: string; error: string },
   payload: FormData,
-) =>
-  gen(function* () {
+) => {
+  const client = authClient();
+
+  return gen(function* () {
     const mailaddress = payload.get('mailaddress')?.toString();
 
     if (!mailaddress) return yield* failWithTag('no mailaddress');
-
-    const client = yield* authClient();
 
     const result = yield* tryPromise({
       try: () =>
@@ -112,35 +106,22 @@ export const sendRequest = async (
       }),
     )
     .pipe(runPromise);
+};
 
 export const accept = async () => {
-  pipe(
-    authClient(),
-    flatMap((client) =>
-      tryPromise(() =>
-        client.request<CreateCoupleMutation, CreateCoupleMutationVariables>(
-          createCoupleMutation,
-          { isAccepted: true },
-        ),
-      ),
-    ),
-  ).pipe(runPromise);
+  await authClient().request<
+    CreateCoupleMutation,
+    CreateCoupleMutationVariables
+  >(createCoupleMutation, { isAccepted: true });
 
   return true;
 };
 
 export const reject = async () => {
-  pipe(
-    authClient(),
-    flatMap((client) =>
-      tryPromise(() =>
-        client.request<CreateCoupleMutation, CreateCoupleMutationVariables>(
-          createCoupleMutation,
-          { isAccepted: false },
-        ),
-      ),
-    ),
-  ).pipe(runPromise);
+  await authClient().request<
+    CreateCoupleMutation,
+    CreateCoupleMutationVariables
+  >(createCoupleMutation, { isAccepted: false });
 
   return true;
 };

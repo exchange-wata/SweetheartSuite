@@ -1,20 +1,10 @@
-import { AUTHORIZATION } from '@/app/api/auth/[...nextauth]/route';
-import { Effect, succeed } from 'effect/Effect';
 import { GraphQLClient } from 'graphql-request';
 import { cookies } from 'next/headers';
-import { failWithTag } from './Effect.lib';
 
-export const authClient = (): Effect<
-  GraphQLClient,
-  {
-    readonly _tag: 'Unauthorized';
-  },
-  never
-> => {
+export const authClient = () => {
   const client = new GraphQLClient(process.env.BACKEND_URL);
-  const authorization = cookies().get(AUTHORIZATION)?.value;
+  const authorization = cookies().get('authorization')?.value;
 
-  return authorization
-    ? succeed(client.setHeaders({ authorization }))
-    : failWithTag('Unauthorized');
+  if (!authorization) throw new Error('No authorization token found');
+  return client.setHeaders({ authorization });
 };

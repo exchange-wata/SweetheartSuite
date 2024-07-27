@@ -13,17 +13,15 @@ import { CreateContentsDialog } from './CreateContentsDialog';
 import { ContentsRow } from './ContentsRow';
 
 export default async function List({ params }: { params: { listId: string } }) {
-  const lists = await gen(function* () {
-    const client = yield* authClient();
-    return yield* tryPromise(() =>
-      client.request<GetListsQuery, GetListsQueryVariables>(getListsQuery),
-    );
-  }).pipe(runPromise);
+  const client = authClient();
+
+  const lists = await client.request<GetListsQuery, GetListsQueryVariables>(
+    getListsQuery,
+  );
 
   const list = lists.getLists.find((list) => list.id === params.listId)!;
 
   const contents = await gen(function* () {
-    const client = yield* authClient();
     return yield* tryPromise(() =>
       client.request<
         GetContentsByListIdQuery,

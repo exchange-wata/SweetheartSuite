@@ -22,9 +22,9 @@ export const createContents = async ({
   content: string;
 }) => {
   const result = await gen(function* () {
-    if (!content) return yield* failWithTag('input no content');
+    const client = authClient();
 
-    const client = yield* authClient();
+    if (!content) return yield* failWithTag('input no content');
 
     const result = yield* tryPromise({
       try: () =>
@@ -72,16 +72,10 @@ export const setCompletedContents = async ({
 }: {
   contentsId: string;
 }) =>
-  gen(function* () {
-    const client = yield* authClient();
-
-    yield* tryPromise(() =>
-      client.request<
-        SetCompletedContentsMutation,
-        SetCompletedContentsMutationVariables
-      >(setCompletedContentsMutation, { setCompletedContentsId: contentsId }),
-    );
-  }).pipe(runPromise);
+  authClient().request<
+    SetCompletedContentsMutation,
+    SetCompletedContentsMutationVariables
+  >(setCompletedContentsMutation, { setCompletedContentsId: contentsId });
 
 const setCompletedContentsMutation = gql`
   mutation SetCompletedContents($setCompletedContentsId: String!) {
@@ -96,18 +90,12 @@ export const setIncompleteContents = async ({
 }: {
   contentsId: string;
 }) =>
-  gen(function* () {
-    const client = yield* authClient();
-
-    yield* tryPromise(() =>
-      client.request<
-        SetIncompleteContentsMutation,
-        SetIncompleteContentsMutationVariables
-      >(setIncompleteContentsMutation, {
-        setIncompleteContentsId: contentsId,
-      }),
-    );
-  }).pipe(runPromise);
+  authClient().request<
+    SetIncompleteContentsMutation,
+    SetIncompleteContentsMutationVariables
+  >(setIncompleteContentsMutation, {
+    setIncompleteContentsId: contentsId,
+  });
 
 const setIncompleteContentsMutation = gql`
   mutation SetIncompleteContents($setIncompleteContentsId: String!) {
