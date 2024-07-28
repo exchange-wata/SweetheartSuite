@@ -23,8 +23,10 @@ export class UserResolver {
   }
 
   @Query(() => String)
-  async login(@Args('token') token: string): Promise<string | null> {
-    return this.loginUsecase.execute(token);
+  async login(
+    @Args('mailaddress') mailaddress: string,
+  ): Promise<string | null> {
+    return this.loginUsecase.execute(mailaddress);
   }
 
   @Mutation(() => UserPresenter)

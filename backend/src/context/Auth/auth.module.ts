@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { GoogleAuthUsecase } from './usecase/googleAuth.usecase';
 import { JwtAuthUsecase } from './usecase/jwtAuth.usecase';
 
 @Module({
@@ -14,7 +13,7 @@ import { JwtAuthUsecase } from './usecase/jwtAuth.usecase';
       inject: [ConfigService],
     }),
   ],
-  providers: [JwtAuthUsecase, GoogleAuthUsecase],
-  exports: [JwtAuthUsecase, GoogleAuthUsecase],
+  providers: [JwtAuthUsecase],
+  exports: [JwtAuthUsecase],
 })
 export class AuthModule {}

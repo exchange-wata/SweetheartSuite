@@ -18,7 +18,6 @@ jobs:
       - name: Create .env file
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./backend/.env
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > ./backend/.env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > ./backend/.env
 
       # AWS認証
