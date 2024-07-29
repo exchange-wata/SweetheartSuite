@@ -20,14 +20,10 @@ export class LoginUsecase {
     return gen(function* () {
       const user = yield* self.userRepository.getUserByMailaddress(mailaddress);
       const couple = yield* self.coupleRepository.findByUserId(user.id);
-
-      if (couple.length !== 1) return '';
-
       const jwt = yield* self.jwtAuthUsecase.generateToken({
         id: user.id,
-        coupleId: couple[0].id,
+        coupleId: couple[0].id ?? '',
       });
-
       return jwt;
     }).pipe(runPromise);
   };

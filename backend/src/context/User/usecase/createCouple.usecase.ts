@@ -6,6 +6,7 @@ import { RequestRepositoryInterface } from '../domain/interface/request.reposito
 import { CoupleModel } from '../domain/model/couple.model';
 import { RequestModel } from '../domain/model/request.model';
 import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
+import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 
 @Injectable()
 export class CreateCoupleUsecase {
@@ -14,12 +15,13 @@ export class CreateCoupleUsecase {
     private readonly requestRepository: RequestRepositoryInterface,
     @Inject(COUPLE_REPOSITORY)
     private readonly coupleRepository: CoupleRepositoryInterface,
+    private readonly jwtAuthUsecase: JwtAuthUsecase,
   ) {}
 
   execute = (
     receiverId: string,
     isAccepted: boolean,
-  ): Promise<CoupleModel | null> => {
+  ): Promise<string | null> => {
     const self = this;
     return gen(function* () {
       const requestTypeId = isAccepted
@@ -43,7 +45,11 @@ export class CreateCoupleUsecase {
         userId2: request.toUserId,
       });
       const couple = yield* self.coupleRepository.create(coupleModel);
-      return couple;
+      const jwt = yield* self.jwtAuthUsecase.generateToken({
+        id: receiverId,
+        coupleId: couple.id ?? '',
+      });
+      return jwt;
     }).pipe(runPromise);
   };
 }
