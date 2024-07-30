@@ -72,4 +72,17 @@ export class ContentsRepository implements ContentsRepositoryInterface {
       }),
       andThen(ContentsModel.create),
     );
+
+  deleteMany = (ids: string[]) =>
+    pipe(
+      tryPromise({
+        try: () =>
+          this.prisma.contents.deleteMany({
+            where: {
+              id: { in: ids },
+            },
+          }),
+        catch: () => ({ _tag: 'can not delete contents' }) as const,
+      }),
+    );
 }

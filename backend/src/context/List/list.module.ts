@@ -12,6 +12,7 @@ import { ListRepository } from './infra/list.repository';
 import { ArchiveListUsecase } from './usecase/archiveList.usecase';
 import { CreateContentsUsecase } from './usecase/createContents.usecase';
 import { CreateListUsecase } from './usecase/createList.usecase';
+import { DeleteContentsUsecase } from './usecase/deleteContents.usecase';
 import { GetContentsByListIdUsecase } from './usecase/getContentsByListId.usecase';
 import { GetListsUsecase } from './usecase/getLists.usecase';
 import { SetCompletedContentsUsecase } from './usecase/setCompletedContents.usecase';
@@ -34,6 +35,7 @@ import { UpdateListUsecase } from './usecase/updateList.usecase';
     SetCompletedContentsUsecase,
     SetIncompleteContentsUsecase,
     ArchiveListUsecase,
+    DeleteContentsUsecase,
     PrismaService,
     { provide: LIST_REPOSITORY, useClass: ListRepository },
     { provide: COUPLE_REPOSITORY, useClass: CoupleRepository },
