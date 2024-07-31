@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { gen, runPromise } from 'effect/Effect';
+import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 import { COUPLE_REPOSITORY, REQUEST_REPOSITORY } from '../const/user.token';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
 import { CoupleModel } from '../domain/model/couple.model';
 import { RequestModel } from '../domain/model/request.model';
 import { RequestTypes } from '../domain/model/valueObject/requestTypeId.value';
-import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 
 @Injectable()
 export class CreateCoupleUsecase {
@@ -47,7 +47,7 @@ export class CreateCoupleUsecase {
       const couple = yield* self.coupleRepository.create(coupleModel);
       const jwt = yield* self.jwtAuthUsecase.generateToken({
         id: receiverId,
-        coupleId: couple.id ?? '',
+        coupleId: couple.id,
       });
       return jwt;
     }).pipe(runPromise);

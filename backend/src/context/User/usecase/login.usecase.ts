@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { gen, runPromise } from 'effect/Effect';
 import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 import { COUPLE_REPOSITORY, USER_REPOSITORY } from '../const/user.token';
-import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
+import { UserRepositoryInterface } from '../domain/interface/user.repository.interface';
 
 @Injectable()
 export class LoginUsecase {
@@ -22,7 +22,7 @@ export class LoginUsecase {
       const couple = yield* self.coupleRepository.findByUserId(user.id);
       const jwt = yield* self.jwtAuthUsecase.generateToken({
         id: user.id,
-        coupleId: couple[0].id ?? '',
+        coupleId: couple[0]?.id ?? '',
       });
       return jwt;
     }).pipe(runPromise);
