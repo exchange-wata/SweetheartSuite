@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { gen, runPromise } from 'effect/Effect';
+import { JwtAuthUsecase } from 'src/context/Auth/usecase/jwtAuth.usecase';
 import { COUPLE_REPOSITORY, REQUEST_REPOSITORY } from '../const/user.token';
 import { CoupleRepositoryInterface } from '../domain/interface/couple.repository.interface';
 import { RequestRepositoryInterface } from '../domain/interface/request.repository.interface';
@@ -14,12 +15,13 @@ export class CreateCoupleUsecase {
     private readonly requestRepository: RequestRepositoryInterface,
     @Inject(COUPLE_REPOSITORY)
     private readonly coupleRepository: CoupleRepositoryInterface,
+    private readonly jwtAuthUsecase: JwtAuthUsecase,
   ) {}
 
   execute = (
     receiverId: string,
     isAccepted: boolean,
-  ): Promise<CoupleModel | null> => {
+  ): Promise<string | null> => {
     const self = this;
     return gen(function* () {
       const requestTypeId = isAccepted
@@ -43,7 +45,11 @@ export class CreateCoupleUsecase {
         userId2: request.toUserId,
       });
       const couple = yield* self.coupleRepository.create(coupleModel);
-      return couple;
+      const jwt = yield* self.jwtAuthUsecase.generateToken({
+        id: receiverId,
+        coupleId: couple.id,
+      });
+      return jwt;
     }).pipe(runPromise);
   };
 }

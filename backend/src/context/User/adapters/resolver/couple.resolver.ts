@@ -13,7 +13,7 @@ export class CoupleResolver {
     private readonly getCoupleUsecase: GetCoupleUsecase,
   ) {}
 
-  @Mutation(() => CouplePresenter, { nullable: true })
+  @Mutation(() => String, { nullable: true })
   async createCouple(
     @User() user: any,
     @Args('isAccepted') isAccepted: boolean,

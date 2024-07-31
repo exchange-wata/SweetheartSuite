@@ -4,6 +4,7 @@ import { Effect, tryPromise } from 'effect/Effect';
 
 type AuthType = {
   id: string;
+  coupleId: string;
 };
 
 @Injectable()
@@ -12,7 +13,11 @@ export class JwtAuthUsecase {
 
   generateToken = (input: AuthType): Effect<string, { _tag: string }> =>
     tryPromise({
-      try: () => this.jwtService.signAsync({ userId: input.id }),
+      try: () =>
+        this.jwtService.signAsync({
+          userId: input.id,
+          coupleId: input.coupleId,
+        }),
       catch: () => ({ _tag: 'can not generate jwt' }) as const,
     });
 
