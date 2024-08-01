@@ -13,7 +13,7 @@ export default function Error({ error }: { error: Error }) {
           <div className="flex flex-col gap-5 justify-center items-center h-full">
             <label>ログインしてください</label>
             <div>
-              <Link href={'/signIn'} onClick={() => signOut()}>
+              <Link href={'/'} onClick={() => signOut()}>
                 ログインページへ
               </Link>
             </div>

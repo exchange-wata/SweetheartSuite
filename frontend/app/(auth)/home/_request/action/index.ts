@@ -143,8 +143,6 @@ const sendRequestMutation = gql`
 
 const createCoupleMutation = gql`
   mutation CreateCouple($isAccepted: Boolean!) {
-    createCouple(isAccepted: $isAccepted) {
-      id
-    }
+    createCouple(isAccepted: $isAccepted)
   }
 `;

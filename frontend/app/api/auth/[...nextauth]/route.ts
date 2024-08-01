@@ -17,7 +17,9 @@ import {
   tryPromise,
   catchTags,
   runPromise,
+  andThen,
 } from 'effect/Effect';
+import { OAuth2Client } from 'google-auth-library';
 
 const handler = NextAuth({
   providers: [
@@ -39,33 +41,41 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: '/signIn',
+    signIn: '/',
   },
   callbacks: {
     async signIn({ user, account }) {
       const client = new GraphQLClient(process.env.BACKEND_URL);
 
-      const loginUser = gen(function* () {
-        const nullableToken =
-          account?.provider === 'credentials'
-            ? cookies().get('googleToken')?.value
-            : account?.id_token;
+      const loginByMailaddress = (mailaddress: string) =>
+        gen(function* () {
+          const { login } = yield* tryPromise({
+            try: () =>
+              client.request<LoginQuery, LoginQueryVariables>(loginQuery, {
+                mailaddress,
+              }),
+            catch: () => ({ _tag: 'User Not Found' } as const),
+          });
 
-        const token = yield* nullableToken
-          ? succeed(nullableToken)
-          : fail({ _tag: 'No token' } as const);
+          cookies().set('authorization', `Bearer ${login}`);
 
-        const { login } = yield* tryPromise({
-          try: () =>
-            client.request<LoginQuery, LoginQueryVariables>(loginQuery, {
-              token,
-            }),
-          catch: () => ({ _tag: 'User Not Found' } as const),
+          return true;
         });
 
-        cookies().set('authorization', `Bearer ${login}`);
+      const login = gen(function* () {
+        if (account?.provider === 'google') {
+          return yield* loginByMailaddress(user.email ?? '');
+        }
 
-        return true;
+        const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+        const mailaddress = yield* tryPromise(() =>
+          googleClient.verifyIdToken({
+            idToken: cookies().get('googleToken')?.value ?? '',
+          }),
+        ).pipe(andThen((ticket) => ticket.getPayload()?.email ?? ''));
+
+        return yield* loginByMailaddress(mailaddress);
       });
 
       const createTempUser = gen(function* () {
@@ -99,9 +109,8 @@ const handler = NextAuth({
       );
 
       const result = pipe(
-        loginUser,
+        login,
         catchTags({
-          'No token': () => succeed(false),
           'User Not Found': () => createTempUser,
         }),
       );
@@ -122,8 +131,8 @@ const handler = NextAuth({
 export { handler as GET, handler as POST };
 
 const loginQuery = gql`
-  query Login($token: String!) {
-    login(token: $token)
+  query Login($mailaddress: String!) {
+    login(mailaddress: $mailaddress)
   }
 `;
 

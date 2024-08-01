@@ -21,10 +21,10 @@ const documents = {
     "\n  mutation CreateList($name: String!) {\n    createList(name: $name) {\n      id\n    }\n  }\n": types.CreateListDocument,
     "\n  query GetUserByMailaddress($mailaddress: String!) {\n    getUserByMailaddress(mailaddress: $mailaddress) {\n      mailaddress\n      name\n    }\n  }\n": types.GetUserByMailaddressDocument,
     "\n  mutation SendRequest($mailaddress: String!) {\n    sendRequest(mailaddress: $mailaddress)\n  }\n": types.SendRequestDocument,
-    "\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted) {\n      id\n    }\n  }\n": types.CreateCoupleDocument,
+    "\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted)\n  }\n": types.CreateCoupleDocument,
     "\n  query GetRequest {\n    getRequest {\n      fromUserId\n    }\n  }\n": types.GetRequestDocument,
     "\n  query GetCouple {\n    getCouple {\n      id\n    }\n  }\n": types.GetCoupleDocument,
-    "\n  query Login($token: String!) {\n    login(token: $token)\n  }\n": types.LoginDocument,
+    "\n  query Login($mailaddress: String!) {\n    login(mailaddress: $mailaddress)\n  }\n": types.LoginDocument,
     "\n  mutation CreateTempUser($mailaddress: String!) {\n    createTempUser(mailaddress: $mailaddress) {\n      token\n    }\n  }\n": types.CreateTempUserDocument,
     "\n  mutation CreateUser($name: String!, $createUserToken2: String!) {\n    createUser(name: $name, token: $createUserToken2) {\n      id\n    }\n  }\n": types.CreateUserDocument,
 };
@@ -78,7 +78,7 @@ export function graphql(source: "\n  mutation SendRequest($mailaddress: String!)
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted) {\n      id\n    }\n  }\n"];
+export function graphql(source: "\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted)\n  }\n"): (typeof documents)["\n  mutation CreateCouple($isAccepted: Boolean!) {\n    createCouple(isAccepted: $isAccepted)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -90,7 +90,7 @@ export function graphql(source: "\n  query GetCouple {\n    getCouple {\n      i
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Login($token: String!) {\n    login(token: $token)\n  }\n"): (typeof documents)["\n  query Login($token: String!) {\n    login(token: $token)\n  }\n"];
+export function graphql(source: "\n  query Login($mailaddress: String!) {\n    login(mailaddress: $mailaddress)\n  }\n"): (typeof documents)["\n  query Login($mailaddress: String!) {\n    login(mailaddress: $mailaddress)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
