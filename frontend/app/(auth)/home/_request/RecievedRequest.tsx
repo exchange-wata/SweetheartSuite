@@ -4,22 +4,24 @@ import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { accept, reject } from './action';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export const RecievedRequest = ({ fromUserId }: { fromUserId: string }) => {
-  const [isAccepted, setIsAccepted] = useState(false);
   const [isRejected, setIsRejected] = useState(false);
+  const router = useRouter();
+
   return (
     <CardContent>
       <div>リクエストを受け取っています</div>
       <div>fromUserId: {fromUserId}</div>
-      {isAccepted || isRejected ? (
-        <div>リクエストを{isAccepted ? '承認' : '拒否'}しました</div>
+      {isRejected ? (
+        <div>リクエストを拒否しました</div>
       ) : (
         <>
           <Button
             onClick={() => {
-              setIsAccepted(true);
               accept();
+              router.refresh();
             }}
           >
             Accept
