@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
 import { GetCoupleUsecase } from 'src/context/User/usecase/getCouple.usecase';
 import { User } from '../../../User/decorator/user.decorator';
+import { ListAuth } from '../../decorator/list.decorator';
 import { ArchiveListUsecase } from '../../usecase/archiveList.usecase';
 import { CreateListUsecase } from '../../usecase/createList.usecase';
 import { GetListsUsecase } from '../../usecase/getLists.usecase';
@@ -21,26 +22,24 @@ export class ListResolver {
 
   @Query(() => [ListPresenter])
   async getLists(@User() user: any) {
-    const couple = await this.getCoupleUsecase.execute(user.userId);
-    if (couple === undefined) throw new Error('couple could not find');
-    const lists = await this.getListsUsecase.execute(couple.id);
+    const lists = await this.getListsUsecase.execute(user.coupleId);
     return lists.map(ListPresenter.create);
   }
 
   @Mutation(() => ListPresenter)
   async createList(@User() user: any, @Args('name') name: string) {
-    const couple = await this.getCoupleUsecase.execute(user.userId);
-    if (couple === undefined) throw new Error('couple could not find');
-    const list = await this.createListUsecase.execute(couple.id, name);
+    const list = await this.createListUsecase.execute(user.coupleId, name);
     return ListPresenter.create(list);
   }
 
+  @ListAuth()
   @Mutation(() => ListPresenter)
   async updateList(@Args('listId') listId: string, @Args('name') name: string) {
     const list = await this.updateListUsecase.execute(listId, name);
     return ListPresenter.create(list);
   }
 
+  @ListAuth()
   @Mutation(() => ListPresenter)
   async archiveList(@Args('listId') listId: string) {
     const list = await this.archiveListUsecase.execute(listId);
