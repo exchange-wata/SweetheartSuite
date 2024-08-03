@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-  paths:
-    - './backend/**'
+  # paths:
+  #   - './backend/**'
 
 jobs:
   ecr_push_and_build:
