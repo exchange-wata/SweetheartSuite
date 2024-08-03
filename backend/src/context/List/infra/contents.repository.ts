@@ -30,14 +30,14 @@ export class ContentsRepository implements ContentsRepositoryInterface {
     pipe(
       tryPromise({
         try: () =>
-          this.prisma.contents.findUniqueOrThrow({
+          this.prisma.contents.findMany({
             where: {
               id,
             },
           }),
         catch: () => ({ _tag: 'can not find contents' }) as const,
       }),
-      andThen(ContentsModel.create),
+      andThen((contents) => contents.map(ContentsModel.create)),
     );
 
   findByListId = (listId: string) =>

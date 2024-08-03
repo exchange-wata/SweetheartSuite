@@ -14,10 +14,15 @@ export class UpdateContentsUsecase {
     const self = this;
     return gen(function* () {
       const currentContents = yield* self.contentsRepository.findById(id);
-      const updateContentsModel = currentContents.updateContent(content);
-      const contents =
-        yield* self.contentsRepository.update(updateContentsModel);
-      return contents;
+      if (currentContents.length === 1) {
+        const updateContentsModel = currentContents[0]?.updateContent(content);
+        if (!updateContentsModel)
+          throw new Error('invalid update contents model');
+
+        const contents =
+          yield* self.contentsRepository.update(updateContentsModel);
+        return contents;
+      }
     }).pipe(runPromise);
   };
 }
