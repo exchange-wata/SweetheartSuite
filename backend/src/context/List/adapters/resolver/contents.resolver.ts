@@ -54,18 +54,21 @@ export class ContentsResolver {
     @Args('content') content: string,
   ) {
     const contents = await this.updateContentsUsecase.execute(id, content);
+    if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
   @Mutation(() => ContentsPresenter)
   async setCompletedContents(@Args('id') id: string) {
     const contents = await this.setCompletedContentsUsecase.execute(id);
+    if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
   @Mutation(() => ContentsPresenter)
   async setIncompleteContents(@Args('id') id: string) {
     const contents = await this.setIncompleteContentsUsecase.execute(id);
+    if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
