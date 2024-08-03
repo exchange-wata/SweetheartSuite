@@ -5,7 +5,7 @@ on:
     branches:
       - main
   paths:
-    - 'backend/**'
+    - './backend/**'
 
 jobs:
   ecr_push_and_build:
