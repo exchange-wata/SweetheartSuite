@@ -36,7 +36,7 @@ jobs:
           REPOSITORY: 'sweetheart-suite'
         run: |
           docker compose -f ./backend/docker-compose.prd.yml build
-          docker tag backend_api ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+          docker tag backend-api ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
 
       - name: Force new deployment and wait for services stability in ECS
