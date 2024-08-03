@@ -21,8 +21,8 @@ const updateContents = ContentsModel.create({
   isDone: true,
 });
 
-const contentsRepository: Pick<ContentsRepository, 'findById' | 'update'> = {
-  findById: jest.fn(() => Effect.succeed([currentContents])),
+const contentsRepository: Pick<ContentsRepository, 'findByIds' | 'update'> = {
+  findByIds: jest.fn(() => Effect.succeed([currentContents])),
   update: jest.fn(() => Effect.succeed(updateContents)),
 };
 const setCompletedContentsUsecase = new SetCompletedContentsUsecase(

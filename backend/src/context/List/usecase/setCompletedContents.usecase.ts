@@ -13,7 +13,7 @@ export class SetCompletedContentsUsecase {
   execute = (id: string) => {
     const self = this;
     return gen(function* () {
-      const currentContents = yield* self.contentsRepository.findById(id);
+      const currentContents = yield* self.contentsRepository.findByIds([id]);
       if (currentContents.length === 1) {
         const updateContentsModel = currentContents[0]?.setCompleted();
         if (!updateContentsModel)

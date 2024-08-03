@@ -26,13 +26,13 @@ export class ContentsRepository implements ContentsRepositoryInterface {
       andThen(ContentsModel.create),
     );
 
-  findById = (id: string) =>
+  findByIds = (ids: string[]) =>
     pipe(
       tryPromise({
         try: () =>
           this.prisma.contents.findMany({
             where: {
-              id,
+              id: { in: ids },
             },
           }),
         catch: () => ({ _tag: 'can not find contents' }) as const,
