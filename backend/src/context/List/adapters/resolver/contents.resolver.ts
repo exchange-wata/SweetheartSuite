@@ -7,7 +7,6 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
-import { ContentsAuth } from '../../decorator/contents.decorator';
 import { CreateContentsUsecase } from '../../usecase/createContents.usecase';
 import { DeleteContentsUsecase } from '../../usecase/deleteContents.usecase';
 import { GetContentsByListIdUsecase } from '../../usecase/getContentsByListId.usecase';
@@ -15,6 +14,8 @@ import { SetCompletedContentsUsecase } from '../../usecase/setCompletedContents.
 import { SetIncompleteContentsUsecase } from '../../usecase/setIncompleteContents.usecase';
 import { UpdateContentsUsecase } from '../../usecase/updateContents.usecase';
 import { ContentsPresenter } from '../presenter/contents.presenter';
+import { ContentsAuth } from '../../guard/contents.guard';
+import { AuthUser, User } from 'src/context/User/decorator/user.decorator';
 
 @ObjectType()
 class DeleteContentsResponse {
@@ -32,6 +33,7 @@ export class ContentsResolver {
     private readonly setCompletedContentsUsecase: SetCompletedContentsUsecase,
     private readonly setIncompleteContentsUsecase: SetIncompleteContentsUsecase,
     private readonly deleteContentsUsecase: DeleteContentsUsecase,
+    private readonly contentsAuth: ContentsAuth,
   ) {}
 
   @Query(() => [ContentsPresenter])
@@ -49,36 +51,44 @@ export class ContentsResolver {
     return ContentsPresenter.create(contents);
   }
 
-  @ContentsAuth()
   @Mutation(() => ContentsPresenter)
   async updateContents(
+    @User() user: AuthUser,
     @Args('id') id: string,
     @Args('content') content: string,
   ) {
+    await this.contentsAuth.canEditContents(user.coupleId, [id]);
+
     const contents = await this.updateContentsUsecase.execute(id, content);
     if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
-  @ContentsAuth()
   @Mutation(() => ContentsPresenter)
-  async setCompletedContents(@Args('id') id: string) {
+  async setCompletedContents(@User() user: AuthUser, @Args('id') id: string) {
+    await this.contentsAuth.canEditContents(user.coupleId, [id]);
+
     const contents = await this.setCompletedContentsUsecase.execute(id);
     if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
-  @ContentsAuth()
   @Mutation(() => ContentsPresenter)
-  async setIncompleteContents(@Args('id') id: string) {
+  async setIncompleteContents(@User() user: AuthUser, @Args('id') id: string) {
+    await this.contentsAuth.canEditContents(user.coupleId, [id]);
+
     const contents = await this.setIncompleteContentsUsecase.execute(id);
     if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
-  @ContentsAuth()
   @Mutation(() => DeleteContentsResponse)
-  async deleteContents(@Args('ids', { type: () => [String] }) ids: string[]) {
+  async deleteContents(
+    @User() user: AuthUser,
+    @Args('ids', { type: () => [String] }) ids: string[],
+  ) {
+    await this.contentsAuth.canEditContents(user.coupleId, ids);
+
     return this.deleteContentsUsecase.execute(ids);
   }
 }
