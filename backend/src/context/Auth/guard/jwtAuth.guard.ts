@@ -20,6 +20,7 @@ export class JwtAuthGuard implements CanActivate {
       const ctx = GqlExecutionContext.create(context);
       const request = ctx.getContext().req;
       const token = yield* self.extractTokenFromHeader(request);
+      if (!token) throw new Error('invalid token');
       const payload = yield* self.jwtAuthUsecase.verifyToken(token);
       request['user'] = payload;
 
