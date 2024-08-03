@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  # paths:
-  #   - './backend/**'
 
 jobs:
   ecr_push_and_build:
@@ -19,6 +17,12 @@ jobs:
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./backend/.env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > ./backend/.env
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
 
       # AWS認証
       - uses: aws-actions/configure-aws-credentials@v1
