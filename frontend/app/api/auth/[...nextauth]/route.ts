@@ -9,7 +9,6 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { cookies } from 'next/headers';
-import { pipe } from 'effect';
 import {
   gen,
   succeed,
@@ -17,7 +16,6 @@ import {
   tryPromise,
   catchTags,
   runPromise,
-  andThen,
 } from 'effect/Effect';
 import { OAuth2Client } from 'google-auth-library';
 
@@ -45,77 +43,32 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      const client = new GraphQLClient(process.env.BACKEND_URL);
-
-      const loginByMailaddress = (mailaddress: string) =>
+      return runPromise(
         gen(function* () {
-          const { login } = yield* tryPromise({
-            try: () =>
-              client.request<LoginQuery, LoginQueryVariables>(loginQuery, {
-                mailaddress,
+          if (account?.provider === 'google')
+            return yield* loginByMailaddress(user.email!).pipe(
+              catchTags({
+                'User Not Found': () => {
+                  cookies().set(GOOGLE_TOKEN_COOKIE, account.id_token!, {
+                    httpOnly: true,
+                    sameSite: 'lax',
+                    secure: true,
+                    maxAge: 10 * 60,
+                  });
+                  return createTempUser(user.email!);
+                },
               }),
-            catch: () => ({ _tag: 'User Not Found' } as const),
-          });
+            );
 
-          cookies().set('authorization', `Bearer ${login}`);
+          const _ = cookies().get(GOOGLE_TOKEN_COOKIE)?.value;
+          const googleToken = yield* _
+            ? succeed(_)
+            : fail({ _tag: 'no google token' } as const);
 
-          return true;
-        });
-
-      const login = gen(function* () {
-        if (account?.provider === 'google') {
-          return yield* loginByMailaddress(user.email ?? '');
-        }
-
-        const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-        const mailaddress = yield* tryPromise(() =>
-          googleClient.verifyIdToken({
-            idToken: cookies().get('googleToken')?.value ?? '',
-          }),
-        ).pipe(andThen((ticket) => ticket.getPayload()?.email ?? ''));
-
-        return yield* loginByMailaddress(mailaddress);
-      });
-
-      const createTempUser = gen(function* () {
-        const mailaddress = yield* user.email
-          ? succeed(user.email)
-          : fail({ _tag: 'No email' } as const);
-
-        const { createTempUser } = yield* tryPromise(
-          (): Promise<CreateTempUserMutation> =>
-            client.request<
-              CreateTempUserMutation,
-              CreateTempUserMutationVariables
-            >(createTempUserMutation, { mailaddress }),
-        );
-
-        const googleToken = yield* account?.id_token
-          ? succeed(account.id_token)
-          : fail({ _tag: 'No Google Token' } as const);
-
-        cookies().set('googleToken', googleToken, {
-          path: '/',
-          maxAge: 10 * 60,
-        });
-
-        return `/signUp?tempToken=${createTempUser.token}`;
-      }).pipe(
-        catchTags({
-          'No email': () => succeed(false),
-          'No Google Token': () => succeed(false),
+          const mailaddress = yield* veryfiyGoogleToken(googleToken);
+          return yield* loginByMailaddress(mailaddress);
         }),
       );
-
-      const result = pipe(
-        login,
-        catchTags({
-          'User Not Found': () => createTempUser,
-        }),
-      );
-
-      return runPromise(result);
     },
     async redirect() {
       return '/home';
@@ -129,6 +82,59 @@ const handler = NextAuth({
 });
 
 export { handler as GET, handler as POST };
+
+const client = new GraphQLClient(process.env.BACKEND_URL);
+
+const loginByMailaddress = (mailaddress: string) =>
+  gen(function* () {
+    const { login } = yield* tryPromise({
+      try: () =>
+        client.request<LoginQuery, LoginQueryVariables>(loginQuery, {
+          mailaddress,
+        }),
+      catch: () => ({ _tag: 'User Not Found' } as const),
+    });
+
+    cookies().set('authorization', `Bearer ${login}`, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: true,
+    });
+
+    return true;
+  });
+
+const veryfiyGoogleToken = (token: string) =>
+  gen(function* () {
+    const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    const ticket = yield* tryPromise(() =>
+      googleClient.verifyIdToken({
+        idToken: token,
+      }),
+    );
+
+    const mailaddress = ticket.getPayload()?.email;
+
+    return yield* mailaddress
+      ? succeed(mailaddress)
+      : fail({ _tag: 'fail verify google token' } as const);
+  });
+
+const createTempUser = (mailaddress: string) =>
+  gen(function* () {
+    const { createTempUser } = yield* tryPromise(
+      (): Promise<CreateTempUserMutation> =>
+        client.request<CreateTempUserMutation, CreateTempUserMutationVariables>(
+          createTempUserMutation,
+          { mailaddress },
+        ),
+    );
+
+    return `/signUp?tempToken=${createTempUser.token}`;
+  });
+
+const GOOGLE_TOKEN_COOKIE = 'googleToken' as const;
 
 const loginQuery = gql`
   query Login($mailaddress: String!) {
