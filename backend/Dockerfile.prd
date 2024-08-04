@@ -17,8 +17,6 @@ RUN apt-get update -y && apt-get install -y openssl
 
 RUN npm install @prisma/client prisma
 
-RUN npx prisma generate
-
 RUN npm run build
 
 CMD ["npm", "run", "start"]
