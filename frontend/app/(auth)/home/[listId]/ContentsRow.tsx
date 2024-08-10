@@ -16,7 +16,7 @@ export const ContentsRow = ({
   const router = useRouter();
 
   return (
-    <div className="flex flex-row items-center border p-4 gap-2">
+    <div className="flex flex-row items-center border p-4 gap-2 rounded-2xl">
       <Checkbox
         checked={isDone}
         onClick={() => {

@@ -35,7 +35,7 @@ const Inner = () => {
 
   return (
     <Center className="m-20">
-      <Card>
+      <Card size="lg">
         <CardHeader className="items-center">
           <h1 className="font-bold text-3xl">新規登録</h1>
         </CardHeader>

@@ -28,7 +28,10 @@ export const HomeRequest = async () => {
 
   return (
     <Center className="m-10">
-      <Card className="w-[350px] h-[400px] flex-col items-center justify-center p-5">
+      <Card
+        size="lg"
+        className="h-[400px] flex-col items-center justify-center p-5"
+      >
         {fromUserId && <RecievedRequest fromUserId={fromUserId} />}
         <SendRequest />
       </Card>
