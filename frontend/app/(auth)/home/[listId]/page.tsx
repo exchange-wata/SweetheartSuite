@@ -32,17 +32,19 @@ export default async function List({ params }: { params: { listId: string } }) {
 
   return (
     <Center className="m-10">
-      <Card className="w-[350px] flex-col items-center justify-center p-5">
+      <Card size="lg" className="flex-col items-center justify-center p-5">
         <CardHeader className="items-center">{list.name}</CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-2">
           <CreateContentsDialog listId={params.listId} />
-          {contents.getContentsByListId.map((content) => (
-            <ContentsRow
-              contentsId={content.id}
-              content={content.content}
-              isDone={content.isDone}
-            />
-          ))}
+          <div className="flex flex-col gap-1">
+            {contents.getContentsByListId.map((content) => (
+              <ContentsRow
+                contentsId={content.id}
+                content={content.content}
+                isDone={content.isDone}
+              />
+            ))}
+          </div>
         </CardContent>
       </Card>
     </Center>

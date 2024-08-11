@@ -15,13 +15,15 @@ export const HomeList = async () => {
 
   return (
     <Center className="m-10">
-      <Card className="w-[350px] flex-col items-center justify-center p-5">
+      <Card size="lg" className="flex-col items-center justify-center p-5">
         <CardHeader className="items-center">やりたいことリスト</CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-2">
           <CreateListDialog />
-          {lists.getLists.map((list) => (
-            <ListRow listId={list.id} listName={list.name} />
-          ))}
+          <div className="flex flex-col gap-1">
+            {lists.getLists.map((list) => (
+              <ListRow listId={list.id} listName={list.name} />
+            ))}
+          </div>
         </CardContent>
       </Card>
     </Center>
@@ -35,7 +37,7 @@ const ListRow = ({
   listId: string;
   listName: string;
 }) => (
-  <div className="flex flex-row items-center border p-4">
+  <div className="flex flex-row items-center border p-4 rounded-2xl">
     <Link href={`/home/${listId}`}>{listName}</Link>
   </div>
 );
