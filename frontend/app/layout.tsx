@@ -28,7 +28,7 @@ const Header = () => {
 
   return (
     <div className="flex justify-between w-full bg-primary p-4">
-      <h1 className="text-white text-3xl">SweetheartSuite</h1>
+      <h1 className="text-cyan-800 text-3xl">SweetheartSuite</h1>
       {data && (
         <Button variant="secondary" onClick={() => signOut()}>
           ログアウト
