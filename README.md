@@ -31,3 +31,8 @@
 ## ER 図(暫定)
 
 ![](backend/db.drawio.svg)
+
+## インフラ(AWS)
+※ DBの扱いに関してはベストプラクティスではありません。
+
+![sweetheartsuite-sweetheartsuite drawio](https://github.com/user-attachments/assets/48517860-b01e-4b3b-8a77-1b42f93bf2a2)
