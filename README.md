@@ -11,7 +11,7 @@
 - github(public)
 - docker
 - Prisma/PostgreSQL
-- BE: Typescript/NestJs
+- BE: Typescript/NestJs/Effect
 - FE: Next.js
 - API: GraphQL
 
