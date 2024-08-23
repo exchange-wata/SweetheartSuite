@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
-import { User } from '../../decorator/user.decorator';
+import { AuthUser, User } from '../../decorator/user.decorator';
 import { RequestTypes } from '../../domain/model/valueObject/requestTypeId.value';
 import { GetRequestUsecase } from '../../usecase/getRequest.usecase';
 import { SendRequestUsecase } from '../../usecase/sendRequest.usecase';
@@ -16,7 +16,7 @@ export class RequestResolver {
 
   @Mutation(() => Boolean)
   async sendRequest(
-    @User() user: any,
+    @User() user: AuthUser,
     @Args('mailaddress') mailaddress: string,
   ): Promise<Boolean> {
     const userId = user.userId;
@@ -24,7 +24,7 @@ export class RequestResolver {
   }
 
   @Query(() => RequestPresenter)
-  async getRequest(@User() user: any) {
+  async getRequest(@User() user: AuthUser) {
     const userId = user.userId;
     const request = await this.getRequestUsacese.execute(
       userId,
