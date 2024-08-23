@@ -13,11 +13,16 @@ export class SetCompletedContentsUsecase {
   execute = (id: string) => {
     const self = this;
     return gen(function* () {
-      const currentContents = yield* self.contentsRepository.findById(id);
-      const updateContentsModel = currentContents.setCompleted();
-      const contents =
-        yield* self.contentsRepository.update(updateContentsModel);
-      return contents;
+      const currentContents = yield* self.contentsRepository.findByIds([id]);
+      if (currentContents.length === 1) {
+        const updateContentsModel = currentContents[0]?.setCompleted();
+        if (!updateContentsModel)
+          throw new Error('invalid update contents model');
+
+        const contents =
+          yield* self.contentsRepository.update(updateContentsModel);
+        return contents;
+      }
     }).pipe(runPromise);
   };
 }
