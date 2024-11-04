@@ -7,6 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { JwtAuth } from 'src/context/Auth/decorator/jwtAuth.decorator';
+import { ContentsAuth } from '../../decorator/contents.decorator';
 import { CreateContentsUsecase } from '../../usecase/createContents.usecase';
 import { DeleteContentsUsecase } from '../../usecase/deleteContents.usecase';
 import { GetContentsByListIdUsecase } from '../../usecase/getContentsByListId.usecase';
@@ -48,27 +49,34 @@ export class ContentsResolver {
     return ContentsPresenter.create(contents);
   }
 
+  @ContentsAuth()
   @Mutation(() => ContentsPresenter)
   async updateContents(
     @Args('id') id: string,
     @Args('content') content: string,
   ) {
     const contents = await this.updateContentsUsecase.execute(id, content);
+    if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
+  @ContentsAuth()
   @Mutation(() => ContentsPresenter)
   async setCompletedContents(@Args('id') id: string) {
     const contents = await this.setCompletedContentsUsecase.execute(id);
+    if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
+  @ContentsAuth()
   @Mutation(() => ContentsPresenter)
   async setIncompleteContents(@Args('id') id: string) {
     const contents = await this.setIncompleteContentsUsecase.execute(id);
+    if (!contents) throw new Error('invalid contents');
     return ContentsPresenter.create(contents);
   }
 
+  @ContentsAuth()
   @Mutation(() => DeleteContentsResponse)
   async deleteContents(@Args('ids', { type: () => [String] }) ids: string[]) {
     return this.deleteContentsUsecase.execute(ids);
